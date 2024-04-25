@@ -19,14 +19,13 @@ public class Servidor {
 		System.out.println("programa 1: servidor");
 		
 		servidorSocket = new ServerSocket(2299,5);
-		Socket ss=servidorSocket.accept(); 
-		
-		InputStreamReader inputReader = new InputStreamReader(ss.getInputStream());
-		BufferedReader reader = new BufferedReader(inputReader);
-		System.out.println(reader.toString());
+//		socket ss=servidorSocket.accept(); 	
+//		InputStreamReader inputReader = new InputStreamReader(ss.getInputStream());
+//		BufferedReader reader = new BufferedReader(inputReader);
+//		System.out.println(reader.toString());
 		
 		//SolicitarCadastro();
-		
+		SolicitarLogin();
 				
 	}
 	
@@ -51,6 +50,8 @@ public class Servidor {
 			Map<String, Object> userData = mapper.readValue(reader, new TypeReference<Map<String, Object>>() {}); 
 						
 			 bd.Cadastrar(userData.get("Email:").toString(),userData.get("nome:").toString(), userData.get("Senha:").toString());
+			
+		
  
 			}
 			catch(Exception ex)
@@ -60,8 +61,38 @@ public class Servidor {
 			}
 	}
 	
-	public static void SolicitarLeitura() {
+	public static void SolicitarLogin() {
 		
+		try 
+		{	
+			System.out.println("conectado");
+			
+			Crud bd = new Crud();
+			bd.Conectar();
+			 
+			Socket ss=servidorSocket.accept(); 
+			InputStreamReader inputReader = new InputStreamReader(ss.getInputStream());
+			BufferedReader reader = new BufferedReader(inputReader);
+			String x; 
+			System.out.println(reader.toString());
+			
+			ObjectMapper mapper = new ObjectMapper();  
+			
+			Map<String, Object> userData = mapper.readValue(reader, new TypeReference<Map<String, Object>>() {}); 
+						
+			 
+			 
+			 	if(bd.getLogin(userData.get("Email:").toString(), userData.get("Senha:").toString()) != 0 ) {
+			 		System.out.print("Login realizado com sucesso");
+			 	}else {
+			 		System.out.print("Falha ao realizar o login");
+			 	}
+			}
+			catch(Exception ex)
+			{
+				System.out.println(ex);
+					
+			}
 	}
 
 }

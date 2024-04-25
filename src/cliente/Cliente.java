@@ -16,8 +16,8 @@ public class Cliente {
 		
 		int op=2;
 		
-		OutputStreamWriter out = new OutputStreamWriter(clienteSocket.getOutputStream(), StandardCharsets.UTF_8);
-		out.write(op);
+//		OutputStreamWriter out = new OutputStreamWriter(clienteSocket.getOutputStream(), StandardCharsets.UTF_8);
+//		out.write(op);
 		
 		//Scanner leia = new Scanner(System.in);
 		

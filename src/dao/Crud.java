@@ -38,6 +38,31 @@ public class Crud extends BancoDeDados{
 			
 		}
 	}
+	public int getLogin(String email, String senha) {
+		
+		
+		try {
+			super.Conectar();
+			PreparedStatement st = null;
+			st = conn.prepareStatement ("SELECT id_candidato FROM candidato WHERE Email = ? and Senha = ? ");
+			st.setString(1,email);
+			st.setString(2,senha);
+			ResultSet rs = st.executeQuery();
+			rs.next();
+			if(st!=null) {
+				return rs.getInt(1);
+			}else {
+				return 0;
+			}
+			
+		}catch(Exception ex) {
+			System.err.print(ex);
+		}finally {
+			
+		}
+		return 0;
+	}
+	
 	
 	public void Ler(int id) throws SQLException {
 		try {
