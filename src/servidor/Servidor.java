@@ -4,10 +4,15 @@ package servidor;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.net.ServerSocket;
 import java.net.*;
 import java.io.*;
 import java.util.Scanner;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import dao.*;
 import java.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper; 
@@ -32,7 +37,8 @@ public class Servidor {
 		BufferedReader reader = new BufferedReader(input);
 		System.out.println(reader.readLine());
 		
-		
+		PrintStream saida  = new PrintStream (ss.getOutputStream());
+		saida.println("Conexão realizada com sucesso com o servidor");
 
 
 		
@@ -80,26 +86,49 @@ public class Servidor {
 				
 	}
 	
-	public static void SolicitarCadastro(Map<String, Object> userData) throws IOException {
-		
+	public static void SolicitarCadastro(Map<String, Object> userData) {
+
 		
 		System.out.println("Entrou em realizar cadastro 2 ");
 		System.out.println(userData.toString());
-		try 
-		{				
-			
+			try 
+			{				
+			JSONObject json = new JSONObject();
+			json.put("type", "CONNECT");
 			
 			Crud bd = new Crud();
 			bd.Conectar();
 			bd.Cadastrar(userData.get("email:").toString(), userData.get("nome:").toString(), userData.get("senha:").toString());	
 			
-			
+			throw new SQLIntegrityConstraintViolationException();  
 			}
-			catch(Exception ex)
+			catch(SQLIntegrityConstraintViolationException e)
 			{
-				System.out.println(ex);
+				try {
+					PrintStream saida  = new PrintStream (ss.getOutputStream());
+					String myString = new JSONObject().put("operacao:", "realizarCadastro").put("status:","422").put("mensagem:", "email ja cadastrado").toString(); 
+					saida.println(myString);
+				}
+				catch(Exception ex) {
 					
+				}
+				
+
+			}catch(Exception ex) {
+				
 			}
+		
+			
+
+			try {
+				PrintStream saida  = new PrintStream (ss.getOutputStream());
+				String myString = new JSONObject().put("operacao:", "realizarCadastro").put("status:","201").put("token:", "UUID").toString(); 
+				saida.println(myString);
+			}
+			catch(Exception ex) {
+				
+			}
+			
 		
 	}
 	

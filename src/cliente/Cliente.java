@@ -1,10 +1,15 @@
 package cliente;
 
 import java.net.*;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -21,9 +26,11 @@ public class Cliente {
 		//OutputStreamWriter out = new OutputStreamWriter(clienteSocket.getOutputStream(), StandardCharsets.UTF_8);
 		
 		PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
-		saida.println("conexão realizada com sucesso");
+		saida.println("conexão realizada com sucesso o cliente");
 		
-		
+		InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+		BufferedReader reader = new BufferedReader(input);
+		System.out.println(reader.readLine());
 		
 		
 		Scanner leia = new Scanner(System.in);
@@ -85,6 +92,27 @@ public class Cliente {
 			System.out.println(ex);
 				
 		}
+		
+		
+		try {
+			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+			BufferedReader reader = new BufferedReader(input);
+			
+			ObjectMapper mapper = new ObjectMapper(); 
+			Map<String, Object> userData = mapper.readValue(reader, new TypeReference<Map<String, Object>>() {});
+			
+			String op = userData.get("status:").toString();
+			if(op.equals("422")) {
+				System.out.println("Já existe esse email");
+			}else if(op.equals("404")) {
+				System.out.println(userData.get("mensagem:").toString());
+			}else {
+				System.out.println("Registro realizado com sucesso");
+			}
+		}catch(Exception ex) {
+			System.out.print(ex);
+		}
+		 
 	}
 	
 	public static void realizarLogin() {
