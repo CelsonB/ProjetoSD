@@ -138,19 +138,23 @@ public class Servidor {
 		
 		
 		try 
-		{	
+		{	JSONObject json = new JSONObject();
+		json.put("type", "CONNECT");
 			
 			Crud bd = new Crud();
 			bd.Conectar();		
 			ObjectMapper mapper = new ObjectMapper();  
-			
+			PrintStream saida  = new PrintStream (ss.getOutputStream());
+		
 
 			 
 			 
 			 	if(bd.getLogin(userData.get("email:").toString(), userData.get("senha:").toString()) != 0 ) {
-			 		System.out.print("Login realizado com sucesso");
+			 		String myString = new JSONObject().put("operacao:", "loginCandidato").put("status:","200").put("token:", "UUID").toString(); 
+					saida.println(myString);
 			 	}else {
-			 		System.out.print("Falha ao realizar o login");
+			 		String myString = new JSONObject().put("operacao:", "loginCandidato").put("status:","401").put("mensagem:", "logins ou senha incorretos").toString(); 
+					saida.println(myString);
 			 	}
 			 
 			}

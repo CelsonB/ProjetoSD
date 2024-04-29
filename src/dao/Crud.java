@@ -44,7 +44,7 @@ public class Crud extends BancoDeDados{
 		try {
 			super.Conectar();
 			PreparedStatement st = null;
-			st = conn.prepareStatement ("SELECT id_candidato FROM candidato WHERE Email = ? and Senha = ? ");
+			st = conn.prepareStatement ("SELECT * FROM candidato WHERE Email = ? and Senha = ? ");
 			st.setString(1,email);
 			st.setString(2,senha);
 			ResultSet rs = st.executeQuery();
