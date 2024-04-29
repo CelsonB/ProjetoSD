@@ -2,6 +2,8 @@ package cliente;
 
 import java.net.*;
 import java.util.Scanner;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -12,51 +14,70 @@ public class Cliente {
 
 	
 	public static void main (String[] args) throws UnknownHostException, IOException {
-		clienteSocket = new Socket("teste",2299);
+		clienteSocket = new Socket("teste",22222);
 		
-		int op=2;
+		int op=0;
 		
-//		OutputStreamWriter out = new OutputStreamWriter(clienteSocket.getOutputStream(), StandardCharsets.UTF_8);
-//		out.write(op);
+		//OutputStreamWriter out = new OutputStreamWriter(clienteSocket.getOutputStream(), StandardCharsets.UTF_8);
 		
-		//Scanner leia = new Scanner(System.in);
+		PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+		saida.println("conexão realizada com sucesso");
 		
 		
-		//op = leia.nextInt();
-		switch(op) {
-		case 1: 
-			CadastrarUsuario();
-		break;
-		case 2:
-			RealizarLogin();
-		break;
-		}
+		
+		
+		Scanner leia = new Scanner(System.in);
+		
+		
+		//OutputStreamWriter outStream = new OutputStreamWriter(clienteSocket.getOutputStream(), StandardCharsets.UTF_8);
+		
+		
+		
+		do {
+		
+			System.out.println("1-Cadastrar usuario\n2-Realizar Login");
+			op = leia.nextInt();
+			
+			switch(op) {
+			case 1: 
+				cadastrarUsuario();
+			break;
+			case 2:
+				realizarLogin();
+			break;
+			case 3:
+				visualizarCandidato();
+			break;
+			}
+		}while(op!=0);
+		
+		
 		
 			
 	}
 	
 	
-	public static void CadastrarUsuario() {
+	public static void cadastrarUsuario() {
 		try 
 		{
 			JSONObject json = new JSONObject();
 			json.put("type", "CONNECT");
-			
-			
-			
 			Scanner leia = new Scanner(System.in);
-			try (OutputStreamWriter out = new OutputStreamWriter(
-				clienteSocket.getOutputStream(), StandardCharsets.UTF_8)) {
-				
+			
+			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+			
+			
 				System.out.println("Digite seu nome:");
-				String nome = leia.nextLine(); 
+				String nome = leia.nextLine();
 				System.out.println("Digite sua senha:");
 				String senha= leia.nextLine();
 				System.out.println("Digite seu email:");
 				String email = leia.nextLine(); 
-				String myString = new JSONObject().put("Email:", email).put("Senha:", senha).put("nome:", nome).toString(); 
-			    out.write(myString);
-			}
+				String myString = new JSONObject().put("operacao:", "realizarCadastro").put("nome:", nome).put("email:", email).put("senha:", senha).toString(); 
+				System.out.println(myString);
+
+			    saida.println(myString);
+			
 			
 		}
 		catch(Exception ex)
@@ -66,7 +87,7 @@ public class Cliente {
 		}
 	}
 	
-	public static void RealizarLogin() {
+	public static void realizarLogin() {
 		try 
 		{
 			JSONObject json = new JSONObject();
@@ -74,17 +95,20 @@ public class Cliente {
 			
 			
 			
-			Scanner leia = new Scanner(System.in);
-			try (OutputStreamWriter out = new OutputStreamWriter(
-				clienteSocket.getOutputStream(), StandardCharsets.UTF_8)) {
+				Scanner leia = new Scanner(System.in);
+			
+				PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
 				
 				System.out.println("Digite seu email:");
 				String email = leia.nextLine();
 				System.out.println("Digite sua senha:");
 				String senha= leia.nextLine();
-				String myString = new JSONObject().put("Email:", email).put("Senha:", senha).toString(); 
-			    out.write(myString);
-			}
+				String myString = new JSONObject().put("operacao:","loginCandidato").put("email:", email).put("senha:", senha).toString(); 
+				System.out.println(myString);
+				
+				saida.println(myString);
+				
+			
 			
 		}
 		catch(Exception ex)
@@ -92,5 +116,36 @@ public class Cliente {
 			System.out.println(ex);
 				
 		}
+	}
+	public static void realizarLogout() {
+		
+	}
+	
+	public static void visualizarCandidato() {
+
+		try {
+			JSONObject json = new JSONObject();
+			json.put("type", "CONNECT");
+			
+			Scanner leia = new Scanner(System.in);
+			
+			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+			
+			System.out.println("Digite seu email:");
+			String email = leia.nextLine();
+			
+			
+			String myString = new JSONObject().put("operacao:","visualizarCandidato").put("email:", email).toString(); 
+			System.out.println(myString);
+			
+			saida.println(myString);
+			
+		}catch(Exception ex)
+		{
+			System.out.println(ex);
+				
+		}
+		
+		
 	}
 }

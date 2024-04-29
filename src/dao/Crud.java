@@ -64,12 +64,12 @@ public class Crud extends BancoDeDados{
 	}
 	
 	
-	public void Ler(int id) throws SQLException {
+	public void Ler(String email) throws SQLException {
 		try {
 			super.Conectar();
 			PreparedStatement st = null;
-			st = conn.prepareStatement ("SELECT * FROM candidato WHERE id_candidato = ?");
-			st.setInt(1,id);
+			st = conn.prepareStatement ("SELECT * FROM candidato WHERE email = ?");
+			st.setString(1,email);
 			ResultSet rs = st.executeQuery();
 			
 			

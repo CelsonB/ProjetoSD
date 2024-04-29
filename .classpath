@@ -11,10 +11,10 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Eclipse/ProjetoSD/jackson-annotations-2.16.0.jar"/>
-	<classpathentry kind="lib" path="C:/Eclipse/ProjetoSD/jackson-core-2.16.0.jar"/>
-	<classpathentry kind="lib" path="C:/Eclipse/ProjetoSD/jackson-databind-2.16.0.jar"/>
-	<classpathentry kind="lib" path="C:/Eclipse/ProjetoSD/java-json.jar"/>
-	<classpathentry kind="lib" path="C:/Eclipse/ProjetoSD/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Eclipse/ProjetoSD2/ProjetoSD/jackson-annotations-2.16.0.jar"/>
+	<classpathentry kind="lib" path="C:/Eclipse/ProjetoSD2/ProjetoSD/jackson-core-2.16.0.jar"/>
+	<classpathentry kind="lib" path="C:/Eclipse/ProjetoSD2/ProjetoSD/jackson-databind-2.16.0.jar"/>
+	<classpathentry kind="lib" path="C:/Eclipse/ProjetoSD2/ProjetoSD/java-json.jar"/>
+	<classpathentry kind="lib" path="C:/Eclipse/ProjetoSD2/ProjetoSD/json-simple-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
