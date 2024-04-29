@@ -64,7 +64,7 @@ public class Crud extends BancoDeDados{
 	}
 	
 	
-	public void Ler(String email) throws SQLException {
+	public boolean Ler(String email) throws SQLException {
 		try {
 			super.Conectar();
 			PreparedStatement st = null;
@@ -74,18 +74,22 @@ public class Crud extends BancoDeDados{
 			
 			
 			while(rs.next())
-			{
+			{	if(rs==null) {
+				return false;
+				}
 			   System.out.println(rs.getString(2));
 			   System.out.println(rs.getString(3));
 			   System.out.println(rs.getString(4));
 			}
+			
+			
 			
 		}catch(Exception ex) {
 			System.err.print(ex);
 		}finally {
 			
 		}
-	
+		return true;
 	}
 	
 	public void AtualizarSenha(int id, String novo) {

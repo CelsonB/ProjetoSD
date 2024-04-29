@@ -169,10 +169,20 @@ public class Servidor {
 	
 	
 		try{
-			Crud bd = new Crud();
-			bd.Conectar();	
 			
-			bd.Ler(email);
+			ObjectMapper mapper = new ObjectMapper();  
+			PrintStream saida  = new PrintStream (ss.getOutputStream());
+			
+			Crud bd = new Crud();
+			bd.Conectar();
+			
+			if(bd.Ler(email) == false ) {
+				String myString = new JSONObject().put("operacao:", "visualizarCandidato").put("status:","404").put("mensagem:", "Usuario não encontrado").toString(); 
+				saida.println(myString);
+			}else {
+				String myString = new JSONObject().put("operacao:", "visualizarCandidato").put("status:","404").put("nome:", "nome").put("email:", "email" ).toString(); 
+				saida.println(myString);
+			}
 		}
 		catch(Exception ex)
 		{

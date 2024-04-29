@@ -187,6 +187,27 @@ public class Cliente {
 			
 			saida.println(myString);
 			
+			
+			try {
+				InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+				BufferedReader reader = new BufferedReader(input);
+				
+				ObjectMapper mapper = new ObjectMapper(); 
+				Map<String, Object> userData = mapper.readValue(reader, new TypeReference<Map<String, Object>>() {});
+				
+				String op = userData.get("status:").toString();
+				if(op.equals("401")) {
+					System.out.println(userData.get("nome:").toString() + userData.get("senha:").toString());
+				}else if(op.equals("404")) {
+					System.out.println(userData.get("mensagem:").toString());
+				}else {
+					System.out.println("Registro realizado com sucesso");
+				}
+			}catch(Exception ex) {
+				System.out.println(ex);
+			}
+				
+				
 		}catch(Exception ex)
 		{
 			System.out.println(ex);
