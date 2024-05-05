@@ -80,7 +80,7 @@ public class Cliente {
 				String senha= leia.nextLine();
 				System.out.println("Digite seu email:");
 				String email = leia.nextLine(); 
-				String myString = new JSONObject().put("operacao:", "realizarCadastro").put("nome:", nome).put("email:", email).put("senha:", senha).toString(); 
+				String myString = new JSONObject().put("operacao", "realizarCadastro").put("nome", nome).put("email", email).put("senha", senha).toString(); 
 				System.out.println(myString);
 
 			    saida.println(myString);
@@ -101,11 +101,11 @@ public class Cliente {
 			ObjectMapper mapper = new ObjectMapper(); 
 			Map<String, Object> userData = mapper.readValue(reader, new TypeReference<Map<String, Object>>() {});
 			
-			String op = userData.get("status:").toString();
+			String op = userData.get("status").toString();
 			if(op.equals("422")) {
 				System.out.println("Já existe esse email");
 			}else if(op.equals("404")) {
-				System.out.println(userData.get("mensagem:").toString());
+				System.out.println(userData.get("mensagem").toString());
 			}else {
 				System.out.println("Registro realizado com sucesso");
 			}
@@ -131,7 +131,7 @@ public class Cliente {
 				String email = leia.nextLine();
 				System.out.println("Digite sua senha:");
 				String senha= leia.nextLine();
-				String myString = new JSONObject().put("operacao:","loginCandidato").put("email:", email).put("senha:", senha).toString(); 
+				String myString = new JSONObject().put("operacao","loginCandidato").put("email", email).put("senha", senha).toString(); 
 				System.out.println(myString);
 				
 				saida.println(myString);
@@ -144,9 +144,9 @@ public class Cliente {
 				ObjectMapper mapper = new ObjectMapper(); 
 				Map<String, Object> userData = mapper.readValue(reader, new TypeReference<Map<String, Object>>() {});
 				
-				String op = userData.get("status:").toString();
+				String op = userData.get("status").toString();
 				if(op.equals("401")) {
-					System.out.println(userData.get("mensagem:").toString());
+					System.out.println(userData.get("mensagem").toString());
 				}else if(op.equals("200")) {
 					System.out.println("login realizado com sucesso");
 				}else {
@@ -182,7 +182,7 @@ public class Cliente {
 			String email = leia.nextLine();
 			
 			
-			String myString = new JSONObject().put("operacao:","visualizarCandidato").put("email:", email).toString(); 
+			String myString = new JSONObject().put("operacao","visualizarCandidato").put("email", email).toString(); 
 			System.out.println(myString);
 			
 			saida.println(myString);
@@ -195,11 +195,11 @@ public class Cliente {
 				ObjectMapper mapper = new ObjectMapper(); 
 				Map<String, Object> userData = mapper.readValue(reader, new TypeReference<Map<String, Object>>() {});
 				
-				String op = userData.get("status:").toString();
+				String op = userData.get("status").toString();
 				if(op.equals("401")) {
-					System.out.println(userData.get("nome:").toString() + userData.get("senha:").toString());
+					System.out.println(userData.get("nome").toString() + userData.get("senha").toString());
 				}else if(op.equals("404")) {
-					System.out.println(userData.get("mensagem:").toString());
+					System.out.println(userData.get("mensagem").toString());
 				}else {
 					System.out.println("Registro realizado com sucesso");
 				}

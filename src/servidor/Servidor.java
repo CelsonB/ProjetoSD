@@ -46,13 +46,6 @@ public class Servidor {
 		
 		String op = ""; 
 
-		
-			
-	//	InputStreamReader inputReader = new InputStreamReader(ss.getInputStream());
-		//BufferedReader reader = new BufferedReader(inputReader);
-		
-		//System.out.println(reader.toString());
-	
 	
         String leitura = reader.readLine(); 
         
@@ -63,9 +56,9 @@ public class Servidor {
 		do {			
 			Map<String, Object> userData = mapper.readValue(leitura, new TypeReference<Map<String, Object>>() {}); 
 			
-			System.out.print(userData.get("operacao:").toString());
+			System.out.print(userData.get("operacao").toString());
 			
-			op = userData.get("operacao:").toString();
+			op = userData.get("operacao").toString();
 			
 			if(op.equals("loginCandidato")) {
 				SolicitarLogin(userData);
@@ -77,10 +70,10 @@ public class Servidor {
 			}
 			
 			if(op.equals("visualizarCandidato")) {
-				SolicitarVisualizacao(userData.get("email:").toString());
+				SolicitarVisualizacao(userData.get("email").toString());
 			}
 			
-		}while(op == "");
+		}while(op != "");
 		
 	
 				
@@ -98,7 +91,7 @@ public class Servidor {
 			
 			Crud bd = new Crud();
 			bd.Conectar();
-			bd.Cadastrar(userData.get("email:").toString(), userData.get("nome:").toString(), userData.get("senha:").toString());	
+			bd.Cadastrar(userData.get("email:").toString(), userData.get("nome").toString(), userData.get("senha").toString());	
 			
 			throw new SQLIntegrityConstraintViolationException();  
 			}
@@ -106,7 +99,7 @@ public class Servidor {
 			{
 				try {
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
-					String myString = new JSONObject().put("operacao:", "realizarCadastro").put("status:","422").put("mensagem:", "email ja cadastrado").toString(); 
+					String myString = new JSONObject().put("operacao", "realizarCadastro").put("status","422").put("mensagem", "email ja cadastrado").toString(); 
 					saida.println(myString);
 				}
 				catch(Exception ex) {
@@ -122,7 +115,7 @@ public class Servidor {
 
 			try {
 				PrintStream saida  = new PrintStream (ss.getOutputStream());
-				String myString = new JSONObject().put("operacao:", "realizarCadastro").put("status:","201").put("token:", "UUID").toString(); 
+				String myString = new JSONObject().put("operacao", "realizarCadastro").put("status","201").put("token", "UUID").toString(); 
 				saida.println(myString);
 			}
 			catch(Exception ex) {
@@ -134,8 +127,7 @@ public class Servidor {
 	
 	public static void SolicitarLogin(Map<String, Object> userData) throws IOException {
 		
-		//BufferedReader reader  = new BufferedReader(new InputStreamReader(ss.getInputStream()));
-		
+			
 		
 		try 
 		{	JSONObject json = new JSONObject();
@@ -150,10 +142,10 @@ public class Servidor {
 			 
 			 
 			 	if(bd.getLogin(userData.get("email:").toString(), userData.get("senha:").toString()) != 0 ) {
-			 		String myString = new JSONObject().put("operacao:", "loginCandidato").put("status:","200").put("token:", "UUID").toString(); 
+			 		String myString = new JSONObject().put("operacao", "loginCandidato").put("status","200").put("token", "UUID").toString(); 
 					saida.println(myString);
 			 	}else {
-			 		String myString = new JSONObject().put("operacao:", "loginCandidato").put("status:","401").put("mensagem:", "logins ou senha incorretos").toString(); 
+			 		String myString = new JSONObject().put("operacao", "loginCandidato").put("status","401").put("mensagem", "logins ou senha incorretos").toString(); 
 					saida.println(myString);
 			 	}
 			 
@@ -177,10 +169,10 @@ public class Servidor {
 			bd.Conectar();
 			
 			if(bd.Ler(email) == false ) {
-				String myString = new JSONObject().put("operacao:", "visualizarCandidato").put("status:","404").put("mensagem:", "Usuario não encontrado").toString(); 
+				String myString = new JSONObject().put("operacao", "visualizarCandidato").put("status","404").put("mensagem", "Usuario não encontrado").toString(); 
 				saida.println(myString);
 			}else {
-				String myString = new JSONObject().put("operacao:", "visualizarCandidato").put("status:","404").put("nome:", "nome").put("email:", "email" ).toString(); 
+				String myString = new JSONObject().put("operacao", "visualizarCandidato").put("status","404").put("nome", "nome").put("email", "email" ).toString(); 
 				saida.println(myString);
 			}
 		}
