@@ -16,7 +16,8 @@ import java.nio.charset.StandardCharsets;
 public class Cliente {
 	
 	public static Socket clienteSocket;
-
+	
+	//public static InputStreamReader input;
 	
 	public static void main (String[] args) throws UnknownHostException, IOException {
 		clienteSocket = new Socket("teste",22222);
@@ -25,14 +26,13 @@ public class Cliente {
 		
 		//OutputStreamWriter out = new OutputStreamWriter(clienteSocket.getOutputStream(), StandardCharsets.UTF_8);
 		
-		PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
-		saida.println("conexão realizada com sucesso o cliente");
+		//PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+		//saida.println("conexão realizada com sucesso o cliente");
 		
 		InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
-		BufferedReader reader = new BufferedReader(input);
-		System.out.println(reader.readLine());
 		
-		
+		//BufferedReader reader = new BufferedReader(input);
+	
 		Scanner leia = new Scanner(System.in);
 		
 		
@@ -50,10 +50,10 @@ public class Cliente {
 				cadastrarUsuario();
 			break;
 			case 2:
-				realizarLogin();
+			//	realizarLogin();
 			break;
 			case 3:
-				visualizarCandidato();
+			//	visualizarCandidato();
 			break;
 			}
 		}while(op!=0);
@@ -95,20 +95,29 @@ public class Cliente {
 		
 	
 		try {
+			
 			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
 			BufferedReader reader = new BufferedReader(input);
 			
 			ObjectMapper mapper = new ObjectMapper(); 
-			Map<String, Object> userData = mapper.readValue(reader, new TypeReference<Map<String, Object>>() {});
+			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
 			
 			String op = userData.get("status").toString();
+			
 			if(op.equals("422")) {
-				System.out.println("Já existe esse email");
+				
+				System.out.println(userData.get("mensagem"));
+				
 			}else if(op.equals("404")) {
+				
 				System.out.println(userData.get("mensagem").toString());
+				
 			}else {
+				
 				System.out.println("Registro realizado com sucesso");
+				
 			}
+			
 		}catch(Exception ex) {
 			System.out.print(ex);
 		}
@@ -142,7 +151,7 @@ public class Cliente {
 				BufferedReader reader = new BufferedReader(input);
 				
 				ObjectMapper mapper = new ObjectMapper(); 
-				Map<String, Object> userData = mapper.readValue(reader, new TypeReference<Map<String, Object>>() {});
+				Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
 				
 				String op = userData.get("status").toString();
 				if(op.equals("401")) {
@@ -164,9 +173,7 @@ public class Cliente {
 				
 		}
 	}
-	public static void realizarLogout() {
-		
-	}
+
 	
 	public static void visualizarCandidato() {
 

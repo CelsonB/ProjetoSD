@@ -35,26 +35,24 @@ public class Servidor {
 		
 		InputStreamReader input = new InputStreamReader(ss.getInputStream());
 		BufferedReader reader = new BufferedReader(input);
-		System.out.println(reader.readLine());
 		
 		PrintStream saida  = new PrintStream (ss.getOutputStream());
-		saida.println("Conexão realizada com sucesso com o servidor");
+		
 
 
 		
 		
 		
-		String op = ""; 
+		
 
-	
-        String leitura = reader.readLine(); 
+	String op = ""; 
+       
         
 		ObjectMapper mapper = new ObjectMapper();  
-		
-		System.out.println(leitura);
-		
 		do {			
-			Map<String, Object> userData = mapper.readValue(leitura, new TypeReference<Map<String, Object>>() {}); 
+			
+
+			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {}); 
 			
 			System.out.print(userData.get("operacao").toString());
 			
@@ -80,50 +78,74 @@ public class Servidor {
 	}
 	
 	public static void SolicitarCadastro(Map<String, Object> userData) {
-
+		String myString = null;
 		
 		System.out.println("Entrou em realizar cadastro 2 ");
 		System.out.println(userData.toString());
+		try {
+			
 			try 
 			{				
 			JSONObject json = new JSONObject();
 			json.put("type", "CONNECT");
 			
 			Crud bd = new Crud();
-			bd.Conectar();
-			bd.Cadastrar(userData.get("email:").toString(), userData.get("nome").toString(), userData.get("senha").toString());	
+			bd.Conectar();	
 			
-			throw new SQLIntegrityConstraintViolationException();  
+			String email = userData.get("email").toString();
+			
+				if(!email.contains("@")) 
+				{
+				throw new EmaiInvalidoException("email invalido");
+				}
+				else if(userData.get("senha").toString().length()>8) {
+				throw new SenhaInvalidaException("senha invalida");	
+				}
+				else 
+				{
+				bd.Cadastrar(userData.get("email").toString(), userData.get("nome").toString(), userData.get("senha").toString());	
+				}
 			}
 			catch(SQLIntegrityConstraintViolationException e)
 			{
-				try {
+				
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
-					String myString = new JSONObject().put("operacao", "realizarCadastro").put("status","422").put("mensagem", "email ja cadastrado").toString(); 
+					myString = new JSONObject().put("operacao", "realizarCadastro").put("status","422").put("mensagem", "email ja cadastrado").toString(); 
 					saida.println(myString);
-				}
-				catch(Exception ex) {
-					
-				}
-				
 
-			}catch(Exception ex) {
-				
 			}
-		
-			
-
-			try {
+			catch(EmaiInvalidoException ex) 
+			{
 				PrintStream saida  = new PrintStream (ss.getOutputStream());
-				String myString = new JSONObject().put("operacao", "realizarCadastro").put("status","201").put("token", "UUID").toString(); 
+				myString = new JSONObject().put("operacao", "realizarCadastro").put("status","422").put("mensagem", "Email invalido").toString(); 
 				saida.println(myString);
 			}
-			catch(Exception ex) {
+			catch(SenhaInvalidaException ex) {
+				PrintStream saida  = new PrintStream (ss.getOutputStream());
+				myString = new JSONObject().put("operacao", "realizarCadastro").put("status","422").put("mensagem", "Senha maior que 8 digitos").toString(); 
+				saida.println(myString);
+			}
+			
+				if(myString == null) {
+					
+					
+					UUID uuid = UUID.randomUUID();
+					 
+					PrintStream saida  = new PrintStream (ss.getOutputStream());
+					myString = new JSONObject().put("operacao", "realizarCadastro").put("status","201").put("token", uuid.toString()).toString(); 
+					saida.println(myString);
 				
+				}
+			
+
+		}catch(Exception ex) {
+				System.err.println(ex.getStackTrace());
 			}
 			
 		
 	}
+	
+	
 	
 	public static void SolicitarLogin(Map<String, Object> userData) throws IOException {
 		
@@ -141,7 +163,7 @@ public class Servidor {
 
 			 
 			 
-			 	if(bd.getLogin(userData.get("email:").toString(), userData.get("senha:").toString()) != 0 ) {
+			 	if(bd.getLogin(userData.get("email").toString(), userData.get("senha").toString()) != 0 ) {
 			 		String myString = new JSONObject().put("operacao", "loginCandidato").put("status","200").put("token", "UUID").toString(); 
 					saida.println(myString);
 			 	}else {
