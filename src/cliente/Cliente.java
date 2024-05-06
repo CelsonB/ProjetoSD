@@ -3,6 +3,7 @@ package cliente;
 import java.net.*;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 public class Cliente {
 	
 	public static Socket clienteSocket;
-	
+	public static UUID token = null;
 	//public static InputStreamReader input;
 	
 	public static void main (String[] args) throws UnknownHostException, IOException {
@@ -113,6 +114,7 @@ public class Cliente {
 				System.out.println(userData.get("mensagem").toString());
 				
 			}else {
+				token = UUID.fromString(userData.get("token").toString()); ;
 				
 				System.out.println("Registro realizado com sucesso");
 				
@@ -157,8 +159,10 @@ public class Cliente {
 				if(op.equals("401")) {
 					System.out.println(userData.get("mensagem").toString());
 				}else if(op.equals("200")) {
+					token = UUID.fromString(userData.get("token").toString());
 					System.out.println("login realizado com sucesso");
 				}else {
+					token = UUID.fromString(userData.get("token").toString());
 					System.out.println("Registro realizado com sucesso");
 				}
 				
@@ -294,5 +298,7 @@ public class Cliente {
 		
 	}
 	
-	
+	public static void realizarLogout() {
+		
+	}
 }
