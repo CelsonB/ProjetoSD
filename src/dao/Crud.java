@@ -92,13 +92,14 @@ public class Crud extends BancoDeDados{
 		return true;
 	}
 	
-	public void AtualizarSenha(int id, String novo) {
+	public void atualizarCadastro(String email, String nome, String senha) {
 		try {
 			super.Conectar();
 			PreparedStatement st = null;
-			st = conn.prepareStatement ("UPDATE Candidato SET senha = ? WHERE id_candidato = ?");
-			st.setString(1, novo);
-			st.setInt(2, id);
+			st = conn.prepareStatement ("UPDATE Candidato SET senha = ?, nome = ? WHERE email = ?");
+			st.setString(1, senha);
+			st.setString(2, nome);
+			st.setString(3, email);
 			st.executeQuery();
 			
 			
@@ -110,6 +111,8 @@ public class Crud extends BancoDeDados{
 			
 		}
 	}
+	
+	
 	public void Apagar(int id) throws SQLException, IOException {
 		super.Conectar();
 		PreparedStatement st = null;
@@ -117,5 +120,5 @@ public class Crud extends BancoDeDados{
 		st.setInt(1, id);
 		st.executeQuery();
 	}
-	
+
 }

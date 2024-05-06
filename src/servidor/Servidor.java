@@ -146,6 +146,54 @@ public class Servidor {
 		
 	}
 	
+	public static void atualizarCadastro(Map<String, Object> userData) {
+	String myString = null;
+		
+		System.out.println("Entrou em realizar cadastro 2 ");
+		System.out.println(userData.toString());
+		try {
+			
+			try 
+			{				
+			JSONObject json = new JSONObject();
+			json.put("type", "CONNECT");
+			
+			Crud bd = new Crud();
+			bd.Conectar();	
+			
+			String email = userData.get("email").toString();
+			
+				if(userData.get("senha").toString().length()>8) 
+				{
+				throw new SenhaInvalidaException("senha invalida");	
+				}
+				else 
+				{
+				bd.atualizarCadastro(userData.get("email").toString(), userData.get("nome").toString(), userData.get("senha").toString());	
+				}
+			}
+			catch(SenhaInvalidaException ex)
+			{
+					PrintStream saida  = new PrintStream (ss.getOutputStream());
+					myString = new JSONObject().put("operacao", "atualizarCadastro").put("status","422").put("mensagem", "Senha maior que 8 digitos").toString(); 
+					saida.println(myString);
+			}
+			
+				if(myString == null) {
+					
+				
+					 
+					PrintStream saida  = new PrintStream (ss.getOutputStream());
+					myString = new JSONObject().put("operacao", "atualizarCadastro").put("status","201").put("mensagem","Atualização realizada com sucesso").toString(); 
+					saida.println(myString);
+				
+				}
+			
+
+		}catch(Exception ex) {
+				System.err.println(ex.getStackTrace());
+			}
+	}
 	
 	
 	public static void SolicitarLogin(Map<String, Object> userData) throws IOException {

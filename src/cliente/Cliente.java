@@ -223,4 +223,76 @@ public class Cliente {
 		
 		
 	}
+	
+	public static void atualizarCadastro() {
+		
+		try 
+		{
+			JSONObject json = new JSONObject();
+			json.put("type", "CONNECT");
+			Scanner leia = new Scanner(System.in);
+			
+			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+			
+			
+				System.out.println("Digite seu nome:");
+				String nome = leia.nextLine();
+				System.out.println("Digite sua senha:");
+				String senha= leia.nextLine();
+				System.out.println("Digite seu email:");
+				String email = leia.nextLine(); 
+				String myString = new JSONObject().put("operacao", "atualizarCandidato").put("nome", nome).put("email", email).put("senha", senha).toString(); 
+				System.out.println(myString);
+
+			    saida.println(myString);
+			
+			
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex);
+				
+		}
+		
+		
+		
+		try {
+			
+			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+			BufferedReader reader = new BufferedReader(input);
+			
+			ObjectMapper mapper = new ObjectMapper(); 
+			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
+			
+			String op = userData.get("status").toString();
+			
+			if(op.equals("422")) {
+				
+				System.out.println(userData.get("mensagem").toString());
+				
+			}else if(op.equals("404")) {
+				
+				System.out.println(userData.get("mensagem").toString());
+				
+			}else {
+				
+				System.out.println(userData.get("mensagem").toString());
+				
+			}
+			
+		}catch(Exception ex) {
+			System.out.print(ex);
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
 }
