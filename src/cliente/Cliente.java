@@ -80,7 +80,7 @@ public class Cliente {
 				String senha= leia.nextLine();
 				System.out.println("Digite seu email:");
 				String email = leia.nextLine(); 
-				String myString = new JSONObject().put("operacao", "realizarCadastro").put("nome", nome).put("email", email).put("senha", senha).toString(); 
+				String myString = new JSONObject().put("operacao", "cadastrarCandidato").put("nome", nome).put("email", email).put("senha", senha).toString(); 
 				System.out.println(myString);
 
 			    saida.println(myString);

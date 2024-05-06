@@ -62,7 +62,7 @@ public class Servidor {
 				SolicitarLogin(userData);
 			}
 			
-			if(op.equals("realizarCadastro")) {	
+			if(op.equals("cadastrarCandidato")) {	
 				System.out.println("Entrou em realizar cadastro 1 ");
 				SolicitarCadastro(userData);
 			}
@@ -110,20 +110,21 @@ public class Servidor {
 			{
 				
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
-					myString = new JSONObject().put("operacao", "realizarCadastro").put("status","422").put("mensagem", "email ja cadastrado").toString(); 
+					myString = new JSONObject().put("operacao", "cadastrarCandidato").put("status","422").put("mensagem", "email ja cadastrado").toString(); 
 					saida.println(myString);
 
 			}
 			catch(EmaiInvalidoException ex) 
 			{
-				PrintStream saida  = new PrintStream (ss.getOutputStream());
-				myString = new JSONObject().put("operacao", "realizarCadastro").put("status","422").put("mensagem", "Email invalido").toString(); 
-				saida.println(myString);
+					PrintStream saida  = new PrintStream (ss.getOutputStream());
+					myString = new JSONObject().put("operacao", "cadastrarCandidato").put("status","422").put("mensagem", "Email invalido").toString(); 
+					saida.println(myString);
 			}
-			catch(SenhaInvalidaException ex) {
-				PrintStream saida  = new PrintStream (ss.getOutputStream());
-				myString = new JSONObject().put("operacao", "realizarCadastro").put("status","422").put("mensagem", "Senha maior que 8 digitos").toString(); 
-				saida.println(myString);
+			catch(SenhaInvalidaException ex)
+			{
+					PrintStream saida  = new PrintStream (ss.getOutputStream());
+					myString = new JSONObject().put("operacao", "cadastrarCandidato").put("status","422").put("mensagem", "Senha maior que 8 digitos").toString(); 
+					saida.println(myString);
 			}
 			
 				if(myString == null) {
@@ -132,7 +133,7 @@ public class Servidor {
 					UUID uuid = UUID.randomUUID();
 					 
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
-					myString = new JSONObject().put("operacao", "realizarCadastro").put("status","201").put("token", uuid.toString()).toString(); 
+					myString = new JSONObject().put("operacao", "cadastrarCandidato").put("status","201").put("token", uuid.toString()).toString(); 
 					saida.println(myString);
 				
 				}
