@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference; 
 
 public class Servidor {
-	
+	private static UUID token = null;
 	public static ServerSocket servidorSocket;
 	public static Socket ss;
 	public static void main(String[] args) throws IOException{
@@ -130,10 +130,10 @@ public class Servidor {
 				if(myString == null) {
 					
 					
-					UUID uuid = UUID.randomUUID();
+					token = UUID.randomUUID();
 					 
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
-					myString = new JSONObject().put("operacao", "cadastrarCandidato").put("status","201").put("token", uuid.toString()).toString(); 
+					myString = new JSONObject().put("operacao", "cadastrarCandidato").put("status","201").put("token", token.toString()).toString(); 
 					saida.println(myString);
 				
 				}
@@ -202,7 +202,7 @@ public class Servidor {
 		
 		try 
 		{	JSONObject json = new JSONObject();
-		json.put("type", "CONNECT");
+			json.put("type", "CONNECT");
 			
 			Crud bd = new Crud();
 			bd.Conectar();		
@@ -210,16 +210,23 @@ public class Servidor {
 			PrintStream saida  = new PrintStream (ss.getOutputStream());
 		
 
-			 
-			 
-			 	if(bd.getLogin(userData.get("email").toString(), userData.get("senha").toString()) != 0 ) {
-			 		UUID uuid = UUID.randomUUID();
-			 		String myString = new JSONObject().put("operacao", "loginCandidato").put("status","200").put("token", uuid.toString()).toString(); 
+			 if(token == null) {
+				 
+				 if(bd.getLogin(userData.get("email").toString(), userData.get("senha").toString()) != 0 ) {
+				 		token = UUID.randomUUID();
+				 		String myString = new JSONObject().put("operacao", "loginCandidato").put("status","200").put("token", token.toString()).toString(); 
+						saida.println(myString);
+				 	}else {
+				 		String myString = new JSONObject().put("operacao", "loginCandidato").put("status","401").put("mensagem", "logins ou senha incorretos").toString(); 
+						saida.println(myString);
+				 	} 
+				 
+			 }else {
+					String myString = new JSONObject().put("operacao", "loginCandidato").put("status","401").put("mensagem", "Usuario já está logado").toString(); 
 					saida.println(myString);
-			 	}else {
-			 		String myString = new JSONObject().put("operacao", "loginCandidato").put("status","401").put("mensagem", "logins ou senha incorretos").toString(); 
-					saida.println(myString);
-			 	}
+			 }
+			 
+			 	
 			 
 			}
 			catch(Exception ex)
@@ -256,5 +263,28 @@ public class Servidor {
 		
 	}
 
+
+
+	public void logout(Map<String, Object> info) {
+		try {
+			
+			JSONObject json = new JSONObject();
+			json.put("type", "CONNECT");
+			
+			ObjectMapper mapper = new ObjectMapper();  
+			PrintStream saida  = new PrintStream (ss.getOutputStream());
+			
+			if(token != null) {
+				if(info.get("token").toString().equals(token.toString())) {
+					String myString = new JSONObject().put("operacao", "logout").put("status","204").toString(); 
+					token = null;
+					saida.println(myString);
+				}
+				
+			}
+			
+		}catch(Exception ex) {
+			
+		}
+	}
 }
-	
