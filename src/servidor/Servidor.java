@@ -163,7 +163,7 @@ public class Servidor {
 			
 			String email = userData.get("email").toString();
 			
-				if(userData.get("senha").toString().length()>8) 
+				if(userData.get("senha").toString().length()>8 ||userData.get("senha").toString().length()<3) 
 				{
 				throw new SenhaInvalidaException("senha invalida");	
 				}
@@ -175,7 +175,7 @@ public class Servidor {
 			catch(SenhaInvalidaException ex)
 			{
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
-					myString = new JSONObject().put("operacao", "atualizarCadastro").put("status","422").put("mensagem", "Senha maior que 8 digitos").toString(); 
+					myString = new JSONObject().put("operacao", "atualizarCadastro").put("status","422").put("mensagem", " A senha menor que 8 digitos e maior que 3 digitos").toString(); 
 					saida.println(myString);
 			}
 			
