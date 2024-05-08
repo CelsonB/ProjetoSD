@@ -3,6 +3,7 @@ package servidor;
 
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.net.ServerSocket;
@@ -60,15 +61,23 @@ public class Servidor {
 			
 			if(op.equals("loginCandidato")) {
 				SolicitarLogin(userData);
-			}
+			}else
 			
 			if(op.equals("cadastrarCandidato")) {	
 				System.out.println("Entrou em realizar cadastro 1 ");
 				SolicitarCadastro(userData);
-			}
+			}else
 			
 			if(op.equals("visualizarCandidato")) {
 				SolicitarVisualizacao(userData.get("email").toString());
+			}else
+				
+			if(op.equals("logout")){
+				logout(userData);
+			}else
+				
+			if(op.equals("atualizarCandidato")) {
+				atualizarCadastro(userData);
 			}
 			
 		}while(op != "");
@@ -246,12 +255,22 @@ public class Servidor {
 			
 			Crud bd = new Crud();
 			bd.Conectar();
-			
-			if(bd.Ler(email) == false ) {
+			ResultSet rs= bd.Ler(email);
+			if( rs == null ) {
 				String myString = new JSONObject().put("operacao", "visualizarCandidato").put("status","404").put("mensagem", "Usuario não encontrado").toString(); 
 				saida.println(myString);
 			}else {
-				String myString = new JSONObject().put("operacao", "visualizarCandidato").put("status","404").put("nome", "nome").put("email", "email" ).toString(); 
+				rs.next();
+				
+				//System.out.println(" "+  +" "+  rs.getString(2).toString());
+				
+				
+				
+				String myString = new JSONObject().put("operacao", "visualizarCandidato")
+						.put("status","401")
+						.put("nome", rs.getString(1).toString())
+						.put("senha",rs.getString(3).toString())
+						.toString(); 
 				saida.println(myString);
 			}
 		}
@@ -265,7 +284,7 @@ public class Servidor {
 
 
 
-	public void logout(Map<String, Object> info) {
+	public static void logout(Map<String, Object> info) {
 		try {
 			
 			JSONObject json = new JSONObject();
@@ -276,9 +295,11 @@ public class Servidor {
 			
 			if(token != null) {
 				if(info.get("token").toString().equals(token.toString())) {
-					String myString = new JSONObject().put("operacao", "logout").put("status","204").toString(); 
+					String myString = new JSONObject().put("operacao", "logout").put("status","422").toString(); 
 					token = null;
 					saida.println(myString);
+				}else {
+					
 				}
 				
 			}

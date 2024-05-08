@@ -36,10 +36,10 @@ public class Crud extends BancoDeDados{
 			
 		
 	}
-	public int getLogin(String email, String senha)  throws SQLException {
+	public int getLogin(String email, String senha)  throws SQLException, IOException {
 		
 		
-		try {
+
 			super.Conectar();
 			PreparedStatement st = null;
 			st = conn.prepareStatement ("SELECT * FROM candidato WHERE Email = ? and Senha = ? ");
@@ -47,47 +47,36 @@ public class Crud extends BancoDeDados{
 			st.setString(2,senha);
 			ResultSet rs = st.executeQuery();
 			rs.next();
+			
 			if(st!=null) {
-				return rs.getInt(1);
+				return 1;
 			}else {
 				return 0;
 			}
-			
-		}catch(Exception ex) {
-			System.err.print(ex);
-		}finally {
-			
-		}
-		return 0;
 	}
 	
 	
-	public boolean Ler(String email) throws SQLException {
+	public ResultSet Ler(String email) throws SQLException {
+		ResultSet rs = null;
 		try {
 			super.Conectar();
 			PreparedStatement st = null;
 			st = conn.prepareStatement ("SELECT * FROM candidato WHERE email = ?");
 			st.setString(1,email);
-			ResultSet rs = st.executeQuery();
+			
+			rs = st.executeQuery();
+			return rs;
 			
 			
-			while(rs.next())
-			{	if(rs==null) {
-				return false;
-				}
-			   System.out.println(rs.getString(2));
-			   System.out.println(rs.getString(3));
-			   System.out.println(rs.getString(4));
-			}
 			
 			
 			
 		}catch(Exception ex) {
 			System.err.print(ex);
 		}finally {
-			
+			return rs; 
 		}
-		return true;
+		
 	}
 	
 	public void atualizarCadastro(String email, String nome, String senha) {

@@ -21,23 +21,27 @@ public class Cliente {
 	//public static InputStreamReader input;
 	
 	public static void main (String[] args) throws UnknownHostException, IOException {
-		clienteSocket = new Socket("teste",22222);
+		Scanner leia = new Scanner(System.in);
+		
+		System.out.println("Digite o servidor");
+		
+		String ip = "localhost";
+		//ip = leia.nextLine();
+		
+		clienteSocket = new Socket(ip,22222);
 		
 		int op=0;
 		
-		//OutputStreamWriter out = new OutputStreamWriter(clienteSocket.getOutputStream(), StandardCharsets.UTF_8);
-		
-		//PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
-		//saida.println("conexão realizada com sucesso o cliente");
+	
 		
 		InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
 		
-		//BufferedReader reader = new BufferedReader(input);
+		
 	
-		Scanner leia = new Scanner(System.in);
 		
 		
-		//OutputStreamWriter outStream = new OutputStreamWriter(clienteSocket.getOutputStream(), StandardCharsets.UTF_8);
+		
+		
 		
 		
 		
@@ -47,7 +51,7 @@ public class Cliente {
 					+ "2-Realizar Login\n"
 					+ "3-Visualizar Candidato\n"
 					+ "4-Atualizar Cadastro\n"
-					+ "5-Realizar cadastro");
+					+ "5-Realizar logout");
 			op = leia.nextInt();
 			
 			switch(op) {
@@ -217,11 +221,11 @@ public class Cliente {
 				BufferedReader reader = new BufferedReader(input);
 				
 				ObjectMapper mapper = new ObjectMapper(); 
-				Map<String, Object> userData = mapper.readValue(reader, new TypeReference<Map<String, Object>>() {});
+				Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
 				
 				String op = userData.get("status").toString();
 				if(op.equals("401")) {
-					System.out.println(userData.get("nome").toString() + userData.get("senha").toString());
+					System.out.println("nome: " + userData.get("nome").toString() +"\nsenha: " + userData.get("senha").toString());
 				}else if(op.equals("404")) {
 					System.out.println(userData.get("mensagem").toString());
 				}else {
@@ -322,6 +326,35 @@ public class Cliente {
 			
 			if(token != null) {
 				String myString = new JSONObject().put("operacao", "logout").put("token", token.toString()).toString(); 
+				
+				
+				
+				
+				try {
+					InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+					BufferedReader reader = new BufferedReader(input);
+					
+					ObjectMapper mapper = new ObjectMapper(); 
+					Map<String, Object> Data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
+					
+					String op = Data.get("status").toString();
+					if(op.equals("422")) {
+						token = null;
+						System.out.println(Data.get("mensagem").toString());
+						
+					}
+				}catch(Exception ex) {
+					
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
 			}else {
 				System.out.println("Você não está logado");
 			}
@@ -331,22 +364,7 @@ public class Cliente {
 			
 		}
 		
-		try {
-			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
-			BufferedReader reader = new BufferedReader(input);
-			
-			ObjectMapper mapper = new ObjectMapper(); 
-			Map<String, Object> Data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
-			
-			String op = Data.get("status").toString();
-			if(op.equals("422")) {
-				token = null;
-				System.out.println(Data.get("mensagem").toString());
-				
-			}
-		}catch(Exception ex) {
-			
-		}
+		
 		
 	}
 }
