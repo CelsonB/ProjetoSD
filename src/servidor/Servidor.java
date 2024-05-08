@@ -117,7 +117,7 @@ public class Servidor {
 			catch(EmaiInvalidoException ex) 
 			{
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
-					myString = new JSONObject().put("operacao", "cadastrarCandidato").put("status","422").put("mensagem", "Email invalido").toString(); 
+					myString = new JSONObject().put("operacao", "cadastrarCandidato").put("status","422").put("mensagem", "Email ja cadastrado").toString(); 
 					saida.println(myString);
 			}
 			catch(SenhaInvalidaException ex)

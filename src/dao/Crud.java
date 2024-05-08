@@ -18,12 +18,12 @@ public class Crud extends BancoDeDados{
 		}
 	
 	
-	public void Cadastrar(String email, String nome, String senha) throws SQLException {
+	public void Cadastrar(String email, String nome, String senha) throws SQLException, IOException {
 		
 		PreparedStatement st = null;
 		
 		
-		try {
+	
 			super.Conectar();
 			st = conn.prepareStatement ("insert into candidato (nome, email, senha) values (?,?,?)");
 			st.setString(1,nome);
@@ -32,13 +32,11 @@ public class Crud extends BancoDeDados{
 			st.executeUpdate();
 			
 		
-		}catch(Exception ex) {
-			System.err.print(ex);
-		}finally{
+		
 			
-		}
+		
 	}
-	public int getLogin(String email, String senha) {
+	public int getLogin(String email, String senha)  throws SQLException {
 		
 		
 		try {
