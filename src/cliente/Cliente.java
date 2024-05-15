@@ -173,14 +173,19 @@ public class Cliente {
 				Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
 				
 				String op = userData.get("status").toString();
-				if(op.equals("401")) {
+				if(op.equals("401")) 
+				{
 					System.out.println(userData.get("mensagem").toString());
-				}else if(op.equals("200")) {
+				}
+				else if(op.equals("200")) 
+				{
 					token = UUID.fromString(userData.get("token").toString());
 					System.out.println("login realizado com sucesso");
-				}else {
+				}
+				else 
+				{
 					token = UUID.fromString(userData.get("token").toString());
-					System.out.println("Registro realizado com sucesso");
+					System.out.println("Login realizado com sucesso");
 				}
 				
 			}catch(Exception ex) {
@@ -224,11 +229,16 @@ public class Cliente {
 				Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
 				
 				String op = userData.get("status").toString();
-				if(op.equals("401")) {
+				if(op.equals("201")) 
+				{
 					System.out.println("nome: " + userData.get("nome").toString() +"\nsenha: " + userData.get("senha").toString());
-				}else if(op.equals("404")) {
+				}
+				else if(op.equals("404")) 
+				{
 					System.out.println(userData.get("mensagem").toString());
-				}else {
+				}
+				else 
+				{
 					System.out.println("Registro realizado com sucesso");
 				}
 			}catch(Exception ex) {
@@ -287,9 +297,9 @@ public class Cliente {
 			
 			String op = userData.get("status").toString();
 			
-			if(op.equals("422")) {
+			if(op.equals("201")) {
 				
-				System.out.println(userData.get("mensagem").toString());
+				System.out.println("Atualização realizada com sucesso");
 				
 			}else if(op.equals("404")) {
 				
@@ -342,6 +352,11 @@ public class Cliente {
 						token = null;
 						System.out.println(Data.get("mensagem").toString());
 						
+					}else if(op.equals("204")){
+						
+					}else {
+						token = null;
+						System.out.print("logout realizado com sucesso");
 					}
 				}catch(Exception ex) {
 					

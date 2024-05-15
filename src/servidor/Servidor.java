@@ -178,13 +178,21 @@ public class Servidor {
 				}
 				else 
 				{
-				bd.atualizarCadastro(userData.get("email").toString(), userData.get("nome").toString(), userData.get("senha").toString());	
+				boolean con = bd.atualizarCadastro(userData.get("email").toString(), userData.get("nome").toString(), userData.get("senha").toString());	
+				
+				if(con==false) {
+					PrintStream saida  = new PrintStream (ss.getOutputStream());
+					myString = new JSONObject().put("operacao", "atualizarCadastro").put("status","404").put("mensagem", "Usuario não encontrado").toString(); 
+					saida.println(myString);
+				}else {
+					//if sem else
+				}
 				}
 			}
 			catch(SenhaInvalidaException ex)
 			{
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
-					myString = new JSONObject().put("operacao", "atualizarCadastro").put("status","422").put("mensagem", " A senha menor que 8 digitos e maior que 3 digitos").toString(); 
+					myString = new JSONObject().put("operacao", "atualizarCadastro").put("status","404").put("mensagem", " A senha menor que 8 digitos e maior que 3 digitos").toString(); 
 					saida.println(myString);
 			}
 			
@@ -193,7 +201,7 @@ public class Servidor {
 				
 					 
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
-					myString = new JSONObject().put("operacao", "atualizarCadastro").put("status","201").put("mensagem","Atualização realizada com sucesso").toString(); 
+					myString = new JSONObject().put("operacao", "atualizarCadastro").put("status","201").toString(); 
 					saida.println(myString);
 				
 				}
@@ -267,7 +275,7 @@ public class Servidor {
 				
 				
 				String myString = new JSONObject().put("operacao", "visualizarCandidato")
-						.put("status","401")
+						.put("status","201")
 						.put("nome", rs.getString(1).toString())
 						.put("senha",rs.getString(3).toString())
 						.toString(); 
@@ -294,13 +302,11 @@ public class Servidor {
 			PrintStream saida  = new PrintStream (ss.getOutputStream());
 			
 			if(token != null) {
-				if(info.get("token").toString().equals(token.toString())) {
-					String myString = new JSONObject().put("operacao", "logout").put("status","422").toString(); 
+				
+					String myString = new JSONObject().put("operacao", "logout").put("status","204").toString(); 
 					token = null;
 					saida.println(myString);
-				}else {
-					
-				}
+				
 				
 			}
 			

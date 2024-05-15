@@ -79,7 +79,7 @@ public class Crud extends BancoDeDados{
 		
 	}
 	
-	public void atualizarCadastro(String email, String nome, String senha) {
+	public boolean atualizarCadastro(String email, String nome, String senha) {
 		try {
 			super.Conectar();
 			PreparedStatement st = null;
@@ -87,7 +87,12 @@ public class Crud extends BancoDeDados{
 			st.setString(1, senha);
 			st.setString(2, nome);
 			st.setString(3, email);
-			st.executeQuery();
+			if(st.execute())
+			{
+			return true; 	
+			}else {
+			return false; 
+			}
 			
 			
 			
@@ -95,7 +100,7 @@ public class Crud extends BancoDeDados{
 		}catch(Exception ex) {
 			System.err.print(ex);
 		}finally {
-			
+			return false;
 		}
 	}
 	
