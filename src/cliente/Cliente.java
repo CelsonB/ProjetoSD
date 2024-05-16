@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Cliente {
 	
-	public static Socket clienteSocket;
+	public static Socket clienteSocket = null;
 	public static UUID token = null;
 	//public static InputStreamReader input;
 	
@@ -25,11 +25,16 @@ public class Cliente {
 		
 		System.out.println("Digite o servidor");
 		
+	
+		
 		String ip = "localhost";
-		//ip = leia.nextLine();
+		do {
 		
-		clienteSocket = new Socket(ip,22222);
-		
+			ip = leia.nextLine();
+			
+			clienteSocket = new Socket(ip,22222);
+			
+		}while(clienteSocket == null);
 		int op=0;
 		
 	
@@ -51,7 +56,8 @@ public class Cliente {
 					+ "2-Realizar Login\n"
 					+ "3-Visualizar Candidato\n"
 					+ "4-Atualizar Cadastro\n"
-					+ "5-Realizar logout");
+					+ "5-Deletar cadastro\n"
+					+ "6-Realizar logout");
 			op = leia.nextInt();
 			
 			switch(op) {
@@ -71,6 +77,9 @@ public class Cliente {
 				atualizarCadastro();
 				break;
 			case 5: 
+				deletarCadastro();
+				break;
+			case 6: 
 				realizarLogout();
 				break;
 			}
@@ -184,8 +193,8 @@ public class Cliente {
 				}
 				else 
 				{
-					token = UUID.fromString(userData.get("token").toString());
-					System.out.println("Login realizado com sucesso");
+					///token = UUID.fromString(userData.get("token").toString());
+					//System.out.println("Login realizado com sucesso");
 				}
 				
 			}catch(Exception ex) {
@@ -325,6 +334,58 @@ public class Cliente {
 		
 	}
 	
+	public static void deletarCadastro() {
+		
+		try 
+		{
+			JSONObject json = new JSONObject();
+			json.put("type", "CONNECT");
+			Scanner leia = new Scanner(System.in);
+			
+			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+			
+				System.out.println("Digite seu email:");
+				String email = leia.nextLine(); 
+				String myString = new JSONObject().put("operacao", "apagarCandidato").put("email", email).toString(); 
+				System.out.println(myString);
+
+			    saida.println(myString);
+			
+			
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex);
+				
+		}
+		
+		
+		
+		try {
+			
+			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+			BufferedReader reader = new BufferedReader(input);
+			
+			ObjectMapper mapper = new ObjectMapper(); 
+			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
+			
+			String op = userData.get("status").toString();
+			
+			if(op.equals("201")) {
+				
+				System.out.println("Apagar candidado realizado com sucesso");
+				
+			}else if(op.equals("404")) {
+				
+				System.out.println(userData.get("mensagem").toString());
+				
+			}
+			
+		}catch(Exception ex) {
+			System.out.print(ex);
+		}
+	}
+	
 	public static void realizarLogout() {
 		
 		try {
@@ -336,7 +397,7 @@ public class Cliente {
 			
 			if(token != null) {
 				String myString = new JSONObject().put("operacao", "logout").put("token", token.toString()).toString(); 
-				
+				saida.println(myString);
 				
 				
 				
@@ -353,7 +414,8 @@ public class Cliente {
 						System.out.println(Data.get("mensagem").toString());
 						
 					}else if(op.equals("204")){
-						
+						token = null;
+						System.out.println(Data.get("mensagem").toString());
 					}else {
 						token = null;
 						System.out.print("logout realizado com sucesso");
@@ -382,4 +444,6 @@ public class Cliente {
 		
 		
 	}
+
+
 }

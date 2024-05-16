@@ -36,22 +36,22 @@ public class Crud extends BancoDeDados{
 			
 		
 	}
-	public int getLogin(String email, String senha)  throws SQLException, IOException {
+	public boolean getLogin(String email, String senha)  throws SQLException, IOException {
 		
 		
 
 			super.Conectar();
+			
 			PreparedStatement st = null;
-			st = conn.prepareStatement ("SELECT * FROM candidato WHERE Email = ? and Senha = ? ");
+			st = conn.prepareStatement ("SELECT * FROM candidato WHERE email = ? and Senha = ? ");
 			st.setString(1,email);
 			st.setString(2,senha);
 			ResultSet rs = st.executeQuery();
-			rs.next();
 			
-			if(st!=null) {
-				return 1;
+			if(rs.next()) {
+				return true;
 			}else {
-				return 0;
+				return false;
 			}
 	}
 	
@@ -80,19 +80,17 @@ public class Crud extends BancoDeDados{
 	}
 	
 	public boolean atualizarCadastro(String email, String nome, String senha) {
+		int op=0;
 		try {
 			super.Conectar();
 			PreparedStatement st = null;
-			st = conn.prepareStatement ("UPDATE Candidato SET senha = ?, nome = ? WHERE email = ?");
+			st = conn.prepareStatement ("UPDATE candidato SET senha = ?, nome = ? WHERE email = ?");
 			st.setString(1, senha);
 			st.setString(2, nome);
 			st.setString(3, email);
-			if(st.execute())
-			{
-			return true; 	
-			}else {
-			return false; 
-			}
+			op  = st.executeUpdate();
+			
+			
 			
 			
 			
@@ -100,17 +98,32 @@ public class Crud extends BancoDeDados{
 		}catch(Exception ex) {
 			System.err.print(ex);
 		}finally {
-			return false;
+		
+			if(op == 0 ) {
+				return false;
+			}else {
+				return true;
+			}
+			
 		}
 	}
 	
 	
-	public void Apagar(int id) throws SQLException, IOException {
+	
+	public boolean apagarCandidato(String email) throws SQLException, IOException {
 		super.Conectar();
+		System.out.println("2" + email);
 		PreparedStatement st = null;
-		st = conn.prepareStatement ("DELETE FROM candidatos WHERE id_candidato = ?");
-		st.setInt(1, id);
-		st.executeQuery();
+		st = conn.prepareStatement ("DELETE FROM candidato WHERE email = ?");
+		st.setString(1, email);
+		int op  = st.executeUpdate();
+		
+		if(op == 0 ) {
+			return false;
+		}else {
+			return true;
+		}
+		
 	}
 
 }
