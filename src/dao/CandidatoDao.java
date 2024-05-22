@@ -3,11 +3,11 @@ import java.sql.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class Crud extends BancoDeDados{
+public class CandidatoDao extends BancoDeDados{
 		BancoDeDados bd = null;
 		public static Connection conn = null;
 		
-		public Crud() {
+		public CandidatoDao() {
 			try{
 				super.Conectar();
 				conn = super.conn;

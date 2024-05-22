@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import entities.Empresa;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -28,20 +30,21 @@ public class Cliente {
 	
 		
 		String ip = "localhost";
-		do {
+//		do {
+//		
+//			ip = leia.nextLine();
+//			
+		clienteSocket = new Socket(ip,22222);
+//			
+//		}while(clienteSocket == null);
 		
-			ip = leia.nextLine();
-			
-			clienteSocket = new Socket(ip,22222);
-			
-		}while(clienteSocket == null);
 		int op=0;
 		
 	
 		
 		InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
 		
-		
+		cadastrarEmpresa();
 	
 		
 		
@@ -49,47 +52,130 @@ public class Cliente {
 		
 		
 		
-		
-		do {
-		
-			System.out.println("1-Cadastrar usuario\n"
-					+ "2-Realizar Login\n"
-					+ "3-Visualizar Candidato\n"
-					+ "4-Atualizar Cadastro\n"
-					+ "5-Deletar cadastro\n"
-					+ "6-Realizar logout");
-			op = leia.nextInt();
-			
-			switch(op) {
-			case 0:
-				
-				break;
-			case 1: 
-				cadastrarUsuario();
-			break;
-			case 2:
-				realizarLogin();
-			break;
-			case 3:
-				visualizarCandidato();
-			break;
-			case 4:
-				atualizarCadastro();
-				break;
-			case 5: 
-				deletarCadastro();
-				break;
-			case 6: 
-				realizarLogout();
-				break;
-			}
-		}while(op!=0);
+//		
+//		do {
+//		
+//			System.out.println("1-Cadastrar usuario\n"
+//					+ "2-Realizar Login\n"
+//					+ "3-Visualizar Candidato\n"
+//					+ "4-Atualizar Cadastro\n"
+//					+ "5-Deletar cadastro\n"
+//					+ "6-Realizar logout");
+//			op = leia.nextInt();
+//			
+//			switch(op) {
+//			case 0:
+//				
+//				break;
+//			case 1: 
+//				cadastrarUsuario();
+//			break;
+//			case 2:
+//				realizarLogin();
+//			break;
+//			case 3:
+//				visualizarCandidato();
+//			break;
+//			case 4:
+//				atualizarCadastro();
+//				break;
+//			case 5: 
+//				deletarCadastro();
+//				break;
+//			case 6: 
+//				realizarLogout();
+//				break;
+//			}
+//		}while(op!=0);
 		
 		
 		
 			
 	}
 	
+	public static void cadastrarEmpresa() {
+		try 
+		{
+			JSONObject json = new JSONObject();
+			json.put("type", "CONNECT");
+			Scanner leia = new Scanner(System.in);
+			
+			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+			Empresa emp1 = new Empresa();
+			
+				System.out.println("Digite seu nome:");
+				emp1.setNome(leia.nextLine()); 
+				System.out.println("Digite sua senha:");
+				emp1.setSenha(leia.nextLine());
+				System.out.println("Digite seu email:");
+				emp1.setEmail(leia.nextLine());
+				
+				System.out.println("Digite sua razao social:");
+				emp1.setRazaoSocial(leia.nextLine());
+				
+				System.out.println("Digite seu cnpj:");
+				String cnpj = leia.nextLine();
+				
+				System.out.println("Digite uma breve descrição da empresa:");
+				emp1.setDescricao(leia.nextLine());
+				
+				System.out.println("Digite o ramo que sua empresa trabalha:");
+				emp1.setRamo(leia.nextLine());
+				
+				//{"operacao": "cadastrarEmpresa", "razaoSocial":"xxxxxxx", "email":"xx@xxx.xxx", "cnpj": "12345678000100", "senha":"xxx","descricao":"xxxxxx","ramo":"xxxxxx"}
+				String myString = new JSONObject()
+						.put("operacao", "cadastrarEmpresa")
+						.put("nome", emp1.getNome())
+						.put("email", emp1.getEmail())
+						.put("senha", emp1.getSenha())
+						.put("cnpj", cnpj)
+						.put("razaoSocial", emp1.getRazaoSocial())
+						.put("descricao", emp1.getDescricao())
+						.put("ramo", emp1.getRamo())
+						.toString(); 
+				
+				System.out.println(myString);
+
+			    saida.println(myString);
+			
+			
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex);
+				
+		}
+		
+	
+		try {
+			
+			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+			BufferedReader reader = new BufferedReader(input);
+			
+			ObjectMapper mapper = new ObjectMapper(); 
+			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
+			
+			String op = userData.get("status").toString();
+			
+			if(op.equals("422")) {
+				
+				System.out.println(userData.get("mensagem"));
+				
+			}else if(op.equals("404")) {
+				
+				System.out.println(userData.get("mensagem").toString());
+				
+			}else {
+				token = UUID.fromString(userData.get("token").toString()); ;
+				
+				System.out.println("Registro realizado com sucesso");
+				
+			}
+			
+		}catch(Exception ex) {
+			System.out.print(ex);
+		}
+	}
 	
 	public static void cadastrarUsuario() {
 		try 
