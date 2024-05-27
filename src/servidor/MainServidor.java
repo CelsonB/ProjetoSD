@@ -18,7 +18,7 @@ import entities.Empresa;
 
 
 
-public class Teste {
+public class MainServidor {
 
 	private static UUID token = null;
 	public static ServerSocket servidorSocket;
@@ -90,10 +90,27 @@ public class Teste {
 				candidatoServer.apagarCandidato(userData.get("email").toString());
 			}		
 			else
+				
+			
 			if(op.equals("cadastrarEmpresa"))
 			{
 						
+			}else 
+			if((op.equals("loginEmpresa")) {
+					
 			}
+			else 
+			if
+			(op.equals("visualizarEmpresa"))
+			{
+						
+			}else //atualizarEmpresa
+			if(op.equals("atualizarEmpresa")) {
+							
+			}else//apagarEmpresa
+				if(op.equals("apagarEmpresa")) {
+					
+				}
 		}while(op != "");
 		
 		
@@ -106,7 +123,9 @@ public class Teste {
 		}
 		
 	}
-		
+	
+	
+	
 	
 
 

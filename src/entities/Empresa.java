@@ -8,7 +8,8 @@ public class Empresa {
 	private String razaoSocial;
 	private String senha;
 	private String descricao;
-	public Empresa(String nome, String email, String senha, String razaoSocial, String descricao, String ramo) {
+	private String cnpj;
+	public Empresa(String nome, String email, String senha, String razaoSocial, String descricao, String ramo,String cnpj) {
 		super();
 		this.nome = nome;
 		this.ramo = ramo;
@@ -16,12 +17,25 @@ public class Empresa {
 		this.razaoSocial = razaoSocial;
 		this.senha = senha;
 		this.descricao = descricao;
+		this.cnpj = cnpj; 
 	}
 	
 	
 	
 	public Empresa() {
 		super();
+	}
+
+
+
+	public String getCnpj() {
+		return cnpj;
+	}
+
+
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
 	}
 
 

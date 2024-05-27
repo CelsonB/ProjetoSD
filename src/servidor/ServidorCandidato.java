@@ -117,7 +117,7 @@ public class ServidorCandidato {
 			
 				if(!email.contains("@")) 
 				{
-				throw new EmaiInvalidoException("email invalido");
+				throw new EmailInvalidoException("email invalido");
 				}
 				else if(userData.get("senha").toString().length()>8) {
 				throw new SenhaInvalidaException("senha invalida");	
@@ -135,7 +135,7 @@ public class ServidorCandidato {
 					saida.println(myString);
 
 			}
-			catch(EmaiInvalidoException ex) 
+			catch(EmailInvalidoException ex) 
 			{
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
 					myString = new JSONObject().put("operacao", "cadastrarCandidato").put("status","422").put("mensagem", "Email ja cadastrado").toString(); 

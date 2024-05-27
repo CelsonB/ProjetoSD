@@ -40,7 +40,9 @@ public class ServidorEmpresa {
 				userData.get("senha").toString(),
 				userData.get("razaoSocial").toString(),
 				userData.get("descricao").toString(),
-				userData.get("ramo").toString());
+				userData.get("ramo").toString(),
+				userData.get("cnpj").toString()
+				);
 		
 	
 		try {
@@ -152,7 +154,19 @@ public class ServidorEmpresa {
 		 }
 		 
 	 }
-	 
+	 public void logout() {
+		 if(token !=null) {
+			 try {
+				respostaServidor("logout");
+			} catch (Exception e) {
+			System.out.println(e);
+			} 
+		 }else {
+			 System.out.println("empresa: você não está logado");
+		 }
+		 
+		 
+	 }
 	 public void apagarEmpresa(Map<String, Object> data) {
 		 ResultSet rs = null; 
 		 EmpresaDao bd = new EmpresaDao();
@@ -193,24 +207,11 @@ public class ServidorEmpresa {
 			 JSONObject json = new JSONObject();
 			 json.put("type", "CONNECT");
 			 
-//			 if(ex instanceof SQLIntegrityConstraintViolationException )
-				//{
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
 					myString = new JSONObject().put("operacao", operacao).put("status", numStatus).put("mensagem", ex.toString()).toString(); 
 					saida.println(myString);
 
-				//}
-//			 else if(ex instanceof EmailInvalidoException) {
-//				 
-//					PrintStream saida  = new PrintStream (ss.getOutputStream());
-//					myString = new JSONObject().put("operacao", operacao).put("status", numStatus).put("mensagem", ex.toString()).toString(); 
-//					saida.println(myString);
-//					
-//			 } else if(ex instanceof SenhaInvalidaException) {
-//				 PrintStream saida  = new PrintStream (ss.getOutputStream());
-//					myString = new JSONObject().put("operacao", operacao).put("status", numStatus).put("mensagem", ex.toString()).toString(); 
-//					saida.println(myString);
-//			 }
+
 		 }catch(Exception exe) {
 			 System.err.println(exe);
 		 }
@@ -241,6 +242,16 @@ public class ServidorEmpresa {
 			 myString = new JSONObject()
 					 .put("operacao", operacao)
 					 .put("status","201")
+					 .toString(); 
+			 
+			 saida.println(myString);
+		 }else 
+			 if(operacao.equals("logout")){
+				 token = null;	 
+				 
+			 myString = new JSONObject()
+					 .put("operacao", operacao)
+					 .put("status","204")
 					 .toString(); 
 			 
 			 saida.println(myString);
