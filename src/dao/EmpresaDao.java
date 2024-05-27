@@ -26,7 +26,7 @@ import entities.Empresa;
 			
 			
 		
-				//Conectar();
+				Conectar();
 				
 				st = conn.prepareStatement ("insert into empresa (razao_social, email, senha,ramo,descricao) values (?,?,?,?,?)");
 				st.setString(1,empresa.getRazaoSocial());
@@ -45,7 +45,7 @@ import entities.Empresa;
 			super.Conectar();
 			
 			PreparedStatement st = null;
-			st = conn.prepareStatement ("SELECT * FROM empresa WHERE email = ? and Senha = ? ");
+			st = conn.prepareStatement ("SELECT * FROM empresa WHERE email = ? and senha = ? ");
 			st.setString(1,email);
 			st.setString(2,senha);
 			ResultSet rs = st.executeQuery();
@@ -82,7 +82,7 @@ import entities.Empresa;
 	}
 	
 	public boolean atualizarCadastro(Empresa empresa) {
-		int op=0;
+		int op=1;
 		try {
 			super.Conectar();
 			PreparedStatement st = null;
@@ -94,7 +94,7 @@ import entities.Empresa;
 			st.setString(3,empresa.getRamo());
 			st.setString(4,empresa.getDescricao());
 			st.setString(5,empresa.getEmail());
-			st.executeUpdate();
+			op = st.executeUpdate();
 			
 			
 			

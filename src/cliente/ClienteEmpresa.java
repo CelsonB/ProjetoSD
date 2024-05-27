@@ -63,7 +63,7 @@ public class ClienteEmpresa {
 	cadastro.setRamo(dado);
 	
 	enviarJsonCadastro(cadastro, "cadastrarEmpresa");
-	
+	receberRespostaServidor();
 	
 	}
 	
@@ -227,7 +227,7 @@ public class ClienteEmpresa {
 			
 			if(op.equals("201") || op.equals("200")) {
 				
-				System.out.println("Atualização realizada com sucesso");
+				System.out.println("Operação realizada com sucesso");
 				if(data.get("operacao").toString().equals("cadastrarEmpresa") || data.get("operacao").toString().equals("loginEmpresa") ) {
 					
 					
@@ -236,11 +236,11 @@ public class ClienteEmpresa {
 				if(data.get("operacao").toString().equals("visualizarEmpresa")){
 					
 					System.out.println("dados: "
-							+"razao social"+ data.get("razaoSocial").toString()
-							+"cnpj"+ data.get("cnpj").toString()
-							+"senha"+ data.get("senha").toString()
-							+"descricao"+ data.get("descricao").toString()
-							+"ramo"+ data.get("ramo").toString()
+							+"\nrazao social: "+ data.get("razaoSocial").toString()
+							+"\ncnpj: "+ data.get("cnpj").toString()
+							+"\nsenha: "+ data.get("senha").toString()
+							+"\ndescricao: "+ data.get("descricao").toString()
+							+"\nramo: "+ data.get("ramo").toString()
 							);
 				}
 				

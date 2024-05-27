@@ -70,15 +70,6 @@ public class ServidorEmpresa {
 			if(rs == null) {
 				throw new  EmailInvalidoException("email não encontrado");
 			}else {
-				
-				sessao.setDescricao(rs.getString("descricao"));
-				sessao.setEmail(rs.getString("email"));
-				sessao.setNome(rs.getString("nome"));
-				sessao.setRamo(rs.getString("ramo"));
-				sessao.setRazaoSocial(rs.getString("razao_social"));
-				sessao.setSenha(rs.getString("senha"));
-				
-				
 				respostaServidor(data.get("operacao").toString());
 			}
 			 
@@ -101,14 +92,14 @@ public class ServidorEmpresa {
 		 Empresa resultadoPesquisa = new Empresa();
 		 
 		 try {
-			 rs =  bd.realizarLogin(data.get("email").toString(),data.get("senha").toString());
+			 rs =  bd.Ler(data.get("email").toString());
 				if(rs == null) {
 					throw new  EmailInvalidoException("email não encontrado");
 				}else {
-					
+					rs.next();
 					resultadoPesquisa.setDescricao(rs.getString("descricao"));
 					resultadoPesquisa.setEmail(rs.getString("email"));
-					resultadoPesquisa.setNome(rs.getString("nome"));
+					//resultadoPesquisa.setNome(rs.getString("nome"));
 					resultadoPesquisa.setRamo(rs.getString("ramo"));
 					resultadoPesquisa.setRazaoSocial(rs.getString("razao_social"));
 					resultadoPesquisa.setSenha(rs.getString("senha"));
@@ -155,15 +146,15 @@ public class ServidorEmpresa {
 		 
 	 }
 	 public void logout() {
-		 if(token !=null) {
+		
 			 try {
 				respostaServidor("logout");
 			} catch (Exception e) {
 			System.out.println(e);
 			} 
-		 }else {
-			 System.out.println("empresa: você não está logado");
-		 }
+		 
+		//	 System.out.println("empresa: você não está logado");
+		 
 		 
 		 
 	 }
@@ -294,10 +285,5 @@ public class ServidorEmpresa {
 	 
 	 
 	 
-	public void realizarLogin(String email, String senha) {
-		
-		
-	}
-	
-	
+
 }

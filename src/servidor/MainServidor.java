@@ -59,58 +59,42 @@ public class MainServidor {
 	do {			
 			
 			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {}); 
-		
-			System.out.print(userData.get("operacao").toString());
+			
+			System.out.print(userData.toString());
 			
 			op = userData.get("operacao").toString();
 			
 			if(op.equals("loginCandidato")) {
 				candidatoServer.SolicitarLogin(userData);
-			}else
-			
-			if(op.equals("cadastrarCandidato")) {	
+			}else if(op.equals("cadastrarCandidato")) {	
 				
 				candidatoServer.SolicitarCadastro(userData);
-			}else
-			
-			if(op.equals("visualizarCandidato")) {
+			}else if(op.equals("visualizarCandidato")) {
 				candidatoServer.SolicitarVisualizacao(userData.get("email").toString());
-			}else
-				
-			if(op.equals("logout")){
+			}else if(op.equals("logout")){
 				candidatoServer.logout(userData);
-			}else
 				
-			if(op.equals("atualizarCandidato")) {
+			}else if(op.equals("atualizarCandidato")) {
 				candidatoServer.atualizarCadastro(userData);
 			}
-			else 
-				
-			if(op.equals("apagarCandidato")) {
+			else  if(op.equals("apagarCandidato")) {
 				candidatoServer.apagarCandidato(userData.get("email").toString());
 			}		
-			else
-				
-			
-			if(op.equals("cadastrarEmpresa"))
+			else if(op.equals("cadastrarEmpresa"))
 			{
-						
-			}else 
-			if((op.equals("loginEmpresa")) {
-					
+				empresaServer.cadastrarEmpresa(userData);
+			}else  if(op.equals("loginEmpresa")) {
+				empresaServer.realizarLogin(userData);
 			}
-			else 
-			if
+			else if
 			(op.equals("visualizarEmpresa"))
 			{
-						
-			}else //atualizarEmpresa
-			if(op.equals("atualizarEmpresa")) {
-							
-			}else//apagarEmpresa
-				if(op.equals("apagarEmpresa")) {
-					
-				}
+				empresaServer.visualizarEmpresa(userData);	
+			}else if(op.equals("atualizarEmpresa")) {
+				empresaServer.atualizarEmpresa(userData);		
+			}else if(op.equals("apagarEmpresa")) {
+				empresaServer.apagarEmpresa(userData);
+			}
 		}while(op != "");
 		
 		
