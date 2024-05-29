@@ -42,7 +42,7 @@ public class Cliente {
 		//cliente.cadastrarEmpresa();
 	
 		
-		int opcao=0;
+		int opcao=3;
 		do {
 			
 			System.out.println("1-Empresa \n2-Candidato \n0-Sair da aplicação");
@@ -56,7 +56,6 @@ public class Cliente {
 				break;
 			case 0:
 			
-			break;
 			}
 		
 		}while(op!=0);
@@ -72,14 +71,12 @@ public class Cliente {
 					+ "3-Visualizar Candidato\n"
 					+ "4-Atualizar Cadastro\n"
 					+ "5-Deletar cadastro\n"
-					+ "6-Realizar logout"
+					+ "6-Realizar logout\n"
 					+ "0-Voltar");
 			op = leia.nextInt();
 			
 			switch(op) {
-			case 0:
-				
-				break;
+			
 			case 1: 
 				empresa.cadastrarEmpresa();
 			break;
@@ -98,7 +95,9 @@ public class Cliente {
 			case 6: 
 				empresa.logout();
 				break;
-			
+			case 0:
+				
+				
 			}
 		}while(op!=0);
 	}
@@ -113,14 +112,12 @@ public class Cliente {
 					+ "3-Visualizar Candidato\n"
 					+ "4-Atualizar Cadastro\n"
 					+ "5-Deletar cadastro\n"
-					+ "6-Realizar logout"
+					+ "6-Realizar logout\n"
 					+ "0-Voltar");
 			op = leia.nextInt();
-			
+			op=0;
 			switch(op) {
-			case 0:
-				
-				break;
+			
 			case 1: 
 				cliente.cadastrarUsuario();
 			break;
@@ -135,11 +132,13 @@ public class Cliente {
 				break;
 			case 5: 
 				cliente.deletarCadastro();
-				break;
+				break; 
 			case 6: 
 				cliente.realizarLogout();
 				break;
-			
+			case 0:
+				
+		
 			}
 		}while(op!=0);
 	}

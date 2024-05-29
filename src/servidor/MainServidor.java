@@ -60,7 +60,7 @@ public class MainServidor {
 			
 			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {}); 
 			
-			System.out.print(userData.toString());
+			System.out.println("Entrada: ["+userData.toString()+"]");
 			
 			op = userData.get("operacao").toString();
 			
@@ -74,7 +74,7 @@ public class MainServidor {
 			}else if(op.equals("logout")){
 				
 				if(empresaServer.getToken()!=null) {
-					
+				
 					candidatoServer.setToken(null);
 					empresaServer.logout();
 					

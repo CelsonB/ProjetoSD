@@ -106,17 +106,18 @@ public class ServidorEmpresa {
 					rs.next();
 					resultadoPesquisa.setDescricao(rs.getString("descricao"));
 					resultadoPesquisa.setEmail(rs.getString("email"));
-					resultadoPesquisa.setCnpj(data.get("cnpj").toString());
+					resultadoPesquisa.setCnpj(rs.getString("cnpj"));
 					//resultadoPesquisa.setNome(rs.getString("nome"));
 					resultadoPesquisa.setRamo(rs.getString("ramo"));
 					resultadoPesquisa.setRazaoSocial(rs.getString("razao_social"));
 					resultadoPesquisa.setSenha(rs.getString("senha"));
 					
-					System.out.println(resultadoPesquisa);
+					
 					
 					respostaServidor(data.get("operacao").toString(), resultadoPesquisa);
 				}
 		 }catch(Exception ex) {
+			 System.out.print("deu problema");
 			 respostaExcecao(ex, data.get("operacao").toString(),"404");
 		 }
 		 
@@ -125,7 +126,7 @@ public class ServidorEmpresa {
 	 }
 	 
 	 public void atualizarEmpresa(Map<String, Object> data) {
-		 //{"operacao": "atualizarEmpresa","email":"xx@xxx.xxx","razaoSocial":"xxxxxxx","cnpj":"12345678000100","senha":"xxx","descricao":"xxxxxx","ramo":"xxxxx"}
+		 
 		 
 		 ResultSet rs = null; 
 		 EmpresaDao bd = new EmpresaDao();
@@ -134,7 +135,6 @@ public class ServidorEmpresa {
 		 
 		 atualizacaoEmpresa.setDescricao(data.get("descricao").toString());
 		 atualizacaoEmpresa.setEmail(data.get("email").toString());
-		 //atualizacaoEmpresa.setNome(data.get("nome").toString());
 		 atualizacaoEmpresa.setCnpj(data.get("cnpj").toString());
 		 atualizacaoEmpresa.setRamo(data.get("ramo").toString());
 		 atualizacaoEmpresa.setRazaoSocial(data.get("razaoSocial").toString());
@@ -142,11 +142,9 @@ public class ServidorEmpresa {
 			
 		 
 		 try {
-			 validarEmail(atualizacaoEmpresa);
 				if(bd.atualizarCadastro(atualizacaoEmpresa) == false) {
 					throw new  EmailInvalidoException("email não encontrado");
 				}else {
-					
 					respostaServidor(data.get("operacao").toString());
 				}
 		 }catch(Exception ex) {
@@ -208,7 +206,8 @@ public class ServidorEmpresa {
 			 json.put("type", "CONNECT");
 			 
 					PrintStream saida  = new PrintStream (ss.getOutputStream());
-					myString = new JSONObject().put("operacao", operacao).put("status", numStatus).put("mensagem", ex.toString()).toString(); 
+					myString = new JSONObject().put("operacao", operacao).put("status", numStatus).put("mensagem", ex).toString(); 
+					 System.out.println("Saida: ["+myString+"]"); 
 					saida.println(myString);
 
 
@@ -239,26 +238,26 @@ public class ServidorEmpresa {
 					 .put("token", token.toString())
 					 .toString(); 
 			 
+			 System.out.println("Saida: ["+myString+"]");
+			 
 			 saida.println(myString);
 			 
-		 } else  
-		 if(operacao.equals("atualizarEmpresa" ) || operacao.equals("apagarEmpresa") ) 
+		 } else if(operacao.equals("atualizarEmpresa" ) || operacao.equals("apagarEmpresa") ) 
 		 {
 			 myString = new JSONObject()
 					 .put("operacao", operacao)
 					 .put("status","201")
 					 .toString(); 
-			 
+			 System.out.println("Saida: ["+myString+"]");
 			 saida.println(myString);
-		 }else 
-			 if(operacao.equals("logout")){
+		 }else  if(operacao.equals("logout")){
 				 token = null;	 
 				 
 			 myString = new JSONObject()
 					 .put("operacao", operacao)
 					 .put("status","204")
 					 .toString(); 
-			 
+			 System.out.println("Saida: ["+myString+"]");
 			 saida.println(myString);
 		 }
 		 
@@ -280,7 +279,7 @@ public class ServidorEmpresa {
 						 .put("descricao", resultado.getDescricao())
 						 .put("ramo", resultado.getRamo()
 						  ).toString(); 
-				 
+				 System.out.println("Saida: ["+myString+"]");
 				 saida.println(myString);
 			 }
 	 }

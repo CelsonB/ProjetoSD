@@ -28,12 +28,13 @@ import entities.Empresa;
 		
 				Conectar();
 				
-				st = conn.prepareStatement ("insert into empresa (razao_social, email, senha,ramo,descricao) values (?,?,?,?,?)");
+				st = conn.prepareStatement ("insert into empresa (razao_social, email, senha,ramo,descricao, cnpj) values (?,?,?,?,?,?)");
 				st.setString(1,empresa.getRazaoSocial());
 				st.setString(2, empresa.getEmail());
 				st.setString(3,empresa.getSenha());
 				st.setString(4,empresa.getRamo());
 				st.setString(5,empresa.getDescricao());
+				st.setString(6,empresa.getCnpj());
 				st.executeUpdate();
 		}
 		
@@ -79,22 +80,24 @@ import entities.Empresa;
 			return rs; 
 		}
 		
-	}
+	} 
 	
 	public boolean atualizarCadastro(Empresa empresa) {
-		int op=90;
+		
 		try {
 			super.Conectar();
 			PreparedStatement st = null;
 			
 			
-			st = conn.prepareStatement ("UPDATE empresa SET razao_social = ? , senha = ? ,ramo = ? ,descricao = ? WHERE email = ? ");
+			st = conn.prepareStatement ("UPDATE empresa SET razao_social = ? , senha = ? ,ramo = ? ,descricao = ?, cnpj = ? WHERE email = ? ");
 			st.setString(1,empresa.getRazaoSocial());
 			st.setString(2,empresa.getSenha());
 			st.setString(3,empresa.getRamo());
 			st.setString(4,empresa.getDescricao());
-			st.setString(5,empresa.getEmail());
-			op = st.executeUpdate();
+			st.setString(5,empresa.getCnpj());
+			st.setString(6,empresa.getEmail());
+			
+			int op = st.executeUpdate();
 			
 			if(op == 0 ) {
 				return false;
@@ -105,9 +108,8 @@ import entities.Empresa;
 			
 		}catch(Exception ex) {
 			System.err.print(ex);
-		}finally {
-			return false;
 		}
+		return false;
 	}
 	
 	

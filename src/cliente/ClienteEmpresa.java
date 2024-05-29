@@ -159,8 +159,7 @@ public class ClienteEmpresa {
 					.put("operacao", "logout")
 					.put("token", token.toString())
 					.toString(); 
-			
-			System.out.println(myString);
+			System.out.println("Saida: [" +myString + "]");
 			
 			  saida.println(myString);
 		}catch(Exception ex) {
@@ -178,7 +177,7 @@ public class ClienteEmpresa {
 					.put("email", email)
 					.toString(); 
 			
-			System.out.println(myString);
+			System.out.println("Saida: [" +myString + "]");
 			
 			   saida.println(myString);
 		}catch(Exception ex) {
@@ -198,7 +197,7 @@ public class ClienteEmpresa {
 					.put("senha",senha)
 					.toString(); 
 			
-			System.out.println(myString);
+			System.out.println("Saida: [" +myString + "]");
 			
 			   saida.println(myString);
 		}catch(Exception ex) {
@@ -215,25 +214,29 @@ public class ClienteEmpresa {
 			ObjectMapper mapper = new ObjectMapper(); 
 			Map<String, Object> data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
 			
-			
+			System.out.println("Entrada: [" +data.toString()+ "]");
 				String op = data.get("status").toString();
 			
 			if(op.equals("201") || op.equals("200")) {
 				
-				System.out.println("Operação realizada com sucesso");
+				
 				if(data.get("operacao").toString().equals("cadastrarEmpresa") || data.get("operacao").toString().equals("loginEmpresa") ) {
 					
-					
+					System.out.println("Operação realizada com sucesso");
 					token =   UUID.fromString ( data.get("token").toString());
 				}else 
 				if(data.get("operacao").toString().equals("visualizarEmpresa")){
 					
-					System.out.println("dados: "
-							+"\nrazao social: "+ data.get("razaoSocial").toString()
+					
+				//	System.out.println("Visualização realizada com sucesso");
+				//	System.out.println(data.toString());
+					
+					System.out.println("dados: "+ 
+					"\nrazao social: "	+ data.get("razaoSocial").toString()
 							+"\ncnpj: "+ data.get("cnpj").toString()
-							+"\nsenha: "+ data.get("senha").toString()
-							+"\ndescricao: "+ data.get("descricao").toString()
-							+"\nramo: "+ data.get("ramo").toString()
+							+ "\nsenha: "+ data.get("senha").toString()
+							+ "\ndescricao: "+ data.get("descricao").toString()
+							+ "\nramo: "+ data.get("ramo").toString()
 							);
 				}
 				
@@ -267,13 +270,13 @@ public class ClienteEmpresa {
 				.put("ramo", dados.getRamo())
 				.toString(); 
 		
-		System.out.println(myString);
+		System.out.println("Saida: [" +myString + "]");
 		
 		   saida.println(myString);
 	}catch(Exception ex) {
 		System.out.print(ex);
 	}
-	}
+	} 
 }
 
 
@@ -281,7 +284,7 @@ public class ClienteEmpresa {
 
 
 
-
+ 
 
 
 
