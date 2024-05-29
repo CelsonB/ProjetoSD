@@ -106,6 +106,7 @@ public class ServidorEmpresa {
 					rs.next();
 					resultadoPesquisa.setDescricao(rs.getString("descricao"));
 					resultadoPesquisa.setEmail(rs.getString("email"));
+					resultadoPesquisa.setCnpj(data.get("cnpj").toString());
 					//resultadoPesquisa.setNome(rs.getString("nome"));
 					resultadoPesquisa.setRamo(rs.getString("ramo"));
 					resultadoPesquisa.setRazaoSocial(rs.getString("razao_social"));
@@ -134,6 +135,7 @@ public class ServidorEmpresa {
 		 atualizacaoEmpresa.setDescricao(data.get("descricao").toString());
 		 atualizacaoEmpresa.setEmail(data.get("email").toString());
 		 //atualizacaoEmpresa.setNome(data.get("nome").toString());
+		 atualizacaoEmpresa.setCnpj(data.get("cnpj").toString());
 		 atualizacaoEmpresa.setRamo(data.get("ramo").toString());
 		 atualizacaoEmpresa.setRazaoSocial(data.get("razaoSocial").toString());
 		 atualizacaoEmpresa.setSenha(data.get("senha").toString());
@@ -273,7 +275,7 @@ public class ServidorEmpresa {
 				 myString = new JSONObject().put("operacao", operacao)
 						 .put("status","201")
 						 .put("razaoSocial", resultado.getRazaoSocial() )
-						 .put("cnpj","xxxx")
+						 .put("cnpj",resultado.getCnpj())
 						 .put("senha", resultado.getSenha())
 						 .put("descricao", resultado.getDescricao())
 						 .put("ramo", resultado.getRamo()
