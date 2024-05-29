@@ -72,7 +72,21 @@ public class MainServidor {
 			}else if(op.equals("visualizarCandidato")) {
 				candidatoServer.SolicitarVisualizacao(userData.get("email").toString());
 			}else if(op.equals("logout")){
-				candidatoServer.logout(userData);
+				
+				if(empresaServer.getToken()!=null) {
+					
+					candidatoServer.setToken(null);
+					empresaServer.logout();
+					
+				}else 
+				if(candidatoServer.getToken()!=null){
+					
+					empresaServer.setToken(null);
+					candidatoServer.logout();
+					
+				}
+			
+				
 				
 			}else if(op.equals("atualizarCandidato")) {
 				candidatoServer.atualizarCadastro(userData);

@@ -21,6 +21,13 @@ public class ServidorEmpresa {
 	public ServerSocket servidorSocket;
 	public Socket ss;
 	
+	public UUID getToken() {
+		return token;
+	}
+	public static void setToken(UUID token) {
+		token = token;
+	}
+
 	private Empresa sessao = null;
 	
 	public ServidorEmpresa(ServerSocket servidorSocket2, Socket ss2) {
@@ -35,7 +42,7 @@ public class ServidorEmpresa {
 		EmpresaDao bd = new EmpresaDao();
 		
 		sessao = new Empresa(
-				userData.get("nome").toString(),
+				//userData.get("nome").toString(),
 				userData.get("email").toString(),
 				userData.get("senha").toString(),
 				userData.get("razaoSocial").toString(),
@@ -126,7 +133,7 @@ public class ServidorEmpresa {
 		 
 		 atualizacaoEmpresa.setDescricao(data.get("descricao").toString());
 		 atualizacaoEmpresa.setEmail(data.get("email").toString());
-		 atualizacaoEmpresa.setNome(data.get("nome").toString());
+		 //atualizacaoEmpresa.setNome(data.get("nome").toString());
 		 atualizacaoEmpresa.setRamo(data.get("ramo").toString());
 		 atualizacaoEmpresa.setRazaoSocial(data.get("razaoSocial").toString());
 		 atualizacaoEmpresa.setSenha(data.get("senha").toString());
@@ -219,9 +226,14 @@ public class ServidorEmpresa {
 		
 		 if(operacao.equals("cadastrarEmpresa") || operacao.equals("loginEmpresa") ) {
 			 token = UUID.randomUUID();
+			 String tokenString = "200";
+			 
+			 if(operacao.equals("cadastrarEmpresa")) {
+				 tokenString = "201";
+			 }
 			 myString = new JSONObject()
 					 .put("operacao", operacao)
-					 .put("status","201")
+					 .put("status",tokenString)
 					 .put("token", token.toString())
 					 .toString(); 
 			 

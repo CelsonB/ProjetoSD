@@ -2,16 +2,14 @@ package entities;
 
 public class Empresa {
 	
-	private String nome; 
 	private String ramo;
 	private String email;
 	private String razaoSocial;
 	private String senha;
 	private String descricao;
 	private String cnpj;
-	public Empresa(String nome, String email, String senha, String razaoSocial, String descricao, String ramo,String cnpj) {
+	public Empresa( String email, String senha, String razaoSocial, String descricao, String ramo,String cnpj) {
 		super();
-		this.nome = nome;
 		this.ramo = ramo;
 		this.email = email;
 		this.razaoSocial = razaoSocial;
@@ -39,13 +37,6 @@ public class Empresa {
 	}
 
 
-
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
 	public String getRamo() {
 		return ramo;
 	}

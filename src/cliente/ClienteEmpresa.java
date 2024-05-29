@@ -30,12 +30,7 @@ public class ClienteEmpresa {
 	
 	String dado; 
 	
-	
-	System.out.println("Por favor digite o nome da empresa:");
-	dado = leia.nextLine();
-	cadastro.setNome(dado);
-	
-	
+		
 	System.out.println("Por favor digite a razao social da empresa:");
 	dado = leia.nextLine();
 	cadastro.setRazaoSocial(dado);
@@ -97,9 +92,7 @@ public class ClienteEmpresa {
 		String dado; 
 		
 		
-		System.out.println("Por favor digite o nome da empresa:");
-		dado = leia.nextLine();
-		att.setNome(dado);
+	
 		
 		
 		System.out.println("Por favor digite a razao social da empresa:");
@@ -266,7 +259,6 @@ public class ClienteEmpresa {
 		
 		String myString = new JSONObject()
 				.put("operacao", operacao)
-				.put("nome", dados.getNome())
 				.put("email", dados.getEmail())
 				.put("senha", dados.getSenha())
 				.put("cnpj", dados.getCnpj())

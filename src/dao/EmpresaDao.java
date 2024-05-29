@@ -82,7 +82,7 @@ import entities.Empresa;
 	}
 	
 	public boolean atualizarCadastro(Empresa empresa) {
-		int op=1;
+		int op=90;
 		try {
 			super.Conectar();
 			PreparedStatement st = null;
@@ -96,19 +96,17 @@ import entities.Empresa;
 			st.setString(5,empresa.getEmail());
 			op = st.executeUpdate();
 			
-			
-			
-			
-		}catch(Exception ex) {
-			System.err.print(ex);
-		}finally {
-		
 			if(op == 0 ) {
 				return false;
 			}else {
 				return true;
 			}
 			
+			
+		}catch(Exception ex) {
+			System.err.print(ex);
+		}finally {
+			return false;
 		}
 	}
 	

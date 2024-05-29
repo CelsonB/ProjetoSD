@@ -24,6 +24,14 @@ public class ServidorCandidato {
 	public static ServerSocket servidorSocket;
 	public static Socket ss;
 	
+	public static UUID getToken() {
+		return token;
+	}
+
+	public static void setToken(UUID token) {
+		ServidorCandidato.token = token;
+	}
+
 	public ServidorCandidato(ServerSocket servidorSocket2, Socket ss2) {
 		this.servidorSocket = servidorSocket2;
 		this.ss = ss2;
@@ -337,23 +345,26 @@ public class ServidorCandidato {
 		}
 	}
 
-	public static void logout(Map<String, Object> info) {
+	public static void logout() {
 		try {
 			
 			JSONObject json = new JSONObject();
 			json.put("type", "CONNECT");
 			
-			ObjectMapper mapper = new ObjectMapper();  
+			
 			PrintStream saida  = new PrintStream (ss.getOutputStream());
 			
-			if(token != null) {
+			if(token==null) {
 				
-					String myString = new JSONObject().put("operacao", "logout").put("status","204").toString(); 
-					token = null;
-					saida.println(myString);
-				
-				
+			}else {
+				String myString = new JSONObject().put("operacao", "logout").put("status","204").toString(); 
+				token = null;
+				saida.println(myString);
+			
 			}
+		
+				
+			
 			
 		}catch(Exception ex) {
 			

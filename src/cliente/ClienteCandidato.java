@@ -41,8 +41,7 @@ public class ClienteCandidato {
 			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
 			Empresa emp1 = new Empresa();
 			
-				System.out.println("Digite seu nome:");
-				emp1.setNome(leia.nextLine()); 
+				
 				System.out.println("Digite sua senha:");
 				emp1.setSenha(leia.nextLine());
 				System.out.println("Digite seu email:");
@@ -63,7 +62,7 @@ public class ClienteCandidato {
 				//{"operacao": "cadastrarEmpresa", "razaoSocial":"xxxxxxx", "email":"xx@xxx.xxx", "cnpj": "12345678000100", "senha":"xxx","descricao":"xxxxxx","ramo":"xxxxxx"}
 				String myString = new JSONObject()
 						.put("operacao", "cadastrarEmpresa")
-						.put("nome", emp1.getNome())
+				
 						.put("email", emp1.getEmail())
 						.put("senha", emp1.getSenha())
 						.put("cnpj", cnpj)
