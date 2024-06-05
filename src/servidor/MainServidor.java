@@ -88,6 +88,10 @@ public class MainServidor {
 						Map <String, String> competencia2 = converterStringArrayToMap(userData.get("competenciaExperiencia").toString());
 						competenciaSever.apagarCompetenciaExperiencia(userData, competencia2);
 						break;
+					case "atualizarCompetenciaExperiencia":
+						competenciaSever.atualizarCompetencia(userData);
+						break;
+						
 				}
 				
 			

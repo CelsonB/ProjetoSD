@@ -25,7 +25,8 @@ public class Cliente {
 	//public static InputStreamReader input;
 	public static Scanner leia = new Scanner(System.in);
 	public static Candidato sessao = null;
-
+	public static Empresa sessaoEmpresa = null;
+	protected static String [] competenciasNomes  = {"python" , "c#", "c++"};
 	
 	public static void main (String[] args) throws UnknownHostException, IOException {
 		
@@ -38,10 +39,14 @@ public class Cliente {
 		ClienteCandidato cliente = new ClienteCandidato();
 		ClienteEmpresa empresa = new ClienteEmpresa(clienteSocket);
 		ClienteCompetencia competencia = new ClienteCompetencia();
+		ClienteVaga vaga = new ClienteVaga();
 
-//		
+		
 //		
 		sessao = new Candidato("celson", "123","celsonb@",UUID.randomUUID());
+		//String email, String senha, String razaoSocial, String descricao, String ramo,String cnpj
+		sessaoEmpresa = new Empresa("bsoft@", "123","bsoft","Empresa de logistica", "logistica", "123321123321");
+		sessaoEmpresa.setToken(UUID.randomUUID());
 //		competencia.cadastrarCandidatoCompetencia(candidato);
 
 	
@@ -65,7 +70,7 @@ public class Cliente {
 				competenciaExperiencia(competencia);
 				break;
 			case 4:
-				
+				vagaEmpresa (vaga);
 				break;
 				
 			case 0:
@@ -74,6 +79,36 @@ public class Cliente {
 		
 		}while(opcao!=0);
 				
+	}
+	protected static void vagaEmpresa (ClienteVaga vaga) {
+		int op;
+		//System.out.println(sessao);
+				do {
+			
+			System.out.println("Selecione qual opção deseja: \n"
+					+ "1-Cadastrar vaga\n"
+					+ "2-Visualizar vaga\n"
+					+ "3-Apagar vaga\n"
+					+ "4-Atualizar vaga\n"
+					+ "0-Voltar");
+			op = leia.nextInt();
+			
+			switch(op) {
+			
+			case 1: 
+				vaga.cadastrarVagas();
+			break;
+			case 2:
+				vaga.visualizarVagas();
+			break;
+			case 3:
+				vaga.apagarVaga();
+			break;
+			case 4:
+				vaga.atualizarVagas();
+				break;
+				}
+		}while(op!=0);
 	}
 	
 	protected static void competenciaExperiencia(ClienteCompetencia competencia) {

@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.UUID;
+
 public class Empresa {
 	
 	private String ramo;
@@ -8,6 +10,21 @@ public class Empresa {
 	private String senha;
 	private String descricao;
 	private String cnpj;
+	
+	private UUID token =null;
+	
+	public UUID getToken() {
+		return token;
+	}
+
+
+
+	public void setToken(UUID token) {
+		this.token = token;
+	}
+
+
+
 	public Empresa( String email, String senha, String razaoSocial, String descricao, String ramo,String cnpj) {
 		super();
 		this.ramo = ramo;
