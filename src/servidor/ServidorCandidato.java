@@ -15,6 +15,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import dao.*;
+import exceptions.EmailInvalidoException;
+import exceptions.SenhaInvalidaException;
+
 import java.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper; 
 import com.fasterxml.jackson.core.type.TypeReference; 

@@ -15,6 +15,8 @@ import org.json.JSONObject;
 
 import dao.EmpresaDao;
 import entities.Empresa;
+import exceptions.EmailInvalidoException;
+import exceptions.SenhaInvalidaException;
 
 public class ServidorEmpresa {
 	private UUID token = null;

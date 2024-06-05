@@ -5,7 +5,9 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import org.json.JSONObject;
@@ -36,7 +38,8 @@ public class MainServidor {
 		ss=servidorSocket.accept(); 	 
 
 		ServidorCandidato candidatoServer = new ServidorCandidato(servidorSocket, ss);
-		ServidorEmpresa empresaServer = new ServidorEmpresa(servidorSocket, ss);		
+		ServidorEmpresa empresaServer = new ServidorEmpresa(servidorSocket, ss);
+		ServidorCompetencia competenciaSever = new ServidorCompetencia();
 		InputStreamReader input = new InputStreamReader(ss.getInputStream());
 		BufferedReader reader = new BufferedReader(input);
 		
@@ -44,7 +47,10 @@ public class MainServidor {
 		
 		ObjectMapper mapper = new ObjectMapper();  
 	
-		//Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {}); 
+//		Map<String, Object> data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {}); 
+//		
+//		System.out.println(data.toString());
+		
 		
 		
 		
@@ -54,7 +60,7 @@ public class MainServidor {
 		
 	String op = ""; 
       
-       
+	
 		
 	do {			
 			
@@ -62,9 +68,31 @@ public class MainServidor {
 			
 			System.out.println("Entrada: ["+userData.toString()+"]");
 			
+			//competenciaSever.visualizarCompetenciaExperiencia(userData);
 			op = userData.get("operacao").toString();
 			
-			if(op.equals("loginCandidato")) {
+			if(op.equals("cadastrarCompetenciaExperiencia") || op.equals("visualizarCompetenciaExperiencia") || op.equals("apagarCompetenciaExperiencia") || op.equals("atualizarCompetenciaExperiencia")  ) {
+				
+					
+				
+				switch(op) {
+					case "cadastrarCompetenciaExperiencia":
+						Map <String, String> competencia = converterStringArrayToMap(userData.get("competenciaExperiencia").toString());
+						competenciaSever.cadastrarCandidatoCompetencia(userData, competencia);
+					
+					break;
+					case "visualizarCompetenciaExperiencia":
+						competenciaSever.visualizarCompetenciaExperiencia(userData);
+					break;
+					case "apagarCompetenciaExperiencia":
+						Map <String, String> competencia2 = converterStringArrayToMap(userData.get("competenciaExperiencia").toString());
+						competenciaSever.apagarCompetenciaExperiencia(userData, competencia2);
+						break;
+				}
+				
+			
+				
+			}else if(op.equals("loginCandidato")) {
 				candidatoServer.SolicitarLogin(userData);
 			}else if(op.equals("cadastrarCandidato")) {	
 				
@@ -78,13 +106,12 @@ public class MainServidor {
 					candidatoServer.setToken(null);
 					empresaServer.logout();
 					
-				}else 
-				if(candidatoServer.getToken()!=null){
+			}else if(candidatoServer.getToken()!=null){
 					
 					empresaServer.setToken(null);
 					candidatoServer.logout();
 					
-				}
+			}
 			
 				
 				
@@ -120,7 +147,7 @@ public class MainServidor {
 			System.err.println(ex);
 		}
 		
-	}
+
 	
 	
 	
@@ -129,3 +156,17 @@ public class MainServidor {
 
 
 }
+	
+	private static Map<String, String> converterStringArrayToMap (String data) {
+		Map<String, String> competencia = new HashMap<String, String>();  
+		System.out.println(data);
+	
+	  StringTokenizer tokenizer = new StringTokenizer(data.replace("{", "").replace("}", "").replace("[", "").replace("]",""), ", ");		
+	  while (tokenizer.hasMoreTokens()) {
+	        String token = tokenizer.nextToken();
+	        String[] keyValue = token.split("=");
+	        competencia.put(keyValue[0], keyValue[1]);
+	    }
+	  return competencia;
+	}
+	}

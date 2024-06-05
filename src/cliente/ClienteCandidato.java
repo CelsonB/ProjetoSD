@@ -13,17 +13,21 @@ import org.json.JSONObject;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import entities.Candidato;
 import entities.Empresa;
 
-public class ClienteCandidato {
+public class ClienteCandidato extends Cliente{
 	
+	
+	public static Scanner leia  = new Scanner(System.in);	
 	public static Socket clienteSocket = null;
 	public static UUID token = null;
 	//public static InputStreamReader input;
 	
 	
-	public ClienteCandidato(Socket ip) {
-		clienteSocket = ip;
+	public ClienteCandidato() {
+		clienteSocket = super.clienteSocket;
+		//Candidato candidato = super.sessao;;
 	}
 	
 	
@@ -31,90 +35,9 @@ public class ClienteCandidato {
 	
 	
 	
-	public static void cadastrarEmpresa() {
-		try 
-		{
-			JSONObject json = new JSONObject();
-			json.put("type", "CONNECT");
-			Scanner leia = new Scanner(System.in);
-			
-			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
-			Empresa emp1 = new Empresa();
-			
-				
-				System.out.println("Digite sua senha:");
-				emp1.setSenha(leia.nextLine());
-				System.out.println("Digite seu email:");
-				emp1.setEmail(leia.nextLine());
-				
-				System.out.println("Digite sua razao social:");
-				emp1.setRazaoSocial(leia.nextLine());
-				
-				System.out.println("Digite seu cnpj:");
-				String cnpj = leia.nextLine();
-				
-				System.out.println("Digite uma breve descrição da empresa:");
-				emp1.setDescricao(leia.nextLine());
-				
-				System.out.println("Digite o ramo que sua empresa trabalha:");
-				emp1.setRamo(leia.nextLine());
-				
-				//{"operacao": "cadastrarEmpresa", "razaoSocial":"xxxxxxx", "email":"xx@xxx.xxx", "cnpj": "12345678000100", "senha":"xxx","descricao":"xxxxxx","ramo":"xxxxxx"}
-				String myString = new JSONObject()
-						.put("operacao", "cadastrarEmpresa")
-				
-						.put("email", emp1.getEmail())
-						.put("senha", emp1.getSenha())
-						.put("cnpj", cnpj)
-						.put("razaoSocial", emp1.getRazaoSocial())
-						.put("descricao", emp1.getDescricao())
-						.put("ramo", emp1.getRamo())
-						.toString(); 
-				
-				System.out.println(myString);
-
-			    saida.println(myString);
-			
-			
-		}
-		catch(Exception ex)
-		{
-			System.out.println(ex);
-				
-		}
-		
 	
-		try {
-			
-			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
-			BufferedReader reader = new BufferedReader(input);
-			
-			ObjectMapper mapper = new ObjectMapper(); 
-			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
-			
-			String op = userData.get("status").toString();
-			
-			if(op.equals("422")) {
-				
-				System.out.println(userData.get("mensagem"));
-				
-			}else if(op.equals("404")) {
-				
-				System.out.println(userData.get("mensagem").toString());
-				
-			}else {
-				token = UUID.fromString(userData.get("token").toString()); ;
-				
-				System.out.println("Registro realizado com sucesso");
-				
-			}
-			
-		}catch(Exception ex) {
-			System.out.print(ex);
-		}
-	}
 	
-	public static void cadastrarUsuario() {
+	public void cadastrarUsuario() {
 		try 
 		{
 			JSONObject json = new JSONObject();
@@ -132,7 +55,10 @@ public class ClienteCandidato {
 				String email = leia.nextLine(); 
 				String myString = new JSONObject().put("operacao", "cadastrarCandidato").put("nome", nome).put("email", email).put("senha", senha).toString(); 
 				System.out.println(myString);
-
+				
+				
+				super.sessao = new Candidato(email,nome,senha);
+				
 			    saida.println(myString);
 			
 			
@@ -164,7 +90,7 @@ public class ClienteCandidato {
 				
 			}else {
 				token = UUID.fromString(userData.get("token").toString()); ;
-				
+				super.sessao.setToken(token);
 				System.out.println("Registro realizado com sucesso");
 				
 			}
@@ -175,7 +101,7 @@ public class ClienteCandidato {
 		 
 	}
 	
-	public static void realizarLogin() {
+	public  void realizarLogin() {
 		try 
 		{
 			JSONObject json = new JSONObject();
@@ -212,6 +138,7 @@ public class ClienteCandidato {
 				else if(op.equals("200")) 
 				{
 					token = UUID.fromString(userData.get("token").toString());
+					super.sessao.setToken(token);
 					System.out.println("login realizado com sucesso");
 				}
 				else 
@@ -324,7 +251,7 @@ public class ClienteCandidato {
 			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
 			BufferedReader reader = new BufferedReader(input);
 			
-			ObjectMapper mapper = new ObjectMapper(); 
+			ObjectMapper mapper = new ObjectMapper();  
 			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
 			
 			String op = userData.get("status").toString();
