@@ -40,6 +40,7 @@ public class MainServidor {
 		ServidorCandidato candidatoServer = new ServidorCandidato(servidorSocket, ss);
 		ServidorEmpresa empresaServer = new ServidorEmpresa(servidorSocket, ss);
 		ServidorCompetencia competenciaSever = new ServidorCompetencia();
+		ServidorVaga vagaServer = new ServidorVaga();
 		InputStreamReader input = new InputStreamReader(ss.getInputStream());
 		BufferedReader reader = new BufferedReader(input);
 		
@@ -93,8 +94,27 @@ public class MainServidor {
 						break;
 						
 				}
+				}
 				
-			
+			else if(op.equals("apagarVaga") || op.equals("cadastrarVaga") || op.equals("visualizarVaga") || op.equals("atualizarVaga")) {
+				switch(op) {
+				case "apagarVaga":
+				
+					vagaServer.cadastrarVaga(userData);
+				
+				break;
+				case "cadastrarVaga":
+					vagaServer.visualizarVaga(userData);
+				break;
+				case "visualizarVaga":
+					vagaServer.apagarVaga(userData);
+					break;
+				case "atualizarVaga":
+					vagaServer.atualizarVaga(userData);
+					break;
+					
+			}
+				
 				
 			}else if(op.equals("loginCandidato")) {
 				candidatoServer.SolicitarLogin(userData);
