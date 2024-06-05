@@ -23,7 +23,7 @@ public class VagasDao extends BancoDeDados {
 	public ResultSet visualizarVaga(String email) throws SQLException, IOException {
 		PreparedStatement st = null;
 		Conectar();	
-		st = conn.prepareStatement ("select * from vaga where id_empresa = (select id_empresa from empresa where email = ?)");
+		st = conn.prepareStatement ("select * from vaga, vaga_competencia INNER JOIN vaga_competencia ON vaga_competencia.id_vaga = vaga.id_vaga where vaga.id_empresa = (select id_empresa from empresa where email = ?)");
 		st.setString(1,email);
 		ResultSet rs  = st.executeQuery();
 		return rs;

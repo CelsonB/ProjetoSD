@@ -57,7 +57,20 @@ public class ServidorVaga extends MainServidor {
 		
 	}
 	public void apagarVaga(Map<String, Object> userData) {
+		VagasDao bd = new VagasDao();
+	try {
 		
+	
+		
+		
+	        	bd.apagarVaga(userData.get("email").toString());
+		
+		respostaServidor(userData.get("operacao").toString());
+	} catch (Exception e) {
+		System.err.println(e);
+		respostaExcecao(e, userData.get("operacao").toString(),"422");
+	}
+	
 	}
 	
 	
@@ -94,15 +107,23 @@ public class ServidorVaga extends MainServidor {
 	 private void respostaServidorLeitura(ResultSet rs) {
 			
 			try {
-				
+//				{
+//					  "operacao": "visualizarVaga",
+//					  "faixaSalarial":12345,
+//					  "descricao":"xxxxx",
+//					  "estado":"xxxxx",
+//					  "competencias": ["xxxx","xxxx","xxxx"],
+//					   "status": "201"
+//					}
 				PrintStream saida  = new PrintStream (ss.getOutputStream());
-				 JSONObject json = new JSONObject();
-				 JSONObject compJson= new JSONObject();
-			
-				 JSONArray competencias = new JSONArray();
-				 //competencias.put(rsToJson(rs));
-				 
-				String myString	= new JSONObject().put("operacao",  "visualizarVaga").put("CompetenciaExperiencia", rsToJson(rs)).toString();
+				JSONObject json = new JSONObject();
+				JSONObject compJson= new JSONObject();				 
+				String myString	= new JSONObject().put("operacao",  "visualizarVaga")
+						.put("faixaSalarial", rs.getFloat("faixa_salarial"))
+						.put("descricao",rs.getString("descricao"))
+						.put("estado", false)
+						.put("competencias", rs.getString("competencias"))
+						.toString();
 				
 				System.out.println("Saida: ["+myString+"]"); 
 				saida.println(myString);
