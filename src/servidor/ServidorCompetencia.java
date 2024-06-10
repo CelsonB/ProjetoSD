@@ -116,14 +116,12 @@ public class ServidorCompetencia extends MainServidor {
 		
 		
 		String competencias = new JSONObject().put("competenciaExperiencia",data.get("competenciaExperiencia").toString()).toString();
-		
 		System.out.println("<"+data.get("competenciaExperiencia").toString()+">");
-		
-		
 		JSONArray jsonArr = new JSONArray(data.get("competenciaExperiencia").toString());
-
 		System.out.println("teste 2 ");
         return jsonArr;
+        
+        
 	}
 
 	private void respostaServidorLeitura(ResultSet rs) {

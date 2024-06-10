@@ -57,7 +57,7 @@ public class ClienteCandidato extends Cliente{
 				System.out.println(myString);
 				
 				
-				super.sessao = new Candidato(email,nome,senha);
+				if(super.sessao==null)super.sessao = new Candidato(email,nome,senha);
 				
 			    saida.println(myString);
 			
@@ -138,6 +138,7 @@ public class ClienteCandidato extends Cliente{
 				else if(op.equals("200")) 
 				{
 					token = UUID.fromString(userData.get("token").toString());
+					if(super.sessao == null)super.sessao = new Candidato();
 					super.sessao.setToken(token);
 					System.out.println("login realizado com sucesso");
 				}

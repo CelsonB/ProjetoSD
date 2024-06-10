@@ -3,22 +3,19 @@ package entities;
 import java.util.ArrayList;
 
 public class Vaga {
-//	{
-//		  "operacao": "cadastrarVaga",
-//		  "nome":"xxxx",
-//		  "email":"xx@xxx.xxx",
-//		  "faixaSalarial":12345,
-//		  "descricao":"xxxxx",
-//		  "estado":"xxxxx",
-//		  "competencias": ["xxxx","xxxx","xxxx"],
-//		  "token":"UUID"
-//		}
+
 	
 	public Vaga() {
 		super();
+		
+	}
+	public Vaga(String nome, int id) {
+		super();
+		this.idVaga = id;
+		this.nome = nome;
 	}
 	private String nome;
-	
+	private int idVaga;
 	private String email;
 	private float faixaSalarial;
 	private String descricao;
@@ -26,6 +23,12 @@ public class Vaga {
 	private ArrayList<String> competencias;
 	
 	
+	public int getIdVaga() {
+		return idVaga;
+	}
+	public void setIdVaga(int idVaga) {
+		this.idVaga = idVaga;
+	}
 	public String getNome() {
 		return nome;
 	}
@@ -61,6 +64,10 @@ public class Vaga {
 	}
 	public void setCompetencias(ArrayList<String> competencias) {
 		this.competencias = competencias;
+	}
+	@Override
+	public String toString() {
+		return "Vaga [nome=" + nome + ", idVaga=" + idVaga+"]";
 	}
 	 
 	

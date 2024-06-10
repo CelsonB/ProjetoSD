@@ -39,15 +39,18 @@ public class Cliente {
 		ClienteCandidato cliente = new ClienteCandidato();
 		ClienteEmpresa empresa = new ClienteEmpresa(clienteSocket);
 		ClienteCompetencia competencia = new ClienteCompetencia();
-		ClienteVaga vaga = new ClienteVaga();
+		
+		
+		sessao = new Candidato();
+		sessaoEmpresa = new Empresa();
 
 		
 //		
-		sessao = new Candidato("celson", "123","celsonb@",UUID.randomUUID());
-		//String email, String senha, String razaoSocial, String descricao, String ramo,String cnpj
-		sessaoEmpresa = new Empresa("bsoft@", "123","bsoft","Empresa de logistica", "logistica", "123321123321");
-		sessaoEmpresa.setToken(UUID.randomUUID());
-//		competencia.cadastrarCandidatoCompetencia(candidato);
+//		sessao = new Candidato("celson", "123","celsonb@",UUID.randomUUID());
+//		//String email, String senha, String razaoSocial, String descricao, String ramo,String cnpj
+//		sessaoEmpresa = new Empresa("bsoft@", "123","bsoft","Empresa de logistica", "logistica", "123321123321");
+//		sessaoEmpresa.setToken(UUID.randomUUID());
+////		competencia.cadastrarCandidatoCompetencia(candidato);
 
 	
 		
@@ -57,7 +60,14 @@ public class Cliente {
 		int opcao=3;
 		do {
 			
-			System.out.println("1-Empresa \n2-Candidato\n3-competencia do candidato\n4-Vagas da empresa \n0-Sair da aplicação");
+			
+		
+				String [] strOp = {"Sair","Empresa", "Candidato", "competencia", "Vagas"};
+				int tamanhoOp =strOp.length ; 
+				for(int i = 1; i<=tamanhoOp-1; i++) {
+					System.out.println(i+"-"+strOp[i]);
+				} System.out.println("0-Sair");
+
 			opcao = leia.nextInt();
 			switch(opcao) {
 			case 1:	
@@ -67,10 +77,22 @@ public class Cliente {
 				clienteCandidato(cliente);
 				break;
 			case 3:
-				competenciaExperiencia(competencia);
+				if(sessao.getToken()==null) {
+					System.out.println("Você não está logado");
+				}else {
+					competenciaExperiencia(competencia);
+				}
+				
 				break;
 			case 4:
-				vagaEmpresa (vaga);
+				
+				if(sessaoEmpresa.getToken()==null) {
+					System.out.println("Você não está logado");
+				}else {
+					ClienteVaga vaga = new ClienteVaga();
+					vagaEmpresa (vaga);
+				}
+				
 				break;
 				
 			case 0:
@@ -80,9 +102,10 @@ public class Cliente {
 		}while(opcao!=0);
 				
 	}
+	
 	protected static void vagaEmpresa (ClienteVaga vaga) {
 		int op;
-		//System.out.println(sessao);
+		
 				do {
 			
 			System.out.println("Selecione qual opção deseja: \n"
@@ -92,7 +115,7 @@ public class Cliente {
 					+ "4-Atualizar vaga\n"
 					+ "0-Voltar");
 			op = leia.nextInt();
-			
+		
 			switch(op) {
 			
 			case 1: 
@@ -115,13 +138,14 @@ public class Cliente {
 		int op;
 		//System.out.println(sessao);
 				do {
-			
-			System.out.println("Selecione qual opção deseja: \n"
-					+ "1-Cadastrar competencia\n"
-					+ "2-Visualizar competencia\n"
-					+ "3-Apagar competencia\n"
-					+ "4-Atualizar competencias\n"
-					+ "0-Voltar");
+					
+					
+					String [] strOp = {"Sair","Cadastrar competencia", "Visualizar competencia", "Apagar competencia", "Atualizar competencias"};
+					int tamanhoOp = 0; 
+					if(sessaoEmpresa.getToken()!=null) {tamanhoOp = strOp.length;} else {tamanhoOp = 3;}
+					for(int i = 1; i<=tamanhoOp-1; i++) {
+						System.out.println(i+"-"+strOp[i]);
+					} System.out.println("0-Sair");
 			op = leia.nextInt();
 			
 			switch(op) {
@@ -147,13 +171,12 @@ public class Cliente {
 		int op;
 		do {
 			
-			System.out.println("1-Cadastrar empresa\n"
-					+ "2-Realizar Login\n"
-					+ "3-Visualizar Candidato\n"
-					+ "4-Atualizar Cadastro\n"
-					+ "5-Deletar cadastro\n"
-					+ "6-Realizar logout\n"
-					+ "0-Voltar");
+			String [] strOp = {"Sair","Cadastrar empresa", "Realizar login", "Visualizar empresa", "Atualizar cadastro","Deletar empresa", "Realizar logout"};
+			int tamanhoOp = 0; 
+			if(sessaoEmpresa.getToken()!=null) {tamanhoOp = strOp.length;} else {tamanhoOp = 3;}
+			for(int i = 1; i<=tamanhoOp-1; i++) {
+				System.out.println(i+"-"+strOp[i]);
+			} System.out.println("0-Sair");
 			op = leia.nextInt();
 			
 			switch(op) {
@@ -165,16 +188,16 @@ public class Cliente {
 				empresa.realizarLogin();
 			break;
 			case 3:
-				empresa.visualizarEmpresa();
+				if(sessaoEmpresa.getToken()!=null)	empresa.visualizarEmpresa();
 			break;
 			case 4:
-				empresa.atualizarEmpresa();
+				if(sessaoEmpresa.getToken()!=null)	empresa.atualizarEmpresa();
 				break;
 			case 5: 
-				empresa.apagarEmpresa();
+				if(sessaoEmpresa.getToken()!=null)	empresa.apagarEmpresa();
 				break;
 			case 6: 
-				empresa.logout();
+				if(sessaoEmpresa.getToken()!=null)	empresa.logout();
 				break;
 			case 0:
 				
@@ -187,14 +210,12 @@ public class Cliente {
 	protected static void clienteCandidato(ClienteCandidato cliente) {
 		int op =0;
 		do {
-			
-			System.out.println("1-Cadastrar usuario\n"
-					+ "2-Realizar Login\n"
-					+ "3-Visualizar Candidato\n"
-					+ "4-Atualizar Cadastro\n"
-					+ "5-Deletar cadastro\n"
-					+ "6-Realizar logout\n"
-					+ "0-Voltar");
+			String [] strOp = {"Sair","Cadastrar usuario", "Realizar login", "Visualizar candidato", "Atualizar cadastro","Deletar cadastro", "Realizar logout"};
+			int tamanhoOp = 0; 
+			if(sessao.getToken()!=null) {tamanhoOp = strOp.length;} else {tamanhoOp = 3;}
+			for(int i = 1; i<=tamanhoOp-1; i++) {
+				System.out.println(i+"-"+strOp[i]);
+			} System.out.println("0-Sair");
 			op = leia.nextInt();
 			
 			switch(op) {
@@ -206,16 +227,16 @@ public class Cliente {
 				cliente.realizarLogin();
 			break;
 			case 3:
-				cliente.visualizarCandidato();
+				if(sessao.getToken()!=null)cliente.visualizarCandidato();
 			break;
 			case 4:
-				cliente.atualizarCadastro();
+				if(sessao.getToken()!=null)cliente.atualizarCadastro();
 				break;
 			case 5: 
-				cliente.deletarCadastro();
+				if(sessao.getToken()!=null)cliente.deletarCadastro();
 				break; 
 			case 6: 
-				cliente.realizarLogout();
+				if(sessao.getToken()!=null)cliente.realizarLogout();
 				break;
 			case 0:
 				

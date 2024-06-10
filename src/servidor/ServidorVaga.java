@@ -3,18 +3,46 @@ package servidor;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.mysql.cj.xdevapi.JsonArray;
+
 import dao.DaoCompetencia;
 import dao.VagasDao;
+import entities.Vaga;
 
 public class ServidorVaga extends MainServidor {
 	
 
+	public void listarVagas(String op,Map<String, Object> data){
+		VagasDao bd = new VagasDao();
+		try {
+			
+			System.out.println("chegou aqui");
+			List<Vaga> vagas = bd.listarVagas(data.get("email").toString());
+			
+			JSONArray jArry = new JSONArray(vagas);
+			
+			System.out.println("array listar Vagas: "+ jArry.toString());
+			respostarServidorListarTodos(jArry);
+			
+		} catch (Exception e) {
+			respostaExcecao(e, op,"422");
+		} 
+		
+		
+		
+	}
+	
+	
+	
 	public void atualizarVaga(Map<String, Object> userData) {
 		VagasDao bd = new VagasDao();
 		
@@ -32,12 +60,9 @@ public class ServidorVaga extends MainServidor {
 	
 		VagasDao bd = new VagasDao();
 		try {
-			ResultSet rs =  bd.visualizarVaga(userData.get("email").toString());
-			if(rs==null)System.out.println("Alguem erro aconteceu");
+			Vaga vagaTemp =  bd.visualizarVaga(Integer.parseInt(userData.get("idVaga").toString()));
 			
-				
-			System.out.println("teste3 ");
-			respostaServidorLeitura(rs);
+			respostaServidorLeitura(vagaTemp);
 		}catch(Exception ex) {
 			System.out.println(ex);
 		}
@@ -48,8 +73,21 @@ public class ServidorVaga extends MainServidor {
 		
 		try {
 		
-			float faixa = Float.parseFloat( userData.get("faixaSalarial").toString());
-			bd.cadastrarVaga(userData.get("email").toString(),faixa, userData.get("descricao").toString());
+			
+			
+			List<String> competencias = converterJsonArrayToList(userData.get("competencias").toString());
+			for(String str : competencias) {
+				System.out.println(str);
+			}
+			
+			//JSONArray jsonArr = new JSONArray(userData.get("competencias").toString());
+			//System.out.println(jsonArr.toString());			
+			bd.cadastrarVaga(userData,competencias);
+			
+			
+			
+			
+			
 			respostaServidor(userData.get("operacao").toString());
 		} catch (Exception e) {
 			respostaExcecao(e, userData.get("operacao").toString(),"422");
@@ -62,8 +100,8 @@ public class ServidorVaga extends MainServidor {
 		
 	
 		
-		
-	        	bd.apagarVaga(userData.get("email").toString());
+	int idVaga = Integer.parseInt(userData.get("idVaga").toString());
+	        	bd.apagarVaga(userData.get("email").toString(), idVaga );
 		
 		respostaServidor(userData.get("operacao").toString());
 	} catch (Exception e) {
@@ -80,11 +118,11 @@ public class ServidorVaga extends MainServidor {
 		 PrintStream saida  = new PrintStream (ss.getOutputStream());
 		 String tokenString = "201";
 		 if(operacao.equals("cadastrarVaga") || operacao.equals("apagarVaga") ) {
-			 
+			 String str = operacao.concat("realizada com sucesso");
 			 myString = new JSONObject()
 					 .put("operacao", operacao)
 					 .put("status",tokenString)
-					 .put("mensagem", "Competencia/Experiencia cadastrada com sucesso")
+					 .put("mensagem", str)
 					 .toString(); 
 			 
 			 System.out.println("Saida: ["+myString+"]");
@@ -104,25 +142,41 @@ public class ServidorVaga extends MainServidor {
 		 }
 		 
 	 }
-	 private void respostaServidorLeitura(ResultSet rs) {
-			
-			try {
-//				{
-//					  "operacao": "visualizarVaga",
-//					  "faixaSalarial":12345,
-//					  "descricao":"xxxxx",
-//					  "estado":"xxxxx",
-//					  "competencias": ["xxxx","xxxx","xxxx"],
-//					   "status": "201"
-//					}
+	 
+	 private void respostarServidorListarTodos(JSONArray jArry) {
+		 try {
+//				
 				PrintStream saida  = new PrintStream (ss.getOutputStream());
 				JSONObject json = new JSONObject();
 				JSONObject compJson= new JSONObject();				 
-				String myString	= new JSONObject().put("operacao",  "visualizarVaga")
-						.put("faixaSalarial", rs.getFloat("faixa_salarial"))
-						.put("descricao",rs.getString("descricao"))
-						.put("estado", false)
-						.put("competencias", rs.getString("competencias"))
+				String myString	= new JSONObject()
+						.put("operacao",  "listarVagas")
+						.put("vagas", jArry)
+						.put("status",201)
+						.toString();
+				System.out.println("Saida: ["+myString+"]"); 
+				saida.println(myString);
+			}catch(Exception ex) {
+				
+			}
+	 }
+	 private void respostaServidorLeitura(Vaga vagaTemp) {
+			
+			try {
+				JSONArray jsonArray = new JSONArray(vagaTemp.getCompetencias());
+				
+				
+
+//				
+				PrintStream saida  = new PrintStream (ss.getOutputStream());
+				JSONObject json = new JSONObject();
+				JSONObject compJson= new JSONObject();				 
+				String myString	= new JSONObject()
+						.put("operacao",  "visualizarVaga")
+						.put("faixaSalarial", vagaTemp.getFaixaSalarial())
+						.put("descricao",vagaTemp.getDescricao())
+						.put("estado", vagaTemp.getEstado())
+						.put("competencias", jsonArray)
 						.toString();
 				
 				System.out.println("Saida: ["+myString+"]"); 
@@ -155,6 +209,17 @@ public class ServidorVaga extends MainServidor {
 		 
 			
 	 }
+	 
+	 private static List<String> converterJsonArrayToList (String data) {
+			
+			data = data.replace("[", "").replace("]", "");
+		    String[] array = data.split(", ");
+		    List<String> list = new ArrayList<>();
+		    for (String s : array) {
+		        list.add(s);
+		    }
+		    return list;
+		}
 	 
 	 
 

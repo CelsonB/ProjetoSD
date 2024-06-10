@@ -96,21 +96,22 @@ public class MainServidor {
 				}
 				}
 				
-			else if(op.equals("apagarVaga") || op.equals("cadastrarVaga") || op.equals("visualizarVaga") || op.equals("atualizarVaga")) {
+			else if(op.equals("apagarVaga") || op.equals("cadastrarVaga") || op.equals("visualizarVaga") || op.equals("atualizarVaga" )|| op.equals("listarVagas") ) {
 				switch(op) {
-				case "apagarVaga":
-				
-					vagaServer.cadastrarVaga(userData);
-				
-				break;
 				case "cadastrarVaga":
-					vagaServer.visualizarVaga(userData);
+					vagaServer.cadastrarVaga(userData);
 				break;
 				case "visualizarVaga":
+					vagaServer.visualizarVaga(userData);
+				break;
+				case "apagarVaga":
 					vagaServer.apagarVaga(userData);
 					break;
 				case "atualizarVaga":
 					vagaServer.atualizarVaga(userData);
+					break;
+				case "listarVagas":
+					vagaServer.listarVagas("listarVagas", userData);
 					break;
 					
 			}

@@ -1,18 +1,23 @@
 package cliente;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import entities.Vaga;
@@ -22,17 +27,31 @@ public class ClienteVaga extends Cliente {
 	private Socket clienteSocket = super.clienteSocket ;
 	private static Scanner leia  = new Scanner(System.in);	
 	
+	private static List<Vaga> vagas = new ArrayList<>();
+	
+	public ClienteVaga() {
+		listarVagas();
+	}
+	
+	public void listarVagas() {
+		enviarJsonListarVagas();
+		this.vagas = receberRespostaListarVagas();
+		
+	}
+	
+	
+	
 	public void cadastrarVagas() {
 		
 		enviarJsonCadastroAtualizacao(cadastrarAtualizarJson(), "cadastrarVaga");
 		receberRespostaServidor();
 	}
 	public void atualizarVagas() {
-		enviarJsonCadastroAtualizacao(cadastrarAtualizarJson(), "cadastrarVaga");
+		enviarJsonCadastroAtualizacao(cadastrarAtualizarJson(),"atualizarVaga");
 		receberRespostaServidor();
 	}
 	public void visualizarVagas() {
-		//{"operacao":"visualizarVaga","idVaga":0,"email":"xx@xxx.xxx","token": "UUID"}
+		
 		enviarJsonVisualizarVaga("visualizarVaga");
 		receberRespostaServidorVisualizar() ;
 	}
@@ -45,11 +64,9 @@ public class ClienteVaga extends Cliente {
 	private void enviarJsonVisualizarVaga(String operacao) {
 		try {
 			PrintStream saida  = new PrintStream (super.clienteSocket.getOutputStream());
-
-			
 				String myString = new JSONObject()
 				.put("operacao", operacao)
-				.put("idVaga", 0)
+				.put("idVaga", selecionarVaga(operacao))
 				.put("email",super.sessaoEmpresa.getEmail())
 				.put("token",super.sessaoEmpresa.getToken())
 				.toString(); 
@@ -64,7 +81,68 @@ public class ClienteVaga extends Cliente {
 	}
 	
 	
+	private void enviarJsonListarVagas() {
+		
+		
+		
+		try {
+			PrintStream saida  = new PrintStream (super.clienteSocket.getOutputStream());
+			String myString = new JSONObject()
+					.put("operacao","listarVagas")
+					.put("email", super.sessaoEmpresa.getEmail())
+					.put("token",super.sessaoEmpresa.getToken())
+					.toString();
+			System.out.println("Saida: [" +myString + "]");
+			
+			saida.println(myString);
+			
+		} catch (JSONException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
+	private List<Vaga> receberRespostaListarVagas() {
+		
+		
+		try {
+			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+		BufferedReader reader = new BufferedReader(input);
+		
+		ObjectMapper mapper = new ObjectMapper(); 
+		Map<String, Object> data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
+		
+		System.out.println("Entrada: [" +data.toString()+ "]");
+		
+		
+			String competencias = new JSONObject().put("vagas",data.get("vagas").toString()).toString();
+			JSONArray jsonArr = new JSONArray(data.get("vagas").toString());
+			List<Vaga> vagas = new ArrayList<>();
+			 for (int i = 0; i < jsonArr.length(); i++)
+		        {
+				
+				 	Vaga vagaTemp = new Vaga();
+		            JSONObject jsonObj = jsonArr.getJSONObject(i);
+		         
+		            vagaTemp.setIdVaga(  Integer.parseInt(jsonObj.get("idVaga").toString()));
+		            vagaTemp.setNome( jsonObj.get("nome").toString());
+		            vagas.add(vagaTemp);
+		            
+		        }
+			 return vagas;
+			 
+			
+		} catch (JSONException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+		
+		
+	}
 	
 	private void enviarJsonCadastroAtualizacao(Vaga dataVaga, String operacao) {
 		try {
@@ -78,7 +156,7 @@ public class ClienteVaga extends Cliente {
 					.put("descricao",dataVaga.getDescricao())
 					.put("estado", dataVaga.getEstado())
 					.put("email", super.sessaoEmpresa.getEmail())
-					.put("competencias", dataVaga.getCompetencias())
+					.put("competencias", selecionarCompetencia())
 					.put("token",super.sessaoEmpresa.getToken())
 					.toString(); 
 			
@@ -99,9 +177,9 @@ public class ClienteVaga extends Cliente {
 		
 
 		
-		System.out.println("Por favor digite a descriçao da vaga:");
+		System.out.println("Por favor digite o nome da vaga:");
 		dado = leia.nextLine();
-		vaga.setDescricao(dado);
+		vaga.setNome(dado);
 		
 		System.out.println("Por favor digite o estado da vaga:");
 		dado = leia.nextLine();
@@ -111,14 +189,12 @@ public class ClienteVaga extends Cliente {
 		System.out.println("Por favor digite a descricao da empresa:");
 		dado = leia.nextLine();
 		vaga.setDescricao(dado);
-		
-		
-		
+				
 		System.out.println("Por favor digite a faixa salarial da vaga:");
 		float faixa = leia.nextFloat();
 		vaga.setFaixaSalarial(faixa);
 		
-		vaga.setCompetencias(selecionarCompetencia());
+	
 		
 		
 		
@@ -126,31 +202,36 @@ public class ClienteVaga extends Cliente {
 		return vaga;
 	}
 	
-	private ArrayList<String> selecionarCompetencia() {
+	private JSONArray selecionarCompetencia() {
 		System.out.println("por favor selecione a competencia que vc deseja: ");
-		ArrayList<String> comps = new ArrayList<String>();
+		
+		
+		
+		
+		JSONArray jArry = new JSONArray();
+		
 		int op = 0; 
 		String [] competencias = super.competenciasNomes;
-		do { op = 1;
+		do {	 
+			op = 1;
 			for(String comp :competencias) {
-			
 					System.out.println(op + " : " + comp);
-
-				
+					
 				op++;
 			}
 			System.out.println("0 : Sair da seleção");
 			op = leia.nextInt();
 			if(op!=0) {
+				
 				String sr = super.competenciasNomes[op-1] ; 
+				jArry.put(sr);
 			
-				comps.add(sr); 
 				
 			}
 			
 		}while(op!=0);
 		
-		return comps;
+		return jArry;
 	}
 	
 	private void receberRespostaServidor() {
@@ -230,4 +311,28 @@ private void receberRespostaServidorVisualizar() {
 		
 	}
 	}
+
+	private static List<String> converterJsonArrayToList (String data) {
+		
+		data = data.replace("[", "").replace("]", "");
+	    String[] array = data.split(", ");
+	    List<String> list = new ArrayList<>();
+	    for (String s : array) {
+	        list.add(s);
+	    }
+	    return list;
+	}
+	
+	private int selecionarVaga(String operacao) {
+		if(operacao.equals("apagarVaga"))System.out.println("Por escolha qual vaga deseja apagar:");
+		else System.out.println("Por escolha qual vaga deseja visualizar:");
+			
+		
+		for(Vaga vaga : vagas) {
+			System.out.println(vaga.getIdVaga() +"-"+ vaga.getNome());
+		}
+		System.out.println("Digite o numero da vaga:");
+		return leia.nextInt();
+	}
+
 }

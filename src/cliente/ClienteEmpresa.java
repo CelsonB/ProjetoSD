@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import entities.Empresa;
 
-public class ClienteEmpresa {
+public class ClienteEmpresa extends Cliente {
 	public static Scanner leia  = new Scanner(System.in);	
 	public static Socket clienteSocket = null;
 	public static UUID token = null;
@@ -58,7 +58,10 @@ public class ClienteEmpresa {
 	cadastro.setRamo(dado);
 	
 	enviarJsonCadastro(cadastro, "cadastrarEmpresa");
-	receberRespostaServidor();
+	if(receberRespostaServidor()) {
+		super.sessaoEmpresa = cadastro;
+		super.sessaoEmpresa.setToken(token);
+	}
 	
 	}
 	
@@ -72,7 +75,10 @@ public class ClienteEmpresa {
 		senha = leia.nextLine();
 		
 		enviarJsonLogin(email,senha);
-		receberRespostaServidor();
+		if(receberRespostaServidor()) {
+			super.sessaoEmpresa.setEmail(email);
+			super.sessaoEmpresa.setSenha(email);
+		}
 	}
 	
 	public void visualizarEmpresa() {
@@ -82,7 +88,12 @@ public class ClienteEmpresa {
 		
 		
 		enviarJsonLeitura(email,"visualizarEmpresa");
-		receberRespostaServidor();
+		if(receberRespostaServidor()) {
+		
+		}
+		
+		
+		
 		
 	}
 	
@@ -122,8 +133,10 @@ public class ClienteEmpresa {
 		att.setRamo(dado);
 		
 		enviarJsonCadastro(att, "atualizarEmpresa");
-		receberRespostaServidor();
-		
+		if(receberRespostaServidor()) {
+	
+		}
+		//System.out.println("array dao: "+ vagaTemp.toString());
 	
 	}
 	
@@ -206,7 +219,7 @@ public class ClienteEmpresa {
 		
 	}
 	
-	private void receberRespostaServidor() {
+	private boolean receberRespostaServidor() {
 		try {
 			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
 			BufferedReader reader = new BufferedReader(input);
@@ -224,6 +237,8 @@ public class ClienteEmpresa {
 					
 					System.out.println("Operação realizada com sucesso");
 					token =   UUID.fromString ( data.get("token").toString());
+					super.sessaoEmpresa.setToken(token);
+					return true;
 				}else 
 				if(data.get("operacao").toString().equals("visualizarEmpresa")){
 					
@@ -238,11 +253,13 @@ public class ClienteEmpresa {
 							+ "\ndescricao: "+ data.get("descricao").toString()
 							+ "\nramo: "+ data.get("ramo").toString()
 							);
+					return true;
 				}
 				
 			}else {
 				
 				System.out.println(data.get("mensagem").toString());
+				return false;
 				
 			}
 			
@@ -250,7 +267,7 @@ public class ClienteEmpresa {
 		}catch(Exception ex) {
 			
 		}
-		
+		return false;
 	}
 	
 	private void enviarJsonCadastro(Empresa dados,String operacao) {
