@@ -14,6 +14,7 @@ create table Vaga_competencia(id_vaga_competencia int not null AUTO_INCREMENT, i
 
 					create table vaga (
 					id_vaga int not null AUTO_INCREMENT, 
+					nome VARCHAR(255) not null,
 					id_empresa int not null, 
 					faixa_salarial int not null, 
 					descricao char(255) not null,
@@ -29,3 +30,24 @@ insert into Competencia (competencia) values ("c++");
 select competencia, tempo from competencia inner join Candidato_Competencia on Candidato_Competencia.id_competencia = competencia.id_competencia where id_candidato = (select id_candidato from candidato where email = "celson@");
 
 ALTER TABLE Candidato_Competencia RENAME COLUMN tempo TO experiencia;
+
+ Select * from vaga inner join vaga_competencia on vaga.id_vaga = vaga_competencia.id_vaga where id_vaga = (select id_vaga from vaga_competencia )
+ 
+
+ select * from competencia inner join vaga_competencia on vaga_competencia.id_competencia = competencia.id_competencia ;
+ 
+Select * from vaga inner join vaga_competencia on vaga.id_vaga = vaga_competencia.id_vaga inner join competencia on competencia.id_competencia = vaga_competencia.id_competencia
+where vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'python')) 
+or  vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'c++' ))
+or  vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'c#' ))
+group by vaga.id_vaga; 
+ 
+ 
+ Select * from vaga inner join vaga_competencia on vaga.id_vaga = vaga_competencia.id_vaga inner join competencia on competencia.id_competencia = vaga_competencia.id_competencia
+where vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'python')) 
+or  vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'c++' ))
+or  vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'c#' ))
+group by vaga.id_vaga;
+
+
+select competencia from competencia inner join vaga_competencia on vaga_competencia.id_competencia = competencia.id_competencia where vaga_competencia.id_vaga = ?; 

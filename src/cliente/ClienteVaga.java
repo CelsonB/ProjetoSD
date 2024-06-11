@@ -45,20 +45,24 @@ public class ClienteVaga extends Cliente {
 		
 		enviarJsonCadastroAtualizacao(cadastrarAtualizarJson(), "cadastrarVaga");
 		receberRespostaServidor();
+		this.listarVagas();
 	}
 	public void atualizarVagas() {
 		enviarJsonCadastroAtualizacao(cadastrarAtualizarJson(),"atualizarVaga");
 		receberRespostaServidor();
+		this.listarVagas();
 	}
 	public void visualizarVagas() {
 		
 		enviarJsonVisualizarVaga("visualizarVaga");
 		receberRespostaServidorVisualizar() ;
+		
 	}
 	public void apagarVaga() {
 		//{"operacao": "apagarVaga","idVaga":0,"email":"xx@xxx.xxx","token": "UUID"}
 		enviarJsonVisualizarVaga("apagarVaga");
 		receberRespostaServidor();
+		this.listarVagas();
 	}
 	
 	private void enviarJsonVisualizarVaga(String operacao) {
@@ -119,12 +123,12 @@ public class ClienteVaga extends Cliente {
 			String competencias = new JSONObject().put("vagas",data.get("vagas").toString()).toString();
 			JSONArray jsonArr = new JSONArray(data.get("vagas").toString());
 			List<Vaga> vagas = new ArrayList<>();
-			 for (int i = 0; i < jsonArr.length(); i++)
+			
+			for (int i = 0; i < jsonArr.length(); i++)
 		        {
 				
 				 	Vaga vagaTemp = new Vaga();
 		            JSONObject jsonObj = jsonArr.getJSONObject(i);
-		         
 		            vagaTemp.setIdVaga(  Integer.parseInt(jsonObj.get("idVaga").toString()));
 		            vagaTemp.setNome( jsonObj.get("nome").toString());
 		            vagas.add(vagaTemp);
@@ -328,7 +332,7 @@ private void receberRespostaServidorVisualizar() {
 		else System.out.println("Por escolha qual vaga deseja visualizar:");
 			
 		
-		for(Vaga vaga : vagas) {
+		for(Vaga vaga : this.vagas) {
 			System.out.println(vaga.getIdVaga() +"-"+ vaga.getNome());
 		}
 		System.out.println("Digite o numero da vaga:");

@@ -104,7 +104,7 @@ public class Cliente {
 	}
 	
 	protected static void vagaEmpresa (ClienteVaga vaga) {
-		int op;
+		int op =0 ;
 		
 				do {
 			
@@ -114,7 +114,11 @@ public class Cliente {
 					+ "3-Apagar vaga\n"
 					+ "4-Atualizar vaga\n"
 					+ "0-Voltar");
-			op = leia.nextInt();
+			try {
+				op = leia.nextInt();
+			}catch(Exception ex) {
+				System.out.println(ex);
+			}
 		
 			switch(op) {
 			
@@ -135,7 +139,7 @@ public class Cliente {
 	}
 	
 	protected static void competenciaExperiencia(ClienteCompetencia competencia) {
-		int op;
+		int op =0 ;
 		//System.out.println(sessao);
 				do {
 					
@@ -146,7 +150,14 @@ public class Cliente {
 					for(int i = 1; i<=tamanhoOp-1; i++) {
 						System.out.println(i+"-"+strOp[i]);
 					} System.out.println("0-Sair");
-			op = leia.nextInt();
+					
+					
+					
+					try {
+						op = leia.nextInt();
+					}catch(Exception ex) {
+						System.out.println(ex);
+					}
 			
 			switch(op) {
 			
@@ -168,7 +179,7 @@ public class Cliente {
 	}
 	
 	protected static void clienteEmpresa(ClienteEmpresa empresa) {
-		int op;
+		int op = 0;
 		do {
 			
 			String [] strOp = {"Sair","Cadastrar empresa", "Realizar login", "Visualizar empresa", "Atualizar cadastro","Deletar empresa", "Realizar logout"};
@@ -177,7 +188,13 @@ public class Cliente {
 			for(int i = 1; i<=tamanhoOp-1; i++) {
 				System.out.println(i+"-"+strOp[i]);
 			} System.out.println("0-Sair");
-			op = leia.nextInt();
+			
+			try {
+				op = leia.nextInt();
+			}catch(Exception ex) {
+				System.out.println(ex);
+			}
+			
 			
 			switch(op) {
 			
@@ -216,7 +233,13 @@ public class Cliente {
 			for(int i = 1; i<=tamanhoOp-1; i++) {
 				System.out.println(i+"-"+strOp[i]);
 			} System.out.println("0-Sair");
-			op = leia.nextInt();
+			
+			
+			try {
+				op = leia.nextInt();
+			}catch(Exception ex) {
+				System.out.println(ex);
+			}
 			
 			switch(op) {
 			

@@ -98,7 +98,7 @@ public class VagasDao extends BancoDeDados {
 	public void apagarVaga(String email, int idVaga) throws IOException, SQLException {
 		Conectar();
 		PreparedStatement st = null;
-		st = conn.prepareStatement ("delete from vaga where id_empresa = (select id_empresa from candidato where email = ?) and id_vaga = ?");
+		st = conn.prepareStatement ("delete from vaga where id_empresa = (select id_empresa from empresa where email = ?) and id_vaga = ?");
 		st.setString(1,email);
 		st.setInt(2, idVaga);
 		st.executeUpdate();

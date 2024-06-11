@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -15,25 +16,95 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dao.BancoDeDados;
 import dao.DaoCompetencia;
 import dao.EmpresaDao;
 import entities.Competencia;
 import entities.Empresa;
+import entities.Vaga;
 
 public class ServidorCompetencia extends MainServidor {
 
+	public void filtrarVagas(Map<String, Object> data) {
+
+		DaoCompetencia bd = new DaoCompetencia();
+		ObjectMapper mapper = new ObjectMapper();  
+		
+	
+		
+				
+		 try {
+			 //JSONObject newObj = new JSONObject (data.get("filtros").toString()); 
+			Map<String, Object> comps = mapper.readValue(new JSONObject (data.get("filtros").toString()).toString(), new TypeReference<Map<String, Object>>() {}); 
+			
+			
+			List<String> competencias =  converterJsonArrayToList (comps.get("competencias").toString());
+			 
+			 
+			List<Vaga> vagas = bd.filtrarVagas(data, competencias, comps.get("tipo").toString());
+			
+			respostarFiltrarVagas(vagas);
+			
+			
+		} catch (Exception e) {
+			
+			respostaExcecao(e, data.get("operacao").toString(),"422");
+		}
+		
+		
+		
+	}
+	
+	public void respostarFiltrarVagas(List<Vaga> vagas) {
+		JSONObject obj = new JSONObject();
+		JSONArray jarray = new JSONArray();
+		
+		String myString = null;
+
+		
+		try {
+			 PrintStream saida  = new PrintStream (ss.getOutputStream());
+			
+			for(Vaga vag : vagas) {
+				JSONObject objTemp = new JSONObject();
+				
+				objTemp.put("IdVaga",vag.getIdVaga())
+				.put("nome", vag.getNome())
+				.put("faixaSalarial", vag.getFaixaSalarial())
+				.put("descricao", vag.getDescricao())
+				.put("estado", vag.getEstado())
+				.put("competencias", vag.getCompetencias())
+				.put("email", vag.getEmail());
+			
+				jarray.put(objTemp);
+			}
+			
+			
+			
+			obj.put("operacao", "filtrarVagas").put("vagas", jarray).put("status", 201);
+			
+			
+			System.out.println("Saida: ["+obj.toString()+"]");
+			 
+			saida.println(obj.toString());
+			
+			
+			
+		} catch (JSONException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public void cadastrarCandidatoCompetencia(Map<String, Object> dataCandidato, Map<String, String> dataCompetencia ) {
 		
 		DaoCompetencia bd = new DaoCompetencia();
 		
 		int periodo =  Integer.parseInt(dataCompetencia.get("experiencia").toString());
-				
-				
-				
-				
 		
 		try {
 		
@@ -252,7 +323,17 @@ public class ServidorCompetencia extends MainServidor {
 	 
 	 
 	 
-	 
+
+	 private static List<String> converterJsonArrayToList (String data) {
+			
+			data = data.replace("[", "").replace("]", "");
+		    String[] array = data.split(", ");
+		    List<String> list = new ArrayList<>();
+		    for (String s : array) {
+		        list.add(s);
+		    }
+		    return list;
+		}
 	 
 	 
 	 

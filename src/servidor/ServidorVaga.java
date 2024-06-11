@@ -25,12 +25,11 @@ public class ServidorVaga extends MainServidor {
 		VagasDao bd = new VagasDao();
 		try {
 			
-			System.out.println("chegou aqui");
 			List<Vaga> vagas = bd.listarVagas(data.get("email").toString());
 			
 			JSONArray jArry = new JSONArray(vagas);
 			
-			System.out.println("array listar Vagas: "+ jArry.toString());
+
 			respostarServidorListarTodos(jArry);
 			
 		} catch (Exception e) {

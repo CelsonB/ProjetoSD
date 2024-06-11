@@ -39,9 +39,56 @@ public class ClienteCompetencia extends Cliente {
 	
 
 	
+	public void filtrarVagas() {
 
+		
+		
+		JSONObject obj = new JSONObject();
+		JSONArray jarray = new JSONArray();
+		
+		
+		try {
+			PrintStream saida  = new PrintStream (super.clienteSocket.getOutputStream());
+			
+			ArrayList<String> competencias =  selecionarCompetencia();
+			
+			for(String str : competencias) {
+				
+				jarray.put(str);
+			}
+			
+			JSONObject newObj = new JSONObject();
+			newObj.put("competencias", jarray).put("tipo", selecionarTipo());
+			obj.put("operacao", "filtrarVagas").put("filtros", newObj).put("token", super.sessao.getToken());
+			
+			
+			System.out.println("Saida: [" + obj.toString() + "]");
+			
+			saida.println(obj.toString());
+			
+			receberRespostaServidor();
+			
+		} catch (JSONException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
-	
+	private String selecionarTipo() {
+		System.out.println("1 - and\n2 - or\n0 - Sair");
+		int op = 0;
+			do {
+				op = leia.nextInt();
+				switch(op) {
+				case 1: return "and";
+				case 2: return "or";
+				case 0:
+				}
+			
+			}while(op!=0);
+			
+		return "or";
+	}
 	 public void cadastrarCandidatoCompetencia() 
 	 {
 	

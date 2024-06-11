@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import entities.Candidato;
 import entities.Competencia;
 import entities.Empresa;
+import entities.Vaga;
 
 public class DaoCompetencia extends BancoDeDados{
 
@@ -22,6 +26,87 @@ public class DaoCompetencia extends BancoDeDados{
 	}
 	
 	
+	public List<Vaga> filtrarVagas(Map<String, Object> data, List<String> competencias,String tipo) throws SQLException, IOException {
+		
+		PreparedStatement st = null;
+		Conectar();
+		String comando = "Select * from vaga inner join vaga_competencia on vaga.id_vaga = vaga_competencia.id_vaga where";
+		String where = " vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = '?')) ";
+		
+		
+		int i = 0;
+		for(String str : competencias) {
+		
+			if(i==0) {comando = comando.concat(where).replace("?", str); i++;}
+			else {
+
+				
+				if(tipo.equals("or")) {
+					comando = comando.concat(tipo);
+					comando = comando.concat(where).replace("?", str);
+					
+					
+					
+				}else 
+				if(tipo.equals("and")) {
+					comando = comando.concat(tipo);
+					comando = comando.concat(where).replace("?", str);
+				
+				
+				}
+				
+			}	
+	
+		}
+		
+	
+		st = conn.prepareStatement (comando.concat("group by vaga.id_vaga"));
+		ResultSet rs = st.executeQuery();
+
+
+		
+		
+
+		
+		
+		
+		
+		List<Vaga> vagas = new ArrayList<>();
+	
+		while(rs.next()) {
+			ArrayList<String> competenciasVagas =  new ArrayList<>();
+			
+			st = conn.prepareStatement ("select email from empresa where id_empresa = ?");
+			
+			st.setInt(1,rs.getInt("id_empresa"));
+			ResultSet email =  st.executeQuery();
+			
+			
+			st = conn.prepareStatement ("select competencia from competencia inner join vaga_competencia on vaga_competencia.id_competencia = competencia.id_competencia where vaga_competencia.id_vaga = ? ");
+			st.setInt(1,rs.getInt("id_vaga"));
+			ResultSet comps = st.executeQuery();
+			
+			while(comps.next()) {
+				competenciasVagas.add(comps.getString("competencia"));
+			}
+			
+			
+			Vaga vagaTemp = new Vaga();
+			vagaTemp.setIdVaga(rs.getInt("id_vaga"));
+			vagaTemp.setNome(rs.getString("nome"));
+			vagaTemp.setFaixaSalarial(Float.parseFloat(rs.getString("faixa_salarial")));
+			vagaTemp.setDescricao(rs.getString("descricao"));
+			vagaTemp.setEstado(rs.getString("estado"));
+			vagaTemp.setEmail(email.getString("email"));
+			vagaTemp.setCompetencias(competenciasVagas);
+			vagas.add(vagaTemp);
+			
+			System.out.println("array dao: "+ vagaTemp.toString());
+		}
+		
+		return vagas;
+		
+	}
 
 	public void cadastrarExperienciaCandidato(String email,String competencia, int periodo)throws SQLException, IOException  {
 		
@@ -87,7 +172,6 @@ public class DaoCompetencia extends BancoDeDados{
 		//delete from Candidato_Competencia where id_candidato = (select id_candidato from candidato where email = "celsonb") and id_competencia =  (select id_competencia from competencia where competencia = "python");
 		//delete from Candidato_Competencia where id_candidato = (select id_candidato from candidato where email = ?) and id_competencia =  (select id_competencia from competencia where competencia = ?
 	}
-	
 	
 	
 	

@@ -1,11 +1,15 @@
 package teste;
 
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.UUID;
 
 import org.json.JSONArray;
 
@@ -18,6 +22,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dao.DaoCompetencia;
+
 public class Teste {
 	protected static String [] competenciasNomes  = {"python" , "c#", "c++"};
 	public static Scanner leia = new Scanner (System.in);
@@ -25,31 +31,47 @@ public class Teste {
 		// TODO Auto-generated method stub
 		
 		
+		JSONObject obj = new JSONObject();
+		JSONArray jsonarry = new JSONArray();
 		
-		JSONArray testeJson = selecionarCompetencia();
+		jsonarry.put("JS").put("Java").put("python");
 		
-		System.out.println(testeJson.toString());
+ 		obj.put("competencias",jsonarry).put("tipo", "or");
 		
-		JSONObject jsonObjectTeste = new JSONObject();
-		jsonObjectTeste.put("competencias", testeJson);
+		String myStr = new JSONObject()
+				.put("operacao", "filtrarVagas")
+				.put("filtros", obj)
+				.put("token", UUID.randomUUID())
+				.toString();	
+				
+		System.out.println(myStr);
+				
 		
-		System.out.println(jsonObjectTeste.toString());
-		String str = jsonObjectTeste.toString();
-		System.out.println(str);
-		
+		DaoCompetencia bd = new DaoCompetencia();
 		ObjectMapper mapper = new ObjectMapper();  
-		Map<String, Object> stringArray = mapper.readValue(str, new TypeReference<Map<String, Object>>() {}); 
 		
-		System.out.println("String array dps do mapper " + stringArray.get("competencias"));
 		
-		List<String> novaLista = converterStringArrayToMap(stringArray.get("competencias").toString());
+		Map<String, Object> data = mapper.readValue(myStr, new TypeReference<Map<String, Object>>() {}); 
+		System.out.println("Primeiro map" + data.toString());
+		System.out.println("Apenas filtro" + data.get("filtros"));
 		
-		for(String str2 : novaLista) {
-			System.out.println("Deppois do passer: " + str2);
-		}
-		//System.out.println("Deppois do passer: " + novaLista.toString());
-		//SONArray testeJson2 = new JSONArray(stringArray.get("competencias"));
-		//System.out.println(testeJson2.toString());
+	
+		
+		
+		Map<String, Object> comps = mapper.readValue(new JSONObject (data.get("filtros").toString()).toString(), new TypeReference<Map<String, Object>>() {}); 
+		List<String> competencias =  converterJsonArrayToList (comps.get("competencias").toString());
+	
+		
+		
+		PreparedStatement st = null;
+		String tipo = comps.get("tipo").toString();
+		
+
+	
+		
+		
+		
+		
 	}
 
 	
@@ -91,6 +113,60 @@ public class Teste {
 	            list.add(s);
 	        }
 	        return list;
+	}
+	
+	private static List<String> converterJsonArrayToList (String data) {
+		
+		data = data.replace("[", "").replace("]", "");
+	    String[] array = data.split(", ");
+	    List<String> list = new ArrayList<>();
+	    for (String s : array) {
+	        list.add(s);
+	    }
+	    return list;
+	}
+	
+	private static void segundoTeste() {
+		//JSONArray newArray = new JSONArray(data.get("filtros").toString());
+		//JSONObject newObj = new JSONObject (data.get("filtros").toString()); 
+		
+		
+	//	Map<String, Object> comps = mapper.readValue(new JSONObject (data.get("filtros").toString()).toString(), new TypeReference<Map<String, Object>>() {}); 
+		
+		//System.out.println("Json objeto : " + newObj.toString());
+		//System.out.println(newArray.toString());
+		
+		//Map<String, Object> comps = mapper.readValue(newObj.toString(), new TypeReference<Map<String, Object>>() {}); 
+		
+//		
+//		System.out.println("Segundo map" + comps.toString());
+//		
+//		List<String> competencias =  converterJsonArrayToList (comps.get("competencias").toString());
+//		
+//		System.out.println("Lista competencias"+competencias.toString());
+	}
+	private static void primeiroTeste() throws JSONException, JsonMappingException, JsonProcessingException {
+JSONArray testeJson = selecionarCompetencia();
+		
+		System.out.println(testeJson.toString());
+		
+		JSONObject jsonObjectTeste = new JSONObject();
+		jsonObjectTeste.put("competencias", testeJson);
+		
+		System.out.println(jsonObjectTeste.toString());
+		String str = jsonObjectTeste.toString();
+		System.out.println(str);
+		
+		ObjectMapper mapper = new ObjectMapper();  
+		Map<String, Object> stringArray = mapper.readValue(str, new TypeReference<Map<String, Object>>() {}); 
+		
+		System.out.println("String array dps do mapper " + stringArray.get("competencias"));
+		
+		List<String> novaLista = converterStringArrayToMap(stringArray.get("competencias").toString());
+		
+		for(String str2 : novaLista) {
+			System.out.println("Deppois do passer: " + str2);
+		}
 	}
 	
 }
