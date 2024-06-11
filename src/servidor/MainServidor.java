@@ -72,9 +72,17 @@ public class MainServidor {
 			
 			op = userData.get("operacao").toString();
 			
-			if(op.equals("cadastrarCompetenciaExperiencia") || op.equals("visualizarCompetenciaExperiencia") || op.equals("apagarCompetenciaExperiencia") || op.equals("atualizarCompetenciaExperiencia")  ) {
+			if(op.equals("cadastrarCompetenciaExperiencia") 
+					|| op.equals("visualizarCompetenciaExperiencia") 
+					|| op.equals("apagarCompetenciaExperiencia") 
+					|| op.equals("atualizarCompetenciaExperiencia")
+					|| op.equals("filtrarVagas")  
+					) {
 				
 					
+				
+				 
+				
 				
 				switch(op) {
 					case "cadastrarCompetenciaExperiencia":
@@ -91,6 +99,9 @@ public class MainServidor {
 						break;
 					case "atualizarCompetenciaExperiencia":
 						competenciaSever.atualizarCompetencia(userData);
+						break;
+					case 	"filtrarVagas":
+						competenciaSever.filtrarVagas(userData);
 						break;
 						
 				}

@@ -39,8 +39,6 @@ public class ServidorCompetencia extends MainServidor {
 		 try {
 			 //JSONObject newObj = new JSONObject (data.get("filtros").toString()); 
 			Map<String, Object> comps = mapper.readValue(new JSONObject (data.get("filtros").toString()).toString(), new TypeReference<Map<String, Object>>() {}); 
-			
-			
 			List<String> competencias =  converterJsonArrayToList (comps.get("competencias").toString());
 			 
 			 

@@ -65,12 +65,13 @@ public class ClienteVaga extends Cliente {
 		this.listarVagas();
 	}
 	
-	private void enviarJsonVisualizarVaga(String operacao) {
+	private int enviarJsonVisualizarVaga(String operacao) {
+		int op = selecionarVaga(operacao);
 		try {
 			PrintStream saida  = new PrintStream (super.clienteSocket.getOutputStream());
 				String myString = new JSONObject()
 				.put("operacao", operacao)
-				.put("idVaga", selecionarVaga(operacao))
+				.put("idVaga", op)
 				.put("email",super.sessaoEmpresa.getEmail())
 				.put("token",super.sessaoEmpresa.getToken())
 				.toString(); 
@@ -82,6 +83,7 @@ public class ClienteVaga extends Cliente {
 		} catch (Exception e) {
 			e.toString();
 		}
+		return op;
 	}
 	
 	
@@ -183,12 +185,10 @@ public class ClienteVaga extends Cliente {
 			
 			if(op.equals("atualizarVaga")) {
 				int i = 0; 
-				for(Vaga vagaTemp : vagas) {
-					System.out.println(vagaTemp.getIdVaga() + " - " + vagaTemp.getNome() );
-				}
+				vaga.setIdVaga(enviarJsonVisualizarVaga("visualizarVaga"));
 				
-				System.out.println("Por favor digite o id da vaga que deseja atualizar:");
-				vaga.setIdVaga(leia.nextInt());
+				vaga = receberRespostaServidorVisualizar();
+				enviarJsonVisualizarVaga("visualizarVaga");
 			}
 			
 			

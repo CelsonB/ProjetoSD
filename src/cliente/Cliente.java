@@ -144,7 +144,7 @@ public class Cliente {
 				do {
 					
 					
-					String [] strOp = {"Sair","Cadastrar competencia", "Visualizar competencia", "Apagar competencia", "Atualizar competencias"};
+					String [] strOp = {"Sair","Cadastrar competencia", "Visualizar competencia", "Apagar competencia", "Atualizar competencias","Filtrar vagas"};
 					int tamanhoOp = 0; 
 					
 					for(int i = 1; i<=strOp.length-1; i++) {
@@ -173,6 +173,8 @@ public class Cliente {
 			case 4:
 				competencia.atualizarCompetencia();
 				break;
+			case 5:
+				competencia.filtrarVagas();
 				}
 		}while(op!=0);
 		
