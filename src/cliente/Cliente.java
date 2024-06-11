@@ -146,8 +146,8 @@ public class Cliente {
 					
 					String [] strOp = {"Sair","Cadastrar competencia", "Visualizar competencia", "Apagar competencia", "Atualizar competencias"};
 					int tamanhoOp = 0; 
-					if(sessaoEmpresa.getToken()!=null) {tamanhoOp = strOp.length;} else {tamanhoOp = 3;}
-					for(int i = 1; i<=tamanhoOp-1; i++) {
+					
+					for(int i = 1; i<=strOp.length-1; i++) {
 						System.out.println(i+"-"+strOp[i]);
 					} System.out.println("0-Sair");
 					

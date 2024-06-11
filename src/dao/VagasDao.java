@@ -24,11 +24,11 @@ public class VagasDao extends BancoDeDados {
 		st.setString(3,email);
 		st.executeUpdate();
 	}
-	public Vaga visualizarVaga(int id ) throws SQLException, IOException {
+	public Vaga visualizarVaga(int id) throws SQLException, IOException {
 		PreparedStatement st = null;
 		Conectar();	
 
-		st = conn.prepareStatement ("select * from vaga INNER JOIN vaga_competencia ON vaga_competencia.id_vaga = vaga.id_vaga where vaga.id_vaga = ?)");
+		st = conn.prepareStatement ("select * from vaga INNER JOIN vaga_competencia ON vaga_competencia.id_vaga = vaga.id_vaga where vaga.id_vaga = ?");
 		st.setInt(1,id);
 		ResultSet rs  = st.executeQuery();
 
@@ -39,7 +39,7 @@ public class VagasDao extends BancoDeDados {
 			vagaTemp.setNome(rs.getString("nome"));
 			vagaTemp.setFaixaSalarial(Float.parseFloat(rs.getString("faixa_salarial")));
 			vagaTemp.setDescricao(rs.getString("descricao"));
-			vagaTemp.setDescricao(rs.getString("estado"));
+			vagaTemp.setEstado(rs.getString("estado"));
 		}
 		
 		st = conn.prepareStatement ("select competencia from competencia inner join vaga_competencia on competencia.id_competencia = vaga_competencia.id_competencia where vaga_competencia.id_vaga = ?");
@@ -107,7 +107,7 @@ public class VagasDao extends BancoDeDados {
 	public List<Vaga> listarVagas(String email) throws IOException, SQLException {
 		Conectar();
 		PreparedStatement st = null;
-		st = conn.prepareStatement ("SELECT id_vaga, nome FROM vaga INNER JOIN empresa ON vaga.id_empresa = (select id_empresa from empresa where email = ?)");
+		st = conn.prepareStatement ("SELECT id_vaga, nome FROM vaga INNER JOIN empresa ON vaga.id_empresa = (select id_empresa from empresa where email = ?) group by id_vaga");
 		st.setString(1, email);
 		ResultSet rs = st.executeQuery();
 		

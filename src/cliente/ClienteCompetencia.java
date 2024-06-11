@@ -129,7 +129,11 @@ public class ClienteCompetencia extends Cliente {
 			PrintStream saida  = new PrintStream (super.clienteSocket.getOutputStream());
 			JSONObject json = new JSONObject();
 			json.put("type", "CONNECT");
-			String myString = new JSONObject().put("operacao", "visualizarCompetenciaExperiencia").put("email",super.sessao.getEmail()).put("token",super.sessao.getToken().toString()).toString();
+			String myString = new JSONObject()
+					.put("operacao", "visualizarCompetenciaExperiencia")
+					.put("email",super.sessao.getEmail())
+					.put("token",super.sessao.getToken().toString())
+					.toString();
 			
 			saida.println(myString);
 			receberRespostaServidorVisualizar();
@@ -192,22 +196,23 @@ public class ClienteCompetencia extends Cliente {
 		JSONObject json = new JSONObject();
 		json.put("type", "CONNECT");
 		
-		JSONObject competencia = new JSONObject();
+		
 		JSONArray competencias = new JSONArray();
 		for(String sr : compOp) {
 			System.out.println("Qual sua experiencia com " + sr );
 			int tempo = leia.nextInt();
-			competencia.put("competencia", sr ).put("experiencia", tempo);
-			competencias.put(competencia);
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("competencia", sr ).put("experiencia", tempo);
+			
+			competencias.put(jsonObj);
 		}
 		
-	
-	//	competencias.put(competencia);
 			
 				String myString = new JSONObject()
 				.put("operacao", operacao)//operacao cadastrarCompetenciaExperiencia
 				.put("email", super.sessao.getEmail())
 				.put("competenciaExperiencia", competencias)
+				.put("token", super.sessao.getToken())
 				.toString(); 
 		
 		System.out.println("Saida: [" +myString + "]");

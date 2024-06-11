@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import entities.Candidato;
 import entities.Competencia;
 import entities.Empresa;
@@ -108,7 +112,7 @@ public class DaoCompetencia extends BancoDeDados{
 		
 	}
 
-	public void cadastrarExperienciaCandidato(String email,String competencia, int periodo)throws SQLException, IOException  {
+	public void cadastrarExperienciaCandidato(String email, JSONArray competencia )throws SQLException, IOException, JSONException  {
 		
 		
 		PreparedStatement st = null;
@@ -117,14 +121,24 @@ public class DaoCompetencia extends BancoDeDados{
 	
 			Conectar();
 				
-			st = conn.prepareStatement ("insert into Candidato_Competencia (id_candidato, id_competencia, experiencia) "
-					+ "values ((select id_candidato from candidato where email = ?)"
-					+ ",(select id_competencia from competencia where competencia = ?)"
-					+ ",?)");
-			st.setString(1,email);
-			st.setString(2, competencia);
-			st.setInt(3, periodo);
-			st.executeUpdate();
+			for(int i=0; i<competencia.length();i++) {
+				JSONObject objJson = new JSONObject();
+				objJson = competencia.getJSONObject(i);
+				
+			
+				st = conn.prepareStatement ("insert into Candidato_Competencia (id_candidato, id_competencia, experiencia) "
+						+ "values ((select id_candidato from candidato where email = ?)"
+						+ ",(select id_competencia from competencia where competencia = ?)"
+						+ ",?)");
+
+				st.setString(1,email);
+				st.setString(2, objJson.getString("competencia"));
+				st.setInt(3, objJson.getInt("experiencia"));
+				st.executeUpdate();
+			
+			
+			}
+		
 	}
 	public void atualizarCompetenciaExperiencia(String email,int experiencia, String competencia) throws SQLException, IOException {
 
@@ -165,7 +179,8 @@ public class DaoCompetencia extends BancoDeDados{
 		PreparedStatement st = null;
 		
 		
-		st = conn.prepareStatement ("delete from Candidato_Competencia where id_candidato = (select id_candidato from candidato where email = ?) and id_competencia =  (select id_competencia from competencia where competencia = ?)");
+		st = conn.prepareStatement ("delete from Candidato_Competencia where id_candidato = (select id_candidato from candidato where email = ?) "
+				+ "and id_competencia =  (select id_competencia from competencia where competencia = ?)");
 		st.setString(1,email);
 		st.setString(2, competencia);
 		return st.executeUpdate();

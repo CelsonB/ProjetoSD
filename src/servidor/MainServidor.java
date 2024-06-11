@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -69,7 +70,6 @@ public class MainServidor {
 			
 			System.out.println("Entrada: ["+userData.toString()+"]");
 			
-			//competenciaSever.visualizarCompetenciaExperiencia(userData);
 			op = userData.get("operacao").toString();
 			
 			if(op.equals("cadastrarCompetenciaExperiencia") || op.equals("visualizarCompetenciaExperiencia") || op.equals("apagarCompetenciaExperiencia") || op.equals("atualizarCompetenciaExperiencia")  ) {
@@ -78,16 +78,16 @@ public class MainServidor {
 				
 				switch(op) {
 					case "cadastrarCompetenciaExperiencia":
-						Map <String, String> competencia = converterStringArrayToMap(userData.get("competenciaExperiencia").toString());
-						competenciaSever.cadastrarCandidatoCompetencia(userData, competencia);
+						
+						competenciaSever.cadastrarCandidatoCompetencia(userData);
 					
 					break;
 					case "visualizarCompetenciaExperiencia":
 						competenciaSever.visualizarCompetenciaExperiencia(userData);
 					break;
 					case "apagarCompetenciaExperiencia":
-						Map <String, String> competencia2 = converterStringArrayToMap(userData.get("competenciaExperiencia").toString());
-						competenciaSever.apagarCompetenciaExperiencia(userData, competencia2);
+				
+						competenciaSever.apagarCompetenciaExperiencia(userData);
 						break;
 					case "atualizarCompetenciaExperiencia":
 						competenciaSever.atualizarCompetencia(userData);
@@ -182,16 +182,5 @@ public class MainServidor {
 
 }
 	
-	private static Map<String, String> converterStringArrayToMap (String data) {
-		Map<String, String> competencia = new HashMap<String, String>();  
-		System.out.println(data);
-	
-	  StringTokenizer tokenizer = new StringTokenizer(data.replace("{", "").replace("}", "").replace("[", "").replace("]",""), ", ");		
-	  while (tokenizer.hasMoreTokens()) {
-	        String token = tokenizer.nextToken();
-	        String[] keyValue = token.split("=");
-	        competencia.put(keyValue[0], keyValue[1]);
-	    }
-	  return competencia;
-	}
+
 	}

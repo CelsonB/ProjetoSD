@@ -43,12 +43,12 @@ public class ClienteVaga extends Cliente {
 	
 	public void cadastrarVagas() {
 		
-		enviarJsonCadastroAtualizacao(cadastrarAtualizarJson(), "cadastrarVaga");
+		enviarJsonCadastroAtualizacao(cadastrarAtualizarJson("cadastrarVaga"), "cadastrarVaga");
 		receberRespostaServidor();
 		this.listarVagas();
 	}
 	public void atualizarVagas() {
-		enviarJsonCadastroAtualizacao(cadastrarAtualizarJson(),"atualizarVaga");
+		enviarJsonCadastroAtualizacao(cadastrarAtualizarJson("atualizarVaga"),"atualizarVaga");
 		receberRespostaServidor();
 		this.listarVagas();
 	}
@@ -173,30 +173,47 @@ public class ClienteVaga extends Cliente {
 			}
 	}
 	
-	private Vaga cadastrarAtualizarJson() {
+	private Vaga cadastrarAtualizarJson(String op ) {
 		Vaga vaga = new Vaga();
 		
 		String dado; 
 		
 		
-
-		
-		System.out.println("Por favor digite o nome da vaga:");
-		dado = leia.nextLine();
-		vaga.setNome(dado);
-		
-		System.out.println("Por favor digite o estado da vaga:");
-		dado = leia.nextLine();
-		vaga.setEstado(dado);
-		
-		
-		System.out.println("Por favor digite a descricao da empresa:");
-		dado = leia.nextLine();
-		vaga.setDescricao(dado);
+		try {
+			
+			if(op.equals("atualizarVaga")) {
+				int i = 0; 
+				for(Vaga vagaTemp : vagas) {
+					System.out.println(vagaTemp.getIdVaga() + " - " + vagaTemp.getNome() );
+				}
 				
-		System.out.println("Por favor digite a faixa salarial da vaga:");
-		float faixa = leia.nextFloat();
-		vaga.setFaixaSalarial(faixa);
+				System.out.println("Por favor digite o id da vaga que deseja atualizar:");
+				vaga.setIdVaga(leia.nextInt());
+			}
+			
+			
+			System.out.println("Por favor digite o nome da vaga:");
+			dado = leia.nextLine();
+			if(dado.isBlank()==false) vaga.setNome(dado);
+			
+			System.out.println("Por favor digite o estado da vaga:");
+			dado = leia.nextLine();
+			if(dado.isBlank()==false) vaga.setEstado(dado);
+			
+			
+			System.out.println("Por favor digite a descricao da empresa:");
+			dado = leia.nextLine();
+			if(dado.isBlank()==false) vaga.setDescricao(dado);
+					
+			System.out.println("Por favor digite a faixa salarial da vaga:");
+			float faixa = leia.nextFloat();
+			if(dado.isBlank()==false) vaga.setFaixaSalarial(faixa);
+			
+		}catch(Exception ex) {
+			vaga = cadastrarAtualizarJson(op);
+		}
+		
+		
 		
 	
 		
@@ -274,8 +291,10 @@ public class ClienteVaga extends Cliente {
 		
 	}
 	
-private void receberRespostaServidorVisualizar() {
+private Vaga receberRespostaServidorVisualizar() {
+	Vaga vagaRet = new Vaga();
 	try {
+		
 		InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
 		BufferedReader reader = new BufferedReader(input);
 		ObjectMapper mapper = new ObjectMapper(); 
@@ -299,6 +318,12 @@ private void receberRespostaServidorVisualizar() {
 				System.out.println("descricao: "+ data.get("descricao").toString());
 				System.out.println("Faixa salarial: "+ data.get("faixaSalarial").toString());
 				
+				vagaRet.setEstado(data.get("estado").toString());
+				vagaRet.setCompetencias(data.get("competencias").toString());
+				vagaRet.setDescricao( data.get("descricao").toString());
+				vagaRet.setFaixaSalarial(Float.parseFloat(data.get("faixaSalarial").toString()));
+				
+				
 			}else 
 			if(data.get("operacao").toString().equals("visualizarEmpresa")){
 
@@ -314,6 +339,7 @@ private void receberRespostaServidorVisualizar() {
 	}catch(Exception ex) {
 		
 	}
+	return vagaRet;
 	}
 
 	private static List<String> converterJsonArrayToList (String data) {

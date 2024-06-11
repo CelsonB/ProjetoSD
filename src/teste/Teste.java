@@ -31,45 +31,75 @@ public class Teste {
 		// TODO Auto-generated method stub
 		
 		
-		JSONObject obj = new JSONObject();
-		JSONArray jsonarry = new JSONArray();
-		
-		jsonarry.put("JS").put("Java").put("python");
-		
- 		obj.put("competencias",jsonarry).put("tipo", "or");
-		
-		String myStr = new JSONObject()
-				.put("operacao", "filtrarVagas")
-				.put("filtros", obj)
-				.put("token", UUID.randomUUID())
-				.toString();	
+//		JSONObject obj = new JSONObject();
+//		JSONArray jsonarry = new JSONArray();
+//		
+////		jsonarry.put("JS").put("Java").put("python");
+////		
+//// 		obj.put("competencias",jsonarry).put("tipo", "or");
+////		
+////		String myStr = new JSONObject()
+////				.put("operacao", "filtrarVagas")
+////				.put("filtros", obj)
+////				.put("token", UUID.randomUUID())
+////				.toString();	
+////				
+////		System.out.println(myStr);
+//				
+//		
+//		String mystr  = "[{experiencia=3, competencia=c++}, {experiencia=3, competencia=c++}]";
+//		DaoCompetencia bd = new DaoCompetencia();
+//		ObjectMapper mapper = new ObjectMapper();  
+//		
+//		
+//		//Map<String, Object> data = mapper.readValue(myStr, new TypeReference<Map<String, Object>>() {}); 
+////		System.out.println("Primeiro map" + data.toString());
+////		System.out.println("Apenas filtro" + data.get("filtros"));
+//		
+//	
+//		
+//		JSONArray jsonarray = new JSONArray(mystr);
+//		
+//		//Map<String, Object> comps = mapper.readValue(mystr, new TypeReference<Map<String, Object>>() {}); 
+//		//List<String> competencias =  converterJsonArrayToList (comps.get("competencias").toString());
+//	
+//		
+//		
+//		for(int i =0 ; i< jsonarray.length();i++) {
+//			System.out.println("Json array: " + jsonarray.getJSONObject(1).toString());
+//		}
+//		
+//		PreparedStatement st = null;
+//	//	String tipo = comps.get("tipo").toString();
+//		
+//
+//	
+//		
+		String competencias = "[Python, C#]".replace("#", "sharp");
+	
+		ArrayList<String > comps = new ArrayList<>();
+		try {
+			JSONArray jsonarr = new JSONArray(competencias);
+			System.out.print(competencias);
+			System.out.print(jsonarr.toString());
+			
+			
+			System.out.println(0 + "nome: " + jsonarr.getString(0));
+			System.out.println(1 + "nome: " + jsonarr.getString(1));
+			
+			for(int i = 0; i<jsonarr.length();i++) {
 				
-		System.out.println(myStr);
+				System.out.println(i + "nome: " + jsonarr.getString(i));
 				
+					comps.add(jsonarr.getString(i));
+			}
+			
+			
+			} catch (JSONException e) {
+				System.out.println(e);
+			}
 		
-		DaoCompetencia bd = new DaoCompetencia();
-		ObjectMapper mapper = new ObjectMapper();  
-		
-		
-		Map<String, Object> data = mapper.readValue(myStr, new TypeReference<Map<String, Object>>() {}); 
-		System.out.println("Primeiro map" + data.toString());
-		System.out.println("Apenas filtro" + data.get("filtros"));
-		
-	
-		
-		
-		Map<String, Object> comps = mapper.readValue(new JSONObject (data.get("filtros").toString()).toString(), new TypeReference<Map<String, Object>>() {}); 
-		List<String> competencias =  converterJsonArrayToList (comps.get("competencias").toString());
-	
-		
-		
-		PreparedStatement st = null;
-		String tipo = comps.get("tipo").toString();
-		
-
-	
-		
-		
+		System.out.println("lista : " + comps.toString());
 		
 		
 	}

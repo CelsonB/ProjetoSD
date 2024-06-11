@@ -100,16 +100,16 @@ public class ServidorCompetencia extends MainServidor {
 	}
 	
 	
-	public void cadastrarCandidatoCompetencia(Map<String, Object> dataCandidato, Map<String, String> dataCompetencia ) {
+	public void cadastrarCandidatoCompetencia(Map<String, Object> dataCandidato) {
 		
 		DaoCompetencia bd = new DaoCompetencia();
-		
-		int periodo =  Integer.parseInt(dataCompetencia.get("experiencia").toString());
-		
+			
 		try {
 		
+			JSONArray competencia = new JSONArray(dataCandidato.get("competenciaExperiencia").toString());
 			
-			bd.cadastrarExperienciaCandidato(dataCandidato.get("email").toString(), dataCompetencia.get("competencia").toString(), periodo);
+			bd.cadastrarExperienciaCandidato(dataCandidato.get("email").toString(), competencia);
+			
 			respostaServidor(dataCandidato.get("operacao").toString());
 		} catch (Exception e) {
 			respostaExcecao(e, dataCandidato.get("operacao").toString(),"422");
@@ -128,9 +128,13 @@ public class ServidorCompetencia extends MainServidor {
 	        {
 	            JSONObject jsonObj = jsonArr.getJSONObject(i);
 	            int tempo = Integer.parseInt(jsonObj.get("experiencia").toString());
+	            
+	            
 	        	bd.atualizarCompetenciaExperiencia(data.get("email").toString(),tempo, jsonObj.get("competencia").toString());
+	        	
+	        	
 	        }
-		 
+		 respostaServidor(data.get("operacao").toString());
 	} catch (Exception e) {
 		System.err.println(e);
 		respostaExcecao(e, data.get("operacao").toString(),"422");
@@ -153,16 +157,17 @@ public class ServidorCompetencia extends MainServidor {
 		}
 	}
 	
-	public void apagarCompetenciaExperiencia(Map<String, Object> data,Map<String, String> dataCompetencia ) {
+	public void apagarCompetenciaExperiencia(Map<String, Object> data) {
 	
 		
 		DaoCompetencia bd = new DaoCompetencia();
 		
 		//int periodo =  Integer.parseInt(dataCompetencia.get("experiencia").toString());
 				
+		
 		try {
 			System.out.println("teste 1 ");
-			JSONArray jsonArr = StringToJSONArray(data);
+			JSONArray jsonArr = new JSONArray(data.get("competenciaExperiencia").toString());
 			
 			 for (int i = 0; i < jsonArr.length(); i++)
 		        {
@@ -273,7 +278,7 @@ public class ServidorCompetencia extends MainServidor {
 		 String myString = null;
 		 PrintStream saida  = new PrintStream (ss.getOutputStream());
 		
-		 if(operacao.equals("cadastrarCompetenciaExperiencia")) {
+		 if(operacao.equals("cadastrarCompetenciaExperiencia") || operacao.equals("atualizarCompetenciaExperiencia")) {
 			 
 			 String tokenString = "201";
 			 
@@ -296,7 +301,7 @@ public class ServidorCompetencia extends MainServidor {
 					 .put("operacao", operacao)
 					 .put("status",tokenString)
 					 .put("mensagem", "Competencia/Experiencia cadastrada com sucesso")
-					 .toString(); 
+					 .toString(); 	
 			 
 			 System.out.println("Saida: ["+myString+"]");
 			 

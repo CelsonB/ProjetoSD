@@ -137,6 +137,9 @@ public class ClienteCandidato extends Cliente{
 				}
 				else if(op.equals("200")) 
 				{
+					super.sessao.setEmail(email);
+					super.sessao.setSenha(senha);
+					
 					token = UUID.fromString(userData.get("token").toString());
 					if(super.sessao == null)super.sessao = new Candidato();
 					super.sessao.setToken(token);

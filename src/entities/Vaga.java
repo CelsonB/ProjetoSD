@@ -2,6 +2,9 @@ package entities;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 public class Vaga {
 
 	
@@ -65,6 +68,24 @@ public class Vaga {
 	public void setCompetencias(ArrayList<String> competencias) {
 		this.competencias = competencias;
 	}
+	
+	public void setCompetencias(String competencias) {
+		
+		ArrayList<String > comps = new ArrayList<>();
+		try {
+			JSONArray jsonarr = new JSONArray(competencias.replace("#", "sharp"));
+		
+			for(int i =0; i<jsonarr.length();i++) {
+				
+					comps.add(jsonarr.getString(i).replace("sharp", "#"));
+			}
+			
+			
+			} catch (JSONException e) {
+			}
+		this.competencias = comps;
+	}
+	
 	@Override
 	public String toString() {
 		return "Vaga [nome=" + nome + ", idVaga=" + idVaga+"]";

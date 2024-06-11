@@ -63,7 +63,7 @@ public class ServidorVaga extends MainServidor {
 			
 			respostaServidorLeitura(vagaTemp);
 		}catch(Exception ex) {
-			System.out.println(ex);
+			respostaExcecao(ex, userData.get("operacao").toString(),"422");
 		}
 	}
 	
@@ -176,6 +176,7 @@ public class ServidorVaga extends MainServidor {
 						.put("descricao",vagaTemp.getDescricao())
 						.put("estado", vagaTemp.getEstado())
 						.put("competencias", jsonArray)
+						.put("status", 201)
 						.toString();
 				
 				System.out.println("Saida: ["+myString+"]"); 
