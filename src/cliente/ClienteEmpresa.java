@@ -170,7 +170,7 @@ public class ClienteEmpresa extends Cliente {
 			
 			String myString = new JSONObject()
 					.put("operacao", "logout")
-					.put("token", token.toString())
+					.put("token", super.sessaoEmpresa.getToken())
 					.toString(); 
 			System.out.println("Saida: [" +myString + "]");
 			
@@ -188,6 +188,7 @@ public class ClienteEmpresa extends Cliente {
 			String myString = new JSONObject()
 					.put("operacao", op)
 					.put("email", email)
+					.put("token", super.sessaoEmpresa.getToken())
 					.toString(); 
 			
 			System.out.println("Saida: [" +myString + "]");

@@ -27,7 +27,6 @@ public class ClienteCandidato extends Cliente{
 	
 	public ClienteCandidato() {
 		clienteSocket = super.clienteSocket;
-		//Candidato candidato = super.sessao;;
 	}
 	
 	
@@ -137,11 +136,15 @@ public class ClienteCandidato extends Cliente{
 				}
 				else if(op.equals("200")) 
 				{
-					super.sessao.setEmail(email);
-					super.sessao.setSenha(senha);
+					
+					
+					
 					
 					token = UUID.fromString(userData.get("token").toString());
 					if(super.sessao == null)super.sessao = new Candidato();
+					
+					super.sessao.setEmail(email);
+					super.sessao.setSenha(senha);
 					super.sessao.setToken(token);
 					System.out.println("login realizado com sucesso");
 				}
@@ -164,7 +167,7 @@ public class ClienteCandidato extends Cliente{
 	}
 
 	
-	public static void visualizarCandidato() {
+	public void visualizarCandidato() {
 
 		try {
 			JSONObject json = new JSONObject();
@@ -178,7 +181,10 @@ public class ClienteCandidato extends Cliente{
 			String email = leia.nextLine();
 			
 			
-			String myString = new JSONObject().put("operacao","visualizarCandidato").put("email", email).toString(); 
+			String myString = new JSONObject()
+					.put("operacao","visualizarCandidato")
+					.put("email", email)
+					.put("token",super.sessao.getToken()).toString(); 
 			System.out.println(myString);
 			
 			saida.println(myString);
@@ -218,7 +224,7 @@ public class ClienteCandidato extends Cliente{
 		
 	}
 	
-	public static void atualizarCadastro() {
+	public void atualizarCadastro() {
 		
 		try 
 		{
@@ -235,7 +241,14 @@ public class ClienteCandidato extends Cliente{
 				String senha= leia.nextLine();
 				System.out.println("Digite seu email:");
 				String email = leia.nextLine(); 
-				String myString = new JSONObject().put("operacao", "atualizarCandidato").put("nome", nome).put("email", email).put("senha", senha).toString(); 
+				
+				String myString = new JSONObject()
+						.put("operacao", "atualizarCandidato")
+						.put("nome", nome)
+						.put("email", email)
+						.put("senha", senha)
+						.put("token",super.sessao.getToken()).toString(); 
+				
 				System.out.println(myString);
 
 			    saida.println(myString);
@@ -288,7 +301,7 @@ public class ClienteCandidato extends Cliente{
 		
 	}
 	
-	public static void deletarCadastro() {
+	public void deletarCadastro() {
 		
 		try 
 		{
@@ -300,7 +313,8 @@ public class ClienteCandidato extends Cliente{
 			
 				System.out.println("Digite seu email:");
 				String email = leia.nextLine(); 
-				String myString = new JSONObject().put("operacao", "apagarCandidato").put("email", email).toString(); 
+				String myString = new JSONObject().put("operacao", "apagarCandidato").put("email", email).put("token", super.sessao.getToken()).toString(); 
+				
 				System.out.println(myString);
 
 			    saida.println(myString);
@@ -340,7 +354,7 @@ public class ClienteCandidato extends Cliente{
 		}
 	}
 	
-	public static void realizarLogout() {
+	public void realizarLogout() {
 		
 		try {
 			JSONObject json = new JSONObject();
@@ -350,10 +364,8 @@ public class ClienteCandidato extends Cliente{
 			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());	
 			
 			if(token != null) {
-				String myString = new JSONObject().put("operacao", "logout").put("token", token.toString()).toString(); 
+				String myString = new JSONObject().put("operacao", "logout").put("token", super.sessao.getToken()).toString(); 
 				saida.println(myString);
-				
-				
 				
 				try {
 					InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
@@ -364,26 +376,20 @@ public class ClienteCandidato extends Cliente{
 					
 					String op = Data.get("status").toString();
 					if(op.equals("422")) {
-						token = null;
+						super.sessao.setToken(null);
 						System.out.println(Data.get("mensagem").toString());
 						
 					}else if(op.equals("204")){
-						token = null;
+						super.sessao.setToken(null);
 						System.out.println(Data.get("mensagem").toString());
 					}else {
-						token = null;
+						super.sessao.setToken(null);
 						System.out.print("logout realizado com sucesso");
 					}
+					
 				}catch(Exception ex) {
 					
 				}
-				
-				
-				
-				
-				
-				
-				
 				
 				
 			}else {

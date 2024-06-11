@@ -86,9 +86,7 @@ public class MainServidor {
 				
 				switch(op) {
 					case "cadastrarCompetenciaExperiencia":
-						
 						competenciaSever.cadastrarCandidatoCompetencia(userData);
-					
 					break;
 					case "visualizarCompetenciaExperiencia":
 						competenciaSever.visualizarCompetenciaExperiencia(userData);
@@ -100,7 +98,7 @@ public class MainServidor {
 					case "atualizarCompetenciaExperiencia":
 						competenciaSever.atualizarCompetencia(userData);
 						break;
-					case 	"filtrarVagas":
+					case "filtrarVagas":
 						competenciaSever.filtrarVagas(userData);
 						break;
 						
