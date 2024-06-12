@@ -77,6 +77,7 @@ public class ClienteCandidato extends Cliente{
 			ObjectMapper mapper = new ObjectMapper(); 
 			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
 			
+			System.out.println("Entrada => ["+userData.toString()+"]");
 			String op = userData.get("status").toString();
 			
 			if(op.equals("422")) {
@@ -88,6 +89,7 @@ public class ClienteCandidato extends Cliente{
 				System.out.println(userData.get("mensagem").toString());
 				
 			}else {
+				
 				token = UUID.fromString(userData.get("token").toString()); ;
 				super.sessao.setToken(token);
 				System.out.println("Registro realizado com sucesso");
@@ -128,7 +130,7 @@ public class ClienteCandidato extends Cliente{
 				
 				ObjectMapper mapper = new ObjectMapper(); 
 				Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
-				
+				System.out.println("Entrada => ["+userData.toString()+"]");
 				String op = userData.get("status").toString();
 				if(op.equals("401")) 
 				{
@@ -196,7 +198,7 @@ public class ClienteCandidato extends Cliente{
 				
 				ObjectMapper mapper = new ObjectMapper(); 
 				Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
-				
+				System.out.println("Entrada => ["+userData.toString()+"]");
 				String op = userData.get("status").toString();
 				if(op.equals("201")) 
 				{
@@ -270,7 +272,7 @@ public class ClienteCandidato extends Cliente{
 			
 			ObjectMapper mapper = new ObjectMapper();  
 			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
-			
+			System.out.println("Entrada => ["+userData.toString()+"]");
 			String op = userData.get("status").toString();
 			
 			if(op.equals("201")) {
@@ -336,7 +338,7 @@ public class ClienteCandidato extends Cliente{
 			
 			ObjectMapper mapper = new ObjectMapper(); 
 			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
-			
+			System.out.println("Entrada => ["+userData.toString()+"]");
 			String op = userData.get("status").toString();
 			
 			if(op.equals("201")) {
@@ -373,7 +375,7 @@ public class ClienteCandidato extends Cliente{
 					
 					ObjectMapper mapper = new ObjectMapper(); 
 					Map<String, Object> Data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
-					
+					System.out.println("Entrada => ["+Data.toString()+"]");
 					String op = Data.get("status").toString();
 					if(op.equals("422")) {
 						super.sessao.setToken(null);

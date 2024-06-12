@@ -48,7 +48,7 @@ public class DaoCompetencia extends BancoDeDados{
 	
 		if(data.get("tipo").toString().toUpperCase().equals("AND")) {
 			String valor = String.valueOf(i) ;
-			String AND = " HAVING COUNT( vaga.id_vaga) >= ?";
+			String AND = " HAVING COUNT( vaga.id_vaga_competencia) >= ?";
 			comando = comando.concat(AND).replace("?", valor);
 		}
 		st = conn.prepareStatement (comando);

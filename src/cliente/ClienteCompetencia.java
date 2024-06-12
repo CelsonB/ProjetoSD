@@ -58,7 +58,7 @@ public class ClienteCompetencia extends Cliente {
 			}
 			
 			JSONObject newObj = new JSONObject();
-			newObj.put("competencias", jarray).put("tipo", selecionarTipo());
+			newObj.put("competencias", jarray).put("tipo", selecionarTipo().toUpperCase());
 			obj.put("operacao", "filtrarVagas").put("filtros", newObj).put("token", super.sessao.getToken());
 			
 			System.out.println("Saida: [" + obj.toString() + "]");
@@ -81,7 +81,7 @@ public class ClienteCompetencia extends Cliente {
 			
 			ObjectMapper mapper = new ObjectMapper(); 
 			Map<String, Object> data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
-			System.out.println(data.toString());
+			System.out.println("Entrada => ["+data.toString()+"]");
 			
 					//String competencias = new JSONObject().put("competenciaExperiencia",data.get("competenciaExperiencia").toString()).toString();
 					//System.out.println("<"+data.get("competenciaExperiencia").toString()+">");
@@ -272,7 +272,8 @@ public class ClienteCompetencia extends Cliente {
 			
 			ObjectMapper mapper = new ObjectMapper(); 
 			Map<String, Object> data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
-			System.out.println(data.toString());
+
+			System.out.println("Entrada => ["+data.toString()+"]");
 			
 			
 			if(data.get("operacao").toString().equals("visualizarCompetenciaExperiencia") ) {//visualizarCompetenciaExperiencia
