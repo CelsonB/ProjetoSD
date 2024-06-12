@@ -61,16 +61,52 @@ public class ClienteCompetencia extends Cliente {
 			newObj.put("competencias", jarray).put("tipo", selecionarTipo());
 			obj.put("operacao", "filtrarVagas").put("filtros", newObj).put("token", super.sessao.getToken());
 			
-			
 			System.out.println("Saida: [" + obj.toString() + "]");
 			
 			saida.println(obj.toString());
 			
-			receberRespostaServidor();
+			//receberRespostaServidor();
+			receberRespostaServidorFiltrar();
 			
 		} catch (JSONException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	private void receberRespostaServidorFiltrar() {
+	try {
+			
+			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+			BufferedReader reader = new BufferedReader(input);
+			
+			ObjectMapper mapper = new ObjectMapper(); 
+			Map<String, Object> data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
+			System.out.println(data.toString());
+			
+					//String competencias = new JSONObject().put("competenciaExperiencia",data.get("competenciaExperiencia").toString()).toString();
+					//System.out.println("<"+data.get("competenciaExperiencia").toString()+">");
+					
+					
+					JSONArray jsonArr = new JSONArray(data.get("vagas").toString());
+
+			        for (int i = 0; i < jsonArr.length(); i++)
+			        {
+			        	System.out.println("----------------------------------------------------------------------------------------");
+			            JSONObject jsonObj = jsonArr.getJSONObject(i);
+
+			            System.out.println("faixaSalarial: " + jsonObj.get("faixaSalarial").toString() + "|| descricao: " + jsonObj.get("descricao").toString());
+			            System.out.println("estado: " + jsonObj.get("estado").toString() + " || idVaga: " + jsonObj.get("idVaga").toString());
+			            System.out.println("competencias: " + jsonObj.get("competencias").toString());
+			        }
+					
+				
+		
+				
+					
+				
+			
+		}catch(Exception ex) {
+			System.out.println(ex);
 		}
 	}
 	
@@ -152,6 +188,7 @@ public class ClienteCompetencia extends Cliente {
 	
 	public void apagarCompetencia() {
 		try {
+			
 			
 			if(super.sessao.getToken()==null) throw new SessaoInvalidaException("Você não está logado");
 			enviarJsonCompetenciaExperiencia(selecionarCompetencia(), "apagarCompetenciaExperiencia");					
@@ -235,28 +272,25 @@ public class ClienteCompetencia extends Cliente {
 			ObjectMapper mapper = new ObjectMapper(); 
 			Map<String, Object> data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
 			System.out.println(data.toString());
+			
+			
 			if(data.get("operacao").toString().equals("visualizarCompetenciaExperiencia") ) {//visualizarCompetenciaExperiencia
 				
-				
-				
-				
-				 
-				 
-				if(data.get("status")==null) {
+				if(data.get("status").toString().equals("201") || data.get("status").toString().equals("200")) {
 					
 
-					String competencias = new JSONObject().put("CompetenciaExperiencia",data.get("CompetenciaExperiencia").toString()).toString();
+					String competencias = new JSONObject().put("competenciaExperiencia",data.get("competenciaExperiencia").toString()).toString();
 					
-					System.out.println("<"+data.get("CompetenciaExperiencia").toString()+">");
+					System.out.println("<"+data.get("competenciaExperiencia").toString()+">");
 					
 					
-					JSONArray jsonArr = new JSONArray(data.get("CompetenciaExperiencia").toString());
+					JSONArray jsonArr = new JSONArray(data.get("competenciaExperiencia").toString());
 
 			        for (int i = 0; i < jsonArr.length(); i++)
 			        {
 			            JSONObject jsonObj = jsonArr.getJSONObject(i);
 
-			            System.out.println(jsonObj.get("competencia").toString());
+			            System.out.println("Competencia: " + jsonObj.get("competencia").toString() + " Experiencia: " + jsonObj.get("experiencia").toString());
 			        }
 					
 				

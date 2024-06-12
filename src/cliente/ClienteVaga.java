@@ -79,10 +79,11 @@ public class ClienteVaga extends Cliente {
 		System.out.println("Saida: [" +myString + "]");
 		
 		saida.println(myString);
-		   
+		return op;
 		} catch (Exception e) {
 			e.toString();
 		}
+		System.out.println("Opcao "+ op );
 		return op;
 	}
 	
@@ -164,6 +165,7 @@ public class ClienteVaga extends Cliente {
 					.put("email", super.sessaoEmpresa.getEmail())
 					.put("competencias", selecionarCompetencia())
 					.put("token",super.sessaoEmpresa.getToken())
+					.put("idVaga", dataVaga.getIdVaga())
 					.toString(); 
 			
 			System.out.println("Saida: [" +myString + "]");
@@ -175,54 +177,101 @@ public class ClienteVaga extends Cliente {
 			}
 	}
 	
-	private Vaga cadastrarAtualizarJson(String op ) {
-		Vaga vaga = new Vaga();
+	
+	
+	private void enviarJsonVisualizarVaga(String operacao, int op ) {
 		
-		String dado; 
+		try {
+			PrintStream saida  = new PrintStream (super.clienteSocket.getOutputStream());
+				String myString = new JSONObject()
+				.put("operacao", operacao)
+				.put("idVaga", op)
+				.put("email",super.sessaoEmpresa.getEmail())
+				.put("token",super.sessaoEmpresa.getToken())
+				.toString(); 
+		
+		System.out.println("Saida: [" +myString + "]");
+		
+		saida.println(myString);
+
+		} catch (Exception e) {
+			e.toString();
+		}
+		System.out.println("Opcao "+ op );
+	}
+	
+	
+	
+	private Vaga cadastrarAtualizarJson(String op) {
+		Vaga vaga = new Vaga();
+		int idVaga = 0;
+		String dado ="   "; 
 		
 		
 		try {
 			
 			if(op.equals("atualizarVaga")) {
 				int i = 0; 
-				vaga.setIdVaga(enviarJsonVisualizarVaga("visualizarVaga"));
+				idVaga = selecionarVaga("visualizarVaga");
 				
-				vaga = receberRespostaServidorVisualizar();
-				enviarJsonVisualizarVaga("visualizarVaga");
+				enviarJsonVisualizarVaga("visualizarVaga",idVaga);
+				
+				System.out.println("id vaga " + idVaga);
+				
+				vaga = receberRespostaServidorVisualizar("  ");
+				
 			}
+			
+			vaga.setIdVaga(idVaga);
+			
+			Scanner ler = new Scanner(System.in);
+			
+			System.out.println("Id vaga: " + vaga.getIdVaga());
 			
 			
 			System.out.println("Por favor digite o nome da vaga:");
-			dado = leia.nextLine();
-			if(dado.isBlank()==false) vaga.setNome(dado);
+			dado = ler.nextLine();
+			if(dado.isBlank()==false) {vaga.setNome(dado);}
+		
 			
-			System.out.println("Por favor digite o estado da vaga:");
-			dado = leia.nextLine();
-			if(dado.isBlank()==false) vaga.setEstado(dado);
-			
+			dado = selecionarEstado();
+			if(dado.isBlank()==false) { vaga.setEstado(dado);}
 			
 			System.out.println("Por favor digite a descricao da empresa:");
-			dado = leia.nextLine();
-			if(dado.isBlank()==false) vaga.setDescricao(dado);
+			dado = ler.nextLine();
+			if(dado.isBlank()==false) {vaga.setDescricao(dado);}
 					
 			System.out.println("Por favor digite a faixa salarial da vaga:");
-			float faixa = leia.nextFloat();
-			if(dado.isBlank()==false) vaga.setFaixaSalarial(faixa);
+			float faixa = ler.nextFloat();
+			if(dado.isBlank()==false) {vaga.setFaixaSalarial(faixa);}
 			
 		}catch(Exception ex) {
-			vaga = cadastrarAtualizarJson(op);
-		}
-		
-		
-		
-	
-		
-		
-		
-		
+			System.out.println(ex);
+		}		
 		return vaga;
 	}
 	
+	private String selecionarEstado() {
+		
+		
+		String dado;
+		do{
+			System.out.println("Por favor digite o estado da vaga:\n1-disponível \n2-divulgavel");
+			switch(leia.nextInt()) {
+				case 1:
+					dado = "disponível";
+				break;
+				case 2:
+					dado = "divulgavel";
+				break;
+				default: 
+					System.out.println("Opção invalida");
+					dado =  "Opcaoinvalida";
+				break;
+			}
+		}while(dado.equals("Opcaoinvalida"));
+		return dado;
+	}
 	private JSONArray selecionarCompetencia() {
 		System.out.println("por favor selecione a competencia que vc deseja: ");
 		
@@ -269,7 +318,6 @@ public class ClienteVaga extends Cliente {
 			
 			if(op.equals("201") || op.equals("200")) {
 				
-				
 				if(data.get("operacao").toString().equals("cadastrarCompetenciaExperiencia") || data.get("operacao").toString().equals("atualizarCompetenciaExperiencia") ) {
 				System.out.println(data.get("mensagem".toString()));
 					
@@ -290,9 +338,43 @@ public class ClienteVaga extends Cliente {
 		}
 		
 	}
+
 	
-private Vaga receberRespostaServidorVisualizar() {
-	Vaga vagaRet = new Vaga();
+	private Vaga receberRespostaServidorVisualizar(String op2) {
+		Vaga vagaRet = new Vaga();
+		try {
+			
+			
+			InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+			BufferedReader reader = new BufferedReader(input);
+			ObjectMapper mapper = new ObjectMapper(); 
+			Map<String, Object> data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
+			System.out.println("Entrada: [" +data.toString()+ "]");
+				String op = data.get("status").toString();
+					if(op.equals("201") || op.equals("200")) {
+						
+						
+						
+						vagaRet.setEstado(data.get("estado").toString());
+						vagaRet.setCompetencias(data.get("competencias").toString());
+						vagaRet.setDescricao( data.get("descricao").toString());
+						vagaRet.setFaixaSalarial(Float.parseFloat(data.get("faixaSalarial").toString()));
+					
+					}else {
+						System.out.println("Erro: "+ data.get("mensagem").toString() );
+					}
+				
+			return vagaRet;
+		}
+		catch(Exception ex ) {
+			System.out.println(ex);
+		}
+		return vagaRet;
+		
+	}
+	
+private void receberRespostaServidorVisualizar() {
+	
 	try {
 		
 		InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
@@ -302,26 +384,15 @@ private Vaga receberRespostaServidorVisualizar() {
 		System.out.println("Entrada: [" +data.toString()+ "]");
 		String op = data.get("status").toString();
 		
-//		{
-//			  "operacao": "visualizarVaga",
-//			  "faixaSalarial":12345,
-//			  "descricao":"xxxxx",
-//			  "estado":"xxxxx",
-//			  "competencias": ["xxxx","xxxx","xxxx"],
-//			   "status": "201"
-//			}
 		if(op.equals("201") || op.equals("200")) {			
-			if(data.get("operacao").toString().equals("cadastrarCompetenciaExperiencia") || data.get("operacao").toString().equals("atualizarCompetenciaExperiencia") ) {
+			if(data.get("operacao").toString().equals("cadastrarCompetenciaExperiencia") || data.get("operacao").toString().equals("atualizarCompetenciaExperiencia") ||data.get("operacao").toString().equals("visualizarVaga") ) {
 		
 				System.out.println("estado: "+ data.get("estado").toString());
 				System.out.println("competencias: "+ data.get("competencias").toString());
 				System.out.println("descricao: "+ data.get("descricao").toString());
 				System.out.println("Faixa salarial: "+ data.get("faixaSalarial").toString());
 				
-				vagaRet.setEstado(data.get("estado").toString());
-				vagaRet.setCompetencias(data.get("competencias").toString());
-				vagaRet.setDescricao( data.get("descricao").toString());
-				vagaRet.setFaixaSalarial(Float.parseFloat(data.get("faixaSalarial").toString()));
+			
 				
 				
 			}else 
@@ -339,7 +410,7 @@ private Vaga receberRespostaServidorVisualizar() {
 	}catch(Exception ex) {
 		
 	}
-	return vagaRet;
+
 	}
 
 	private static List<String> converterJsonArrayToList (String data) {
