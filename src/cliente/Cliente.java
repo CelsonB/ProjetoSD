@@ -26,8 +26,10 @@ public class Cliente {
 	public static Scanner leia = new Scanner(System.in);
 	public static Candidato sessao = null;
 	public static Empresa sessaoEmpresa = null;
-	protected static String [] competenciasNomes  = {"python" , "c#", "c++"};
-	
+	protected static String [] competenciasNome  = {   "Python", "C#", "C++", "JS", "PHP", "Swift", "Java", "Go", "SQL", "Ruby", 
+		    "HTML", "CSS", "NOSQL", "Flutter", "TypeScript", "Perl", "Cobol", "dotNet", 
+		    "Kotlin", "Dart"};
+	 
 	public static void main (String[] args) throws UnknownHostException, IOException {
 		
 		

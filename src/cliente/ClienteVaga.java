@@ -281,7 +281,7 @@ public class ClienteVaga extends Cliente {
 		JSONArray jArry = new JSONArray();
 		
 		int op = 0; 
-		String [] competencias = super.competenciasNomes;
+		String [] competencias = super.competenciasNome;
 		do {	 
 			op = 1;
 			for(String comp :competencias) {
@@ -293,7 +293,7 @@ public class ClienteVaga extends Cliente {
 			op = leia.nextInt();
 			if(op!=0) {
 				
-				String sr = super.competenciasNomes[op-1] ; 
+				String sr = super.competenciasNome[op-1] ; 
 				jArry.put(sr);
 			
 				

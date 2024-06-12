@@ -33,7 +33,7 @@ public class ClienteCompetencia extends Cliente {
 	private static UUID token = null;
 	private static Scanner leia  = new Scanner(System.in);	
 	
-	private static String [] competenciasNome  = {"python" , "c#", "c++"};
+	//private static String [] competenciasNome  = {"python" , "c#", "c++"};
 	
 	
 	
@@ -210,14 +210,15 @@ public class ClienteCompetencia extends Cliente {
 		ArrayList<String> comps = new ArrayList<String>();
 		int op = 0; 
 		do { op = 1;
-			for(String comp :competenciasNome) {
-				System.out.println(op + " : " + comp);
+			for(String comp :super.competenciasNome) {
+				System.out.print(op + ": " + comp+ "  ");
+				if(op%5==0)System.out.println();
 				op++;
 			}
 			System.out.println("0 : Sair da seleção");
 			op = leia.nextInt();
 			if(op!=0) {
-				String sr = competenciasNome[op-1] ; 
+				String sr = super.competenciasNome[op-1] ; 
 				comps.add(sr); 
 			}
 			
