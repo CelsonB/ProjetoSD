@@ -34,46 +34,26 @@ public class DaoCompetencia extends BancoDeDados{
 		
 		PreparedStatement st = null;
 		Conectar();
-		String comando = "Select * from vaga inner join vaga_competencia on vaga.id_vaga = vaga_competencia.id_vaga where";
-		String where = " vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = '?')) ";
-		
+		String comando = "Select * from vaga inner join vaga_competencia on vaga.id_vaga = vaga_competencia.id_vaga inner join competencia on competencia.id_competencia = vaga_competencia.id_competencia "
+				+ "where competencia in ('?' ";
+		String where = " ,'?' ";
+				
 		
 		int i = 0;
 		for(String str : competencias) {
-		
-			if(i==0) {comando = comando.concat(where).replace("?", str); i++;}
-			else {
-
-				
-				if(tipo.equals("or")) {
-					comando = comando.concat(tipo);
 					comando = comando.concat(where).replace("?", str);
-					
-					
-					
-				}else 
-				if(tipo.equals("and")) {
-					comando = comando.concat(tipo);
-					comando = comando.concat(where).replace("?", str);
-				
-				
-				}
-				
-			}	
-	
+					i++;
 		}
-		
+		comando = comando.concat(")");
 	
-		st = conn.prepareStatement (comando.concat("group by vaga.id_vaga"));
+		if(data.get("tipo").toString().toUpperCase().equals("AND")) {
+			String valor = String.valueOf(i) ;
+			String AND = " HAVING COUNT( vaga.id_vaga) >= ?";
+			comando = comando.concat(AND).replace("?", valor);
+		}
+		st = conn.prepareStatement (comando);
+		
 		ResultSet rs = st.executeQuery();
-
-
-		
-		
-
-		
-		
-		
 		
 		List<Vaga> vagas = new ArrayList<>();
 	
@@ -84,14 +64,14 @@ public class DaoCompetencia extends BancoDeDados{
 			
 			st.setInt(1,rs.getInt("id_empresa"));
 			ResultSet email =  st.executeQuery();
-			
+			email.next();
 			
 			st = conn.prepareStatement ("select competencia from competencia inner join vaga_competencia on vaga_competencia.id_competencia = competencia.id_competencia where vaga_competencia.id_vaga = ? ");
 			st.setInt(1,rs.getInt("id_vaga"));
 			ResultSet comps = st.executeQuery();
 			
 			while(comps.next()) {
-				competenciasVagas.add(comps.getString("competencia"));
+				competenciasVagas.add(comps.getString("competencia").replace("#", "sharp"));
 			}
 			
 			
@@ -132,7 +112,7 @@ public class DaoCompetencia extends BancoDeDados{
 						+ ",?)");
 
 				st.setString(1,email);
-				st.setString(2, objJson.getString("competencia"));
+				st.setString(2, objJson.getString("competencia").replace("sharp","#"));
 				st.setInt(3, objJson.getInt("experiencia"));
 				st.executeUpdate();
 			
@@ -170,19 +150,19 @@ public class DaoCompetencia extends BancoDeDados{
 	return rs;
 	}
 	
-	public void atualizarExperienciaCandidato() {
-		
-	}
-	public int apagarExperienciaCandidato(String email, String competencia) throws IOException, SQLException {
+
+	public int apagarExperienciaCandidato(String email, String competencia,int exp) throws IOException, SQLException {
 
 		Conectar();
 		PreparedStatement st = null;
 		
 		
 		st = conn.prepareStatement ("delete from Candidato_Competencia where id_candidato = (select id_candidato from candidato where email = ?) "
-				+ "and id_competencia =  (select id_competencia from competencia where competencia = ?)");
+				+ "and id_competencia =  (select id_competencia from competencia where competencia = ?)"
+				+ "and experiencia = ?");
 		st.setString(1,email);
-		st.setString(2, competencia);
+		st.setString(2, competencia.replace("sharp","#"));
+		st.setInt(3, exp);
 		return st.executeUpdate();
 		//delete from Candidato_Competencia where id_candidato = (select id_candidato from candidato where email = "celsonb") and id_competencia =  (select id_competencia from competencia where competencia = "python");
 		//delete from Candidato_Competencia where id_candidato = (select id_candidato from candidato where email = ?) and id_competencia =  (select id_competencia from competencia where competencia = ?

@@ -74,7 +74,8 @@ public class ServidorVaga extends MainServidor {
 		
 			
 			
-			List<String> competencias = converterJsonArrayToList(userData.get("competencias").toString());
+			List<String> competencias = converterJsonArrayToList(userData.get("competencias").toString().replace("#", "sharp"));
+			
 			for(String str : competencias) {
 				System.out.println(str);
 			}

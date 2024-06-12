@@ -63,11 +63,18 @@ public class VagasDao extends BancoDeDados {
 		Conectar();	
 		//Entrada: [{estado=seila, operacao=cadastrarVaga, faixaSalarial=10000, email=seila@, competencias=[python, c#, c++], descricao=seila, token=1cdb3a5e-ea56-4cbd-9f4f-878f019a2d58}]
 		st = conn.prepareStatement ("insert into vaga (id_empresa, faixa_salarial, descricao,nome,estado) values ((select id_empresa from empresa where email = ?), ?,?,?,?)");
-		st.setString(1,dados.get("email").toString());
-		st.setFloat(2, Float.parseFloat(dados.get("faixaSalarial").toString()));
-		st.setString(3, dados.get("descricao").toString());
-		st.setString(4, dados.get("nome").toString());
-		st.setString(5, dados.get("estado").toString());
+		String estado = "divulgavel";
+		String email = dados.get("email").toString();
+		Float faixaSalarial = Float.parseFloat(dados.get("faixaSalarial").toString());
+		String descricao = dados.get("descricao").toString();
+		String nome = dados.get("nome").toString();
+		if(dados.get("estado")!=null) estado = dados.get("estado").toString();
+		
+		st.setString(1,email);
+		st.setFloat(2,faixaSalarial );
+		st.setString(3, descricao);
+		st.setString(4, nome);
+		st.setString(5, estado);
 		op = st.executeUpdate();
 		
 		if( op != 0) {
@@ -76,14 +83,14 @@ public class VagasDao extends BancoDeDados {
 			st.setFloat(2, Float.parseFloat(dados.get("faixaSalarial").toString()));
 			st.setString(3, dados.get("descricao").toString());
 			st.setString(4, dados.get("nome").toString());
-			st.setString(5, dados.get("estado").toString());
+			st.setString(5, estado);
 			ResultSet rs = st.executeQuery();
 			if(rs.next())op = rs.getInt("id_vaga");
 			
 			for(String str : competencias) {
 				st = conn.prepareStatement ("insert into vaga_competencia (id_vaga,id_competencia) values (?, (select id_competencia from competencia where competencia = ?))");
 				st.setInt(1, op);
-				st.setString(2, str);
+				st.setString(2, str.replace("sharp", "#"));
 				st.executeUpdate();
 			}
 			
@@ -95,7 +102,7 @@ public class VagasDao extends BancoDeDados {
 	}
 	
 	
-	public void apagarVaga(String email, int idVaga) throws IOException, SQLException {
+	public void apagarVaga(String email, int idVaga ) throws IOException, SQLException {
 		Conectar();
 		PreparedStatement st = null;
 		st = conn.prepareStatement ("delete from vaga where id_empresa = (select id_empresa from empresa where email = ?) and id_vaga = ?");

@@ -37,9 +37,9 @@ public class ServidorCompetencia extends MainServidor {
 		
 				
 		 try {
-			 //JSONObject newObj = new JSONObject (data.get("filtros").toString()); 
-			Map<String, Object> comps = mapper.readValue(new JSONObject (data.get("filtros").toString()).toString(), new TypeReference<Map<String, Object>>() {}); 
-			List<String> competencias =  converterJsonArrayToList (comps.get("competencias").toString());
+			
+			Map<String, Object> comps = mapper.readValue(new JSONObject (data.get("filtros").toString().replace("#", "sharp")).toString(), new TypeReference<Map<String, Object>>() {}); 
+			List<String> competencias =  converterJsonArrayToList (comps.get("competencias").toString().replace("#", "sharp"));
 			 
 			 
 			List<Vaga> vagas = bd.filtrarVagas(data, competencias, comps.get("tipo").toString());
@@ -48,7 +48,7 @@ public class ServidorCompetencia extends MainServidor {
 			
 			
 		} catch (Exception e) {
-			
+			System.err.println(e);
 			respostaExcecao(e, data.get("operacao").toString(),"422");
 		}
 		
@@ -68,14 +68,22 @@ public class ServidorCompetencia extends MainServidor {
 			
 			for(Vaga vag : vagas) {
 				JSONObject objTemp = new JSONObject();
+				JSONArray jsonArrayComp = new JSONArray();
 				
-				objTemp.put("IdVaga",vag.getIdVaga())
-				.put("nome", vag.getNome())
-				.put("faixaSalarial", vag.getFaixaSalarial())
-				.put("descricao", vag.getDescricao())
-				.put("estado", vag.getEstado())
-				.put("competencias", vag.getCompetencias())
-				.put("email", vag.getEmail());
+				List<String> lista = new ArrayList<>();
+				for(String str : vag.getCompetencias()) {
+					lista.add(str.replace("#", "sharp"));
+				}
+				
+				
+				objTemp.put("idVaga",vag.getIdVaga());
+				objTemp.put("nome", vag.getNome());
+				objTemp.put("faixaSalarial", vag.getFaixaSalarial());
+				objTemp.put("descricao", vag.getDescricao());
+				objTemp.put("estado", vag.getEstado());
+				objTemp.put("competencias", lista);
+				objTemp.put("email", vag.getEmail());
+				
 			
 				jarray.put(objTemp);
 			}
@@ -87,13 +95,14 @@ public class ServidorCompetencia extends MainServidor {
 			
 			System.out.println("Saida: ["+obj.toString()+"]");
 			 
-			saida.println(obj.toString());
+			saida.println(obj.toString().replace("sharp", "#"));
 			
 			
 			
 		} catch (JSONException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.err.println(e);
 		}
 	}
 	
@@ -104,7 +113,7 @@ public class ServidorCompetencia extends MainServidor {
 			
 		try {
 		
-			JSONArray competencia = new JSONArray(dataCandidato.get("competenciaExperiencia").toString());
+			JSONArray competencia = new JSONArray(dataCandidato.get("competenciaExperiencia").toString().replace("#","sharp"));
 			
 			bd.cadastrarExperienciaCandidato(dataCandidato.get("email").toString(), competencia);
 			
@@ -170,7 +179,8 @@ public class ServidorCompetencia extends MainServidor {
 			 for (int i = 0; i < jsonArr.length(); i++)
 		        {
 		            JSONObject jsonObj = jsonArr.getJSONObject(i);
-		        	bd.apagarExperienciaCandidato(data.get("email").toString(), jsonObj.get("competencia").toString());
+		            int exp = Integer.parseInt(jsonObj.get("experiencia").toString());
+		        	bd.apagarExperienciaCandidato(data.get("email").toString(), jsonObj.get("competencia").toString(),exp);
 		        }
 			 
 		
@@ -209,10 +219,10 @@ public class ServidorCompetencia extends MainServidor {
 			 JSONArray competencias = new JSONArray();
 			 //competencias.put(rsToJson(rs));
 			 
-			String myString	= new JSONObject().put("operacao",  "visualizarCompetenciaExperiencia").put("CompetenciaExperiencia", rsToJson(rs)).toString();
+			String myString	= new JSONObject().put("operacao",  "visualizarCompetenciaExperiencia").put("competenciaExperiencia", rsToJson(rs)).put("status", 201).toString();
 			
 			System.out.println("Saida: ["+myString+"]"); 
-			saida.println(myString);
+			saida.println(myString.replace("sharp","#"));
 		}catch(Exception ex) {
 			
 		}
@@ -221,6 +231,7 @@ public class ServidorCompetencia extends MainServidor {
 		
 	}
 	private static JSONArray rsToJson(ResultSet rs ) throws SQLException {
+		
 		ResultSetMetaData md = rs.getMetaData();
 		int numCols = md.getColumnCount();
 		List<String> colNames = IntStream.range(0, numCols)
@@ -239,7 +250,7 @@ public class ServidorCompetencia extends MainServidor {
 		    JSONObject row = new JSONObject();
 		    colNames.forEach(cn -> {
 		        try {
-		            row.put(cn, rs.getObject(cn));
+		            row.put(cn, rs.getObject(cn).toString().replace("#","sharp"));
 		        } catch (JSONException | SQLException e) {
 		            e.printStackTrace();
 		        }

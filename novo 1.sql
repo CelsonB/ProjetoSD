@@ -45,9 +45,15 @@ group by vaga.id_vaga;
  
  Select * from vaga inner join vaga_competencia on vaga.id_vaga = vaga_competencia.id_vaga inner join competencia on competencia.id_competencia = vaga_competencia.id_competencia
 where vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'python')) 
-or  vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'c++' ))
-or  vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'c#' ))
+and  vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'c++' ))
+and  vaga.id_vaga = (select id_vaga from vaga_competencia where id_competencia = (select id_competencia from competencia where competencia = 'flutter' ))
 group by vaga.id_vaga;
 
 
 select competencia from competencia inner join vaga_competencia on vaga_competencia.id_competencia = competencia.id_competencia where vaga_competencia.id_vaga = ?; 
+
+Select * from vaga inner join vaga_competencia on vaga.id_vaga = vaga_competencia.id_vaga inner join competencia 
+on competencia.id_competencia = vaga_competencia.id_competencia where competencia in ('python', 'c++') HAVING COUNT(vaga_competencia.id_vaga_competencia) >= 2;
+
+
+

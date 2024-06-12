@@ -302,8 +302,8 @@ public class ServidorCandidato {
 				
 				String myString = new JSONObject().put("operacao", "visualizarCandidato")
 						.put("status","201")
-						.put("nome", rs.getString(1).toString())
-						.put("senha",rs.getString(3).toString())
+						.put("nome", rs.getString("nome").toString())
+						.put("senha",rs.getString("senha").toString())
 						.toString(); 
 				saida.println(myString);
 			}
