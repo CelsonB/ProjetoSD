@@ -67,11 +67,12 @@ public class ClienteVaga extends Cliente {
 	
 	private int enviarJsonVisualizarVaga(String operacao) {
 		int op = selecionarVaga(operacao);
+		String opString = String.valueOf(op);
 		try {
 			PrintStream saida  = new PrintStream (super.clienteSocket.getOutputStream());
 				String myString = new JSONObject()
 				.put("operacao", operacao)
-				.put("idVaga", op)
+				.put("idVaga", opString)
 				.put("email",super.sessaoEmpresa.getEmail())
 				.put("token",super.sessaoEmpresa.getToken())
 				.toString(); 
@@ -165,7 +166,7 @@ public class ClienteVaga extends Cliente {
 					.put("email", super.sessaoEmpresa.getEmail())
 					.put("competencias", selecionarCompetencia())
 					.put("token",super.sessaoEmpresa.getToken())
-					.put("idVaga", dataVaga.getIdVaga())
+					.put("idVaga", String.valueOf(dataVaga.getIdVaga())  )
 					.toString(); 
 			
 			System.out.println("Saida: [" +myString + "]");
@@ -185,7 +186,7 @@ public class ClienteVaga extends Cliente {
 			PrintStream saida  = new PrintStream (super.clienteSocket.getOutputStream());
 				String myString = new JSONObject()
 				.put("operacao", operacao)
-				.put("idVaga", op)
+				.put("idVaga", String.valueOf(op))
 				.put("email",super.sessaoEmpresa.getEmail())
 				.put("token",super.sessaoEmpresa.getToken())
 				.toString(); 
