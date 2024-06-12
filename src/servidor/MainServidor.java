@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
@@ -35,7 +36,11 @@ public class MainServidor {
 		
 		System.out.println("programa 1: servidor");
 		
-		servidorSocket = new ServerSocket(22222,5);
+		Scanner leia = new Scanner(System.in);
+		System.out.println("Digite a porta");
+		int porta = leia.nextInt();
+		
+		servidorSocket = new ServerSocket(porta,5);
 		ss=servidorSocket.accept(); 	 
 
 		ServidorCandidato candidatoServer = new ServidorCandidato(servidorSocket, ss);

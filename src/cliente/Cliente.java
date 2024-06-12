@@ -35,7 +35,10 @@ public class Cliente {
 		
 		System.out.println("Digite o servidor");
 		String ip = leia.nextLine();
-		clienteSocket = new Socket(ip,22222);
+		
+		System.out.println("Digite a porta");
+		int porta = leia.nextInt();
+		clienteSocket = new Socket(ip,porta);
 		
 		
 		ClienteCandidato cliente = new ClienteCandidato();
