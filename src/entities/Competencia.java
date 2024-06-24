@@ -3,10 +3,10 @@ package entities;
 public class Competencia {
 	
 	private String nomeCompetencia;
-	private String experiencia;
+	private int experiencia;
 	
 	
-	public Competencia(String experiencia,String nomeCompetencia) {
+	public Competencia(int experiencia,String nomeCompetencia) {
 		this.experiencia = experiencia;
 		this.nomeCompetencia = nomeCompetencia;
 	}
@@ -19,11 +19,11 @@ public class Competencia {
 		this.nomeCompetencia = nomeCompetencia;
 	}
 
-	public String getExperiencia() {
+	public int getExperiencia() {
 		return experiencia;
 	}
 
-	public void setExperiencia(String experiencia) {
+	public void setExperiencia(int experiencia) {
 		this.experiencia = experiencia;
 	}
 	

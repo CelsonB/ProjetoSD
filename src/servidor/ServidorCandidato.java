@@ -24,6 +24,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 public class ServidorCandidato {
 	private static UUID token = null;
+	public static String emailLogado;
 	public static ServerSocket servidorSocket;
 	public static Socket ss;
 	
@@ -35,8 +36,7 @@ public class ServidorCandidato {
 		ServidorCandidato.token = token;
 	}
 
-	public ServidorCandidato(ServerSocket servidorSocket2, Socket ss2) {
-		this.servidorSocket = servidorSocket2;
+	public ServidorCandidato( Socket ss2) {
 		this.ss = ss2;
 	}
 
@@ -45,69 +45,7 @@ public class ServidorCandidato {
 		this.ss = ss; 
 		
 	}
-//	public static void chamarServidor() throws IOException {
-//		
-//		
-//		System.out.println("programa 1: servidor");
-//		
-//		servidorSocket = new ServerSocket(22222,5);
-//		ss=servidorSocket.accept(); 	 
-//
-//		InputStreamReader input = new InputStreamReader(ss.getInputStream());
-//		BufferedReader reader = new BufferedReader(input);
-//		
-//		PrintStream saida  = new PrintStream (ss.getOutputStream());
-//		
-//
-//
-//		
-//		
-//		
-//		
-//
-//	String op = ""; 
-//       
-//        
-//		ObjectMapper mapper = new ObjectMapper();  
-//		do {			
-//			
-//
-//			Map<String, Object> userData = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {}); 
-//			
-//			System.out.print(userData.get("operacao").toString());
-//			
-//			op = userData.get("operacao").toString();
-//			
-//			if(op.equals("loginCandidato")) {
-//				SolicitarLogin(userData);
-//			}else
-//			
-//			if(op.equals("cadastrarCandidato")) {	
-//				System.out.println("Entrou em realizar cadastro 1 ");
-//				SolicitarCadastro(userData);
-//			}else
-//			
-//			if(op.equals("visualizarCandidato")) {
-//				SolicitarVisualizacao(userData.get("email").toString());
-//			}else
-//				
-//			if(op.equals("logout")){
-//				logout(userData);
-//			}else
-//				
-//			if(op.equals("atualizarCandidato")) {
-//				atualizarCadastro(userData);
-//			}
-//			else 
-//				
-//			if(op.equals("apagarCandidato")) {
-//				apagarCandidato(userData.get("email").toString());
-//			}
-//		}while(op != "");
-//		
-//	
-//				
-//	}
+
 	
 	public static void SolicitarCadastro(Map<String, Object> userData) {
 		String myString = null;
@@ -236,7 +174,7 @@ public class ServidorCandidato {
 	}
 	
 	
-	public static void SolicitarLogin(Map<String, Object> userData) throws IOException {
+	public static String SolicitarLogin(Map<String, Object> userData) throws IOException {
 		
 			
 		
@@ -254,19 +192,24 @@ public class ServidorCandidato {
 				 
 				 if(bd.getLogin(userData.get("email").toString(), userData.get("senha").toString())) {
 				 		token = UUID.randomUUID();
+				 		emailLogado = userData.get("email").toString();
+				 		
 				 		
 				 		String myString = new JSONObject().put("operacao", "loginCandidato").put("status","200").put("token", token.toString()).toString(); 
 				 		System.out.println(myString);
 				 		saida.println(myString);
+				 		return userData.get("email").toString();
 				 	}else {
 				 		String myString = new JSONObject().put("operacao", "loginCandidato").put("status","401").put("mensagem", "logins ou senha incorretos").toString(); 
 				 		System.out.println(myString);
 						saida.println(myString);
+						return null;
 				 	} 
 				 
 			 }else {
 					String myString = new JSONObject().put("operacao", "loginCandidato").put("status","401").put("mensagem", "Usuario já está logado").toString(); 
 					saida.println(myString);
+					return null;
 			 }
 			 
 			 	
@@ -277,6 +220,7 @@ public class ServidorCandidato {
 				System.out.println(ex);
 					
 			}
+		return null;
 	}
 	
 	public static void SolicitarVisualizacao(String email) throws IOException {

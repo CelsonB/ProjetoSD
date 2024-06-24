@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.List;
 import java.util.UUID;
 
 public class Candidato {
@@ -11,10 +12,18 @@ public class Candidato {
 	private String email;
 	
 	private UUID token =null;
+	private List<Competencia> listaCompetencia;
+	
+	
+	
+	public List<Competencia> getListaCompetencia() {
+		return listaCompetencia;
+	}
 
-	
-	
-	
+	public void setListaCompetencia(List<Competencia> listaCompetencia) {
+		this.listaCompetencia = listaCompetencia;
+	}
+
 	public Candidato(String nome, String senha, String email, UUID token) {
 		super();
 		this.nome = nome;
@@ -30,6 +39,8 @@ public class Candidato {
 		this.email = email;
 		
 	}
+	
+	
 	public Candidato() {
 	}
 

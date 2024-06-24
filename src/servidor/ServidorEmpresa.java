@@ -22,7 +22,7 @@ public class ServidorEmpresa {
 	private UUID token = null;
 	public ServerSocket servidorSocket;
 	public Socket ss;
-	
+	public String emailLogado;
 	public UUID getToken() {
 		return token;
 	}
@@ -32,8 +32,8 @@ public class ServidorEmpresa {
 
 	private Empresa sessao = null;
 	
-	public ServidorEmpresa(ServerSocket servidorSocket2, Socket ss2) {
-		this.servidorSocket = servidorSocket2;
+	public ServidorEmpresa( Socket ss2) {
+		//this.servidorSocket = servidorSocket2;
 		this.ss = ss2;
 	}
 	
@@ -67,7 +67,7 @@ public class ServidorEmpresa {
 		
 	}
 	 
-	 public void realizarLogin(Map<String, Object> data) {
+	 public boolean realizarLogin(Map<String, Object> data) {
 		 ResultSet rs = null; 
 		 EmpresaDao bd = new EmpresaDao();
 		 
@@ -77,16 +77,19 @@ public class ServidorEmpresa {
 			 
 			rs =  bd.realizarLogin(data.get("email").toString(),data.get("senha").toString());
 			if(rs == null) {
+			
 				throw new  EmailInvalidoException("email não encontrado");
 			}else {
+				emailLogado = data.get("email").toString();
 				respostaServidor(data.get("operacao").toString());
+				return true;
 			}
 			 
 			 
 		 }catch(Exception ex) {
 			 respostaExcecao( ex, data.get("operacao").toString(), "401");
 		 }
-		 
+		 return false;
 		 
 		 
 		 

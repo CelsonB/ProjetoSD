@@ -2,6 +2,7 @@ package servidor;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,9 +19,13 @@ import dao.DaoCompetencia;
 import dao.VagasDao;
 import entities.Vaga;
 
-public class ServidorVaga extends MainServidor {
+public class ServidorVaga  {
 	
-
+	private Socket ss;
+	public ServidorVaga( Socket ss) {
+		this.ss = ss;
+	}
+	
 	public void listarVagas(String op,Map<String, Object> data){
 		VagasDao bd = new VagasDao();
 		try {

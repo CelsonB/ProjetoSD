@@ -1,5 +1,6 @@
+/gui/
 /cliente/
+/Service/
+/service/
 /entities/
 /servidor/
-/dao/
-/teste/

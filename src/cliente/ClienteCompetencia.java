@@ -65,7 +65,7 @@ public class ClienteCompetencia extends Cliente {
 			
 			saida.println(obj.toString());
 			
-			//receberRespostaServidor();
+		
 			receberRespostaServidorFiltrar();
 			
 		} catch (JSONException | IOException e) {
@@ -125,7 +125,8 @@ public class ClienteCompetencia extends Cliente {
 			
 		return "or";
 	}
-	 public void cadastrarCandidatoCompetencia() 
+	
+	public void cadastrarCandidatoCompetencia() 
 	 {
 	
 		enviarJsonCompetenciaExperiencia(selecionarCompetencia(), "cadastrarCompetenciaExperiencia");
@@ -285,15 +286,19 @@ public class ClienteCompetencia extends Cliente {
 					
 					System.out.println("<"+data.get("competenciaExperiencia").toString()+">");
 					
-					
-					JSONArray jsonArr = new JSONArray(data.get("competenciaExperiencia").toString());
+					if(data.get("competenciaExperiencia").toString().equals("<[]>")) {
+						
+					}else {
+						JSONArray jsonArr = new JSONArray(data.get("competenciaExperiencia").toString());
 
-			        for (int i = 0; i < jsonArr.length(); i++)
-			        {
-			            JSONObject jsonObj = jsonArr.getJSONObject(i);
+				        for (int i = 0; i < jsonArr.length(); i++)
+				        {
+				            JSONObject jsonObj = jsonArr.getJSONObject(i);
 
-			            System.out.println("Competencia: " + jsonObj.get("competencia").toString() + " Experiencia: " + jsonObj.get("experiencia").toString());
-			        }
+				            System.out.println("Competencia: " + jsonObj.get("competencia").toString() + " Experiencia: " + jsonObj.get("experiencia").toString());
+				        }
+					}
+				
 					
 				
 				}else{

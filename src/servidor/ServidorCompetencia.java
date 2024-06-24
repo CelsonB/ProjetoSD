@@ -2,6 +2,7 @@ package servidor;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -26,8 +27,17 @@ import entities.Competencia;
 import entities.Empresa;
 import entities.Vaga;
 
-public class ServidorCompetencia extends MainServidor {
+public class ServidorCompetencia 
+{
 
+	
+	private Socket ss;
+	
+	
+	public ServidorCompetencia( Socket ss) {
+		this.ss = ss;
+	}
+	
 	public void filtrarVagas(Map<String, Object> data) {
 
 		DaoCompetencia bd = new DaoCompetencia();

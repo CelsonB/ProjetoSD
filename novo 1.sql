@@ -55,7 +55,7 @@ group by vaga.id_vaga;
 
 select competencia from competencia inner join vaga_competencia on vaga_competencia.id_competencia = competencia.id_competencia where vaga_competencia.id_vaga = ?; 
 
-Select v.id_vaga, v.nome, v.faixa_salarial, v.descricao, v.estado, competencia.competencia from vaga v inner join vaga_competencia vc on v.id_vaga = vc.id_vaga inner join competencia on competencia.id_competencia = vc.id_competencia where competencia in ('python','c++') HAVING COUNT(vc.id_vaga) >= 2;
+Select v.id_vaga, v.nome, v.faixa_salarial, v.descricao, v.estado, competencia.competencia from vaga v inner join vagacompetencia vc on v.id_vaga = vc.id_vaga inner join competencia on competencia.id_competencia = vc.id_competencia where competencia in ('python','c++') HAVING COUNT(vc.id_vaga_competencia) >= 2;
 
 
 

@@ -43,10 +43,11 @@ public class MainServidor {
 		servidorSocket = new ServerSocket(porta,5);
 		ss=servidorSocket.accept(); 	 
 
-		ServidorCandidato candidatoServer = new ServidorCandidato(servidorSocket, ss);
-		ServidorEmpresa empresaServer = new ServidorEmpresa(servidorSocket, ss);
-		ServidorCompetencia competenciaSever = new ServidorCompetencia();
-		ServidorVaga vagaServer = new ServidorVaga();
+		ServidorCandidato candidatoServer = new ServidorCandidato(ss);
+		ServidorEmpresa empresaServer = new ServidorEmpresa( ss);
+		ServidorCompetencia competenciaSever = new ServidorCompetencia(ss);
+		ServidorVaga vagaServer = new ServidorVaga(ss);
+		
 		InputStreamReader input = new InputStreamReader(ss.getInputStream());
 		BufferedReader reader = new BufferedReader(input);
 		
@@ -58,7 +59,7 @@ public class MainServidor {
 //		
 //		System.out.println(data.toString());
 		
-		
+			
 		
 		
 		
