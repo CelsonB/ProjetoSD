@@ -22,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.json.JSONException;
 
+import entities.Candidato;
 import entities.Competencia;
 import entities.Empresa;
 import service.CompetenciaService;
@@ -164,5 +165,8 @@ public class FiltrarCandidatosWindow extends JFrame {
 		String filtro = (String) listFiltro.getSelectedItem();
 		
 		List<Candidato> candidatoFiltrados = vagaService.filtrarCandidatos(competencias, filtro);
+		
+		
+		
 	}
 }
