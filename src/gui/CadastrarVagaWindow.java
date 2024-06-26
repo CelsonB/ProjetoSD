@@ -140,12 +140,12 @@ public class CadastrarVagaWindow extends JFrame {
 	      btnRealizarCadastro = new JButton("Realizar cadastro");
 	      btnRealizarCadastro.addActionListener(new ActionListener() {
 	      	public void actionPerformed(ActionEvent e) {
-	      		realizarCadastro();
+
 	      		if(vagaSelecionada==null) {
 	      		
 	      			realizarCadastro();
 	      			
-	      		}else{
+	      		}else if(vagaSelecionada!=null){
 	      			atualizarCadastro();
 	      		}
 	      	}
@@ -190,7 +190,6 @@ public class CadastrarVagaWindow extends JFrame {
 			JOptionPane.showMessageDialog(null, "Vaga cadastrada com sucesso");
 			
 			new VagasWindow(sessao,clienteSocket).setVisible(true);
-			
       		dispose();
 		}else {
 			JOptionPane.showMessageDialog(null, "Erro ao cadastrar vaga");

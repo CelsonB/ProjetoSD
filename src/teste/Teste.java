@@ -73,33 +73,38 @@ public class Teste {
 //	//	String tipo = comps.get("tipo").toString();
 //		
 //
+		
+		
+		
+		
+		String	str = "[{operacao=filtrarCandidatos, filtros={competenciasExperiencias=[{experiencia=0, competencia=Python}], tipo=OR}, token=f13c6dda-7e96-42de-ac8f-ba603b8b74b1}]";
 //	
 //		
-		String competencias = "[Python, C#]".replace("#", "sharp");
-	
-		ArrayList<String > comps = new ArrayList<>();
-		try {
-			JSONArray jsonarr = new JSONArray(competencias);
-			System.out.print(competencias);
-			System.out.print(jsonarr.toString());
-			
-			
-			System.out.println(0 + "nome: " + jsonarr.getString(0));
-			System.out.println(1 + "nome: " + jsonarr.getString(1));
-			
-			for(int i = 0; i<jsonarr.length();i++) {
-				
-				System.out.println(i + "nome: " + jsonarr.getString(i));
-				
-					comps.add(jsonarr.getString(i));
-			}
-			
-			
-			} catch (JSONException e) {
-				System.out.println(e);
-			}
-		
-		System.out.println("lista : " + comps.toString());
+//		String competencias = "[Python, C#]".replace("#", "sharp");
+//	
+//		ArrayList<String > comps = new ArrayList<>();
+//		try {
+//			JSONArray jsonarr = new JSONArray(competencias);
+//			System.out.print(competencias);
+//			System.out.print(jsonarr.toString());
+//			
+//			
+//			System.out.println(0 + "nome: " + jsonarr.getString(0));
+//			System.out.println(1 + "nome: " + jsonarr.getString(1));
+//			
+//			for(int i = 0; i<jsonarr.length();i++) {
+//				
+//				System.out.println(i + "nome: " + jsonarr.getString(i));
+//				
+//					comps.add(jsonarr.getString(i));
+//			}
+//			
+//			
+//			} catch (JSONException e) {
+//				System.out.println(e);
+//			}
+//		
+//		System.out.println("lista : " + comps.toString());
 		
 		
 	}

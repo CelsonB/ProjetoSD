@@ -59,4 +59,10 @@ public class Main {
     public static Set<String> getUsuariosLogados() {
         return usuariosLogados;
     }
+    
+    public static void mostrarLogados() {
+    	for(String str: usuariosLogados) {
+    		System.out.println("Email: "+ str);
+    	}
+    }
 }

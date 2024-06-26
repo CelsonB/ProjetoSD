@@ -40,6 +40,7 @@ public class CompetenciaService {
 		JSONArray jarray = new JSONArray();
 		try {
 			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+			
 			for(String str : competencias) {
 				jarray.put(str);
 			}

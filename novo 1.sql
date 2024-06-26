@@ -32,7 +32,7 @@ create table Vaga_competencia(id_vaga_competencia int not null AUTO_INCREMENT, i
 
 INSERT INTO competencia (competencia) VALUES ('Python'), ('C#'), ('C++'), ('JS'), ('PHP'), ('Swift'), ('Java'), ('Go'), ('SQL'), ('Ruby'), ('HTML'), ('CSS'), ('NOSQL'), ('Flutter'), ('TypeScript'), ('Perl'), ('Cobol'), ('dotNet'), ('Kotlin'), ('Dart');
 
-
+ 
 
 
 

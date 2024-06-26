@@ -45,14 +45,22 @@ public class ServidorCompetencia
 		
 	
 		
-				
+				System.out.println(data.toString());
 		 try {
 			
 			Map<String, Object> comps = mapper.readValue(new JSONObject (data.get("filtros").toString().replace("#", "sharp")).toString(), new TypeReference<Map<String, Object>>() {}); 
+			
+			System.out.println(comps.toString());
+			
 			List<String> competencias =  converterJsonArrayToList (comps.get("competencias").toString().replace("#", "sharp"));
 			 
-			 
+			System.out.println(competencias.toString());
+			
+			System.out.println("Tipo: " + comps.get("tipo").toString());
+			
 			List<Vaga> vagas = bd.filtrarVagas(data, competencias, comps.get("tipo").toString());
+			
+			//System.out.println(vagas.toString());
 			
 			respostarFiltrarVagas(vagas);
 			
@@ -69,7 +77,7 @@ public class ServidorCompetencia
 	public void respostarFiltrarVagas(List<Vaga> vagas) {
 		JSONObject obj = new JSONObject();
 		JSONArray jarray = new JSONArray();
-		
+		System.out.println("chegou aqui");
 		String myString = null;
 
 		
@@ -123,6 +131,10 @@ public class ServidorCompetencia
 			
 		try {
 		
+			
+			
+			
+			
 			JSONArray competencia = new JSONArray(dataCandidato.get("competenciaExperiencia").toString().replace("#","sharp"));
 			
 			bd.cadastrarExperienciaCandidato(dataCandidato.get("email").toString(), competencia);

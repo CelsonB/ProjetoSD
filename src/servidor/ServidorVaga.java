@@ -59,10 +59,27 @@ public class ServidorVaga  {
 		
 		List<Competencia> competencias = new ArrayList<>() ; 
 		try {
-			Map<String, Object> filtro = mapper.readValue(new JSONObject (userData.get("filtros").toString().replace("#", "sharp")).toString(), new TypeReference<Map<String, Object>>() {});
+			//Map<String, Object> filtro = mapper.readValue(new JSONObject (userData.get("filtros").toString().replace("#", "sharp")).toString(), new TypeReference<Map<String, Object>>() {});
+		
+			 Map<String, Object> filtro = (Map<String, Object>) userData.get("filtros");	
 			String tipo = filtro.get("tipo").toString();
+			//Map<String, Object> competenciaExperiencia = mapper.readValue(new JSONObject (filtro.get("competenciasExperiencias").toString()).toString(), new TypeReference<Map<String, Object>>() {});
+			//List<Competencia>  competenciasArray = ;
 			
-			JSONArray jsonArr = new JSONArray (filtro.get("competenciasExperiencias"));
+			JSONArray jsonArr = new JSONArray (filtro.get("competenciasExperiencias").toString());
+			
+			
+			//Map<String, Object> userData = mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
+
+            // Extrai o nó "filtros" do JSON
+           
+
+
+          
+
+         
+			
+			
 			
 			for(int i = 0 ;i<jsonArr.length();i++) {
 				JSONObject jsonobj = jsonArr.getJSONObject(i);

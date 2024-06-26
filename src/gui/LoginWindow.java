@@ -130,9 +130,7 @@ public class LoginWindow extends JFrame {
 					} catch (IOException e1) {
 					
 						JOptionPane.showMessageDialog(null, e1.getMessage(), "Realizar login", JOptionPane.WARNING_MESSAGE);
-					}
-					
-					
+					}	
 					
 				}
 	

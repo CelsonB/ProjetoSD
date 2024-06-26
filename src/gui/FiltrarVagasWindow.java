@@ -41,6 +41,7 @@ public class FiltrarVagasWindow extends JFrame {
 	private Candidato sessao;
 	private CompetenciaService competenciaService;
 	private JComboBox comboBox;
+	private JScrollPane scrollPane;
 	
 	
 	public FiltrarVagasWindow(Candidato sessao, Socket clienteSocket) {
@@ -93,20 +94,14 @@ public class FiltrarVagasWindow extends JFrame {
 	      btnVoltar.setBounds(17, 153, 125, 23);
 	      contentPane.add(btnVoltar);
 	      
+	      scrollPane = new JScrollPane();
+	      scrollPane.setBounds(87, 49, 197, 89);
+	      contentPane.add(scrollPane);
+	      
 	      listCompetencias = new JList<>(listModel);
-	      listCompetencias.setBounds(87, 49, 197, 89);
-	      contentPane.add(listCompetencias);
+	      scrollPane.setViewportView(listCompetencias);
 	      
 	      listCompetencias.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);	
-	      
-	      comboBox = new JComboBox();
-	      comboBox.setModel(new DefaultComboBoxModel(new String[] {"AND", "OR"}));
-	      comboBox.setBounds(87, 16, 197, 22);
-	      contentPane.add(comboBox);
-	      
-	      JLabel lblFiltro = new JLabel("Filtro");
-	      lblFiltro.setBounds(10, 20, 67, 14);
-	      contentPane.add(lblFiltro);
 	      listCompetencias.addListSelectionListener(new ListSelectionListener() {
 	            public void valueChanged(ListSelectionEvent e) {
 	                if (e.getValueIsAdjusting()) {
@@ -116,6 +111,15 @@ public class FiltrarVagasWindow extends JFrame {
 	                System.out.println("Selected competência: " + selectedCompetencia);
 	            }
 	        });
+	      
+	      comboBox = new JComboBox();
+	      comboBox.setModel(new DefaultComboBoxModel(new String[] {"AND", "OR", "ALL"}));
+	      comboBox.setBounds(87, 16, 197, 22);
+	      contentPane.add(comboBox);
+	      
+	      JLabel lblFiltro = new JLabel("Filtro");
+	      lblFiltro.setBounds(10, 20, 67, 14);
+	      contentPane.add(lblFiltro);
 	}
 	
 	public void filtrarVagas() {

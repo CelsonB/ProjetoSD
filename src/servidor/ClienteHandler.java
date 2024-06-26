@@ -75,8 +75,9 @@ public class ClienteHandler implements Runnable {
                     case "loginCandidato":
                         String emailLogado = candidatoServer.SolicitarLogin(userData);
                         if(emailLogado!=null) {
-                        	usuariosLogados.add(emailLogado);
+                        	//usuariosLogados.add(emailLogado);
                         	Main.adicionarUsuarioLogado(candidatoServer.emailLogado);
+                        	Main.mostrarLogados();
                         }	
                         	
                         break;
@@ -89,10 +90,12 @@ public class ClienteHandler implements Runnable {
                     case "logout":
                     	  if (empresaServer.getToken() != null) {
                     		  Main.removerUsuarioLogado(candidatoServer.emailLogado);
+                    		  Main.mostrarLogados();
                               candidatoServer.setToken(null);
                               empresaServer.logout();
                           } else if (candidatoServer.getToken() != null) {
                         	  Main.removerUsuarioLogado(candidatoServer.emailLogado);
+                        	  Main.mostrarLogados();
                               empresaServer.setToken(null);
                               candidatoServer.logout();
                           }
@@ -111,6 +114,7 @@ public class ClienteHandler implements Runnable {
                         
                         if(  empresaServer.realizarLogin(userData)) {
                         	 Main.adicionarUsuarioLogado(empresaServer.emailLogado);
+                        	 Main.mostrarLogados();
                         }
                        
                         break;
@@ -150,15 +154,15 @@ public class ClienteHandler implements Runnable {
         }
     }
     
-    private void listarUsuariosLogados(PrintStream saida) {
-        Set<String> usuariosLogados = Main.getUsuariosLogados();
-        StringBuilder sb = new StringBuilder();
-        sb.append("Usuários logados:\n");
-        for (String usuario : usuariosLogados) {
-            sb.append(usuario).append("\n");
-        }
-        saida.println(sb.toString());
-    }
+//    private void listarUsuariosLogados(PrintStream saida) {
+//        Set<String> usuariosLogados = Main.getUsuariosLogados();
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("Usuários logados:\n");
+//        for (String usuario : usuariosLogados) {
+//            sb.append(usuario).append("\n");
+//        }
+//        saida.println(sb.toString());
+//    }
 
     
 }

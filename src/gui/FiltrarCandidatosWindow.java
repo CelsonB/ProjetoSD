@@ -118,10 +118,12 @@ public class FiltrarCandidatosWindow extends JFrame {
 		JButton btnNewButton = new JButton("Adicionar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				
 				Object selectedItem = listCompetencia.getSelectedItem();
 				String nomeCompetencia = (String) selectedItem;
 				
-			int exp = (int)spinnerExperiencia.getValue();
+				int exp = (int)spinnerExperiencia.getValue();
 				Competencia comp = new Competencia(exp,nomeCompetencia);
 				
 				competencias.add(comp);
@@ -156,7 +158,7 @@ public class FiltrarCandidatosWindow extends JFrame {
 		lblFiltro.setBounds(10, 177, 62, 14);
 		contentPane.add(lblFiltro);
 		
-		 listFiltro = new JComboBox(new DefaultComboBoxModel(new String[] {"OR", "AND"}));
+		listFiltro = new JComboBox(new DefaultComboBoxModel(new String[] {"OR", "AND", "ALL"}));
 		listFiltro.setBounds(111, 171, 125, 20);
 		contentPane.add(listFiltro);
 	}

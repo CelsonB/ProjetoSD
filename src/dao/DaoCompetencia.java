@@ -32,6 +32,7 @@ public class DaoCompetencia extends BancoDeDados{
 	
 	public List<Vaga> filtrarVagas(Map<String, Object> data, List<String> competencias,String tipo) throws SQLException, IOException {
 		
+		System.out.println("chegou aqui ----3");
 		PreparedStatement st = null;
 		Conectar();
 		String comando = "Select * from vaga inner join vaga_competencia on vaga.id_vaga = vaga_competencia.id_vaga inner join competencia on competencia.id_competencia = vaga_competencia.id_competencia "
@@ -46,9 +47,9 @@ public class DaoCompetencia extends BancoDeDados{
 		}
 		comando = comando.concat(")");
 	
-		if(data.get("tipo").toString().toUpperCase().equals("AND")) {
+		if(tipo.toUpperCase().equals("AND")) {
 			String valor = String.valueOf(i) ;
-			String AND = " HAVING COUNT( vaga.id_vaga_competencia) >= ?";
+			String AND = " HAVING COUNT( vaga_competencia.id_vaga_competencia) >= ?";
 			comando = comando.concat(AND).replace("?", valor);
 		}
 		st = conn.prepareStatement (comando);
@@ -64,7 +65,7 @@ public class DaoCompetencia extends BancoDeDados{
 			
 			st.setInt(1,rs.getInt("id_empresa"));
 			ResultSet email =  st.executeQuery();
-			email.next();
+			
 			
 			st = conn.prepareStatement ("select competencia from competencia inner join vaga_competencia on vaga_competencia.id_competencia = competencia.id_competencia where vaga_competencia.id_vaga = ? ");
 			st.setInt(1,rs.getInt("id_vaga"));
@@ -81,7 +82,7 @@ public class DaoCompetencia extends BancoDeDados{
 			vagaTemp.setFaixaSalarial(Float.parseFloat(rs.getString("faixa_salarial")));
 			vagaTemp.setDescricao(rs.getString("descricao"));
 			vagaTemp.setEstado(rs.getString("estado"));
-			vagaTemp.setEmail(email.getString("email"));
+			if(email.next())vagaTemp.setEmail(email.getString("email"));
 			vagaTemp.setCompetencias(competenciasVagas);
 			vagas.add(vagaTemp);
 			

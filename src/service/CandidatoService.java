@@ -367,7 +367,7 @@ public class CandidatoService {
 					sessao.setSenha(senha);
 					sessao.setToken(token);
 					
-					JOptionPane.showMessageDialog(null, "login realizado com sucesso", "Login", JOptionPane.WARNING_MESSAGE);
+					//JOptionPane.showMessageDialog(null, "login realizado com sucesso", "Login", JOptionPane.WARNING_MESSAGE);
 					
 					return sessao;
 				}
