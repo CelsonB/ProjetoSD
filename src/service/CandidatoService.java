@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 
 import javax.swing.JOptionPane;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import entities.Candidato;
+import entities.Empresa;
 
 public class CandidatoService {
 
@@ -34,6 +38,68 @@ public class CandidatoService {
 	
 	public CandidatoService(Socket ss) {
 		this.clienteSocket = ss;
+	}
+	
+	
+	
+	public List<Empresa> receberMensagem() throws JSONException, IOException {
+		//{"operacao":"receberMensagem", "email":"xxxx@xsss.com","token":"UUID"}
+		
+			JSONObject json = new JSONObject();
+			json.put("type", "CONNECT");
+			Scanner leia = new Scanner(System.in);
+		
+			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+		
+		
+			
+			String myString = new JSONObject()
+					.put("operacao", "receberMensagem")
+					.put("email", this.sessao.getEmail())
+					.put("token",sessao.getToken())
+					.toString(); 
+			
+			System.out.println(myString);
+			saida.println(myString);
+			return receberRespostaEmpresaMensagem();
+	}
+	
+	public List<Empresa> receberRespostaEmpresaMensagem() throws JsonMappingException, JsonProcessingException, IOException, JSONException {
+		
+	
+		InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+		BufferedReader reader = new BufferedReader(input);
+		ObjectMapper mapper = new ObjectMapper(); 
+		Map<String, Object> data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
+		
+		System.out.println("Entrada: [" +data.toString()+ "]");
+		String op = data.get("status").toString();
+		
+		List<Empresa> empresasContato = new ArrayList<>();
+		
+		//{"operacao":"receberMensagem","empresas":[{"nome":"xxxx","email":"yyyy@yyy.com","ramo":"zzzz"},],"status":201}
+		
+		if(op.equals("201") || op.equals("200")) {
+			JSONArray jsonArr = new JSONArray(data.get("empresas").toString());
+			for(int i =0 ; i<jsonArr.length();i++) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj = jsonArr.getJSONObject(i);
+				
+				Empresa emp = new Empresa();
+				emp.setRazaoSocial(jsonObj.getString("nome"));
+				emp.setEmail(jsonObj.getString("email"));
+				emp.setRamo(jsonObj.getString("ramo"));
+				empresasContato.add(emp);
+				
+			}
+			
+			return empresasContato;
+			
+		}else {
+			JOptionPane.showMessageDialog(null, data.get("mensagem").toString(), "Realizar login", JOptionPane.WARNING_MESSAGE);
+			return null;
+		}
+		
 	}
 	
 	public boolean atualizarCadastro(Candidato user) throws JSONException, IOException {

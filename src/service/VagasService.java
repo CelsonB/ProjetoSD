@@ -45,14 +45,28 @@ public class VagasService {
 		
 		JSONObject obj = new JSONObject();
 		JSONArray jarray = new JSONArray();
+			
 		
 		
 		try {
-			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
 			
+			
+			
+			PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+
+			
+
+			
+			
+			for(Competencia comp : competencias) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("competencia", comp.getNomeCompetencia())
+				.put("experiencia", comp.getExperiencia());
+				jarray.put(jsonObj);
+			}
 			
 			JSONObject newObj = new JSONObject();
-			newObj.put("competenciasExperiencias", competencias).put("tipo", tipo.toUpperCase());
+			newObj.put("competenciasExperiencias", jarray).put("tipo", tipo.toUpperCase());	
 			
 			obj.put("operacao", "filtrarCandidatos").put("filtros", newObj).put("token", sessao.getToken());
 			
@@ -97,16 +111,31 @@ public class VagasService {
 				            
 				            cand.setEmail(jsonObj.getString("email"));
 				            cand.setNome(jsonObj.getString("nome"));
-				            List<Competencia> competencias = mapper.readValue(jsonObj.getString("competenciaExperiencia"), new TypeReference<List<Competencia>>() {});
+				            	
+				            
+				            	JSONArray arrCompetencia = new JSONArray(jsonObj.get("competenciaExperiencia").toString());
+				            	  List<Competencia> competencias  = new ArrayList<>();
+				            	  
+				            	  for(int j =0 ;i<arrCompetencia.length();j++) {
+				            		  JSONObject ObjCompetencia = arrCompetencia.getJSONObject(j);
+				            		  System.out.println(ObjCompetencia.toString());
+				            		  Competencia comp2 = new Competencia(Integer.parseInt(ObjCompetencia.get("experiencia").toString()),ObjCompetencia.get("competencia").toString());
+				            		  competencias.add(comp2);
+	
+				            	  }
+				            	  System.out.println(competencias.toString());
+				          
 				            cand.setListaCompetencia(competencias);
 				            candidatos.add(cand);
+				       
 				        }
 						
 				        return candidatos;
 			}catch(Exception ex) {
 				System.out.println(ex);
+				return candidatos;
 			}
-	       return candidatos;
+	     
 	       
 		}
 	
@@ -204,6 +233,7 @@ public class VagasService {
 					System.out.println("descricao: "+ data.get("descricao").toString());
 					System.out.println("Faixa salarial: "+ data.get("faixaSalarial").toString());
 					
+					//vagaVisualizada.setNome(data.get("nome").toString());
 					vagaVisualizada.setEstado(data.get("estado").toString());
 					vagaVisualizada.setCompetencias(data.get("competencias").toString());
 					vagaVisualizada.setDescricao(data.get("descricao").toString());

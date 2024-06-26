@@ -18,6 +18,15 @@ import entities.Empresa;
 				
 			}
 		}
+		public void enviarMensage(Empresa empresa,int idCandidato) throws SQLException {
+			PreparedStatement st = null;
+			
+			
+			st = conn.prepareStatement ("insert into candidato_mensagem (id_candidato,id_empresa) values ((select id_empresa from empresa where email = ?),?)");
+			st.setString(1, empresa.getEmail());
+			st.setInt(2, idCandidato);
+			st.executeUpdate();
+		}
 		
 		public static void cadastrarEmpresa(Empresa empresa)throws SQLException, IOException  {
 			

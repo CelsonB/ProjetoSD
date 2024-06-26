@@ -8,10 +8,64 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import entities.Candidato;
+import entities.Competencia;
 import entities.Vaga;
 
 public class VagasDao extends BancoDeDados {
 
+	
+	
+	public List<Candidato> filtrarCandidatos(List<Competencia> competencias, String tipo) throws IOException, SQLException {
+		
+		
+		
+		
+		
+		PreparedStatement st = null;
+		Conectar();
+		String str = "SELECT * candidato as c inner join candidato_competencia as cc on c.id_candidato = cc.id_candidato where ";
+		
+		String linhaCompetencia = " cc.id_competencia = (select id_competencia from competencia where competencia = ?) ";
+		String linhaExperiencia = " cc.experiencia >= ?  ";
+		
+		for(Competencia comp : competencias) {
+			
+			str.concat("(" + linhaCompetencia).replace("?", comp.getNomeCompetencia());
+			str.concat(" AND ");
+			str.concat(linhaExperiencia +")").replace("?", String.valueOf(comp.getExperiencia()));
+			
+			str.concat(tipo);
+			
+		}
+		
+		st = conn.prepareStatement (str);
+		
+		ResultSet rs = st.executeQuery();
+		
+		List<Candidato> listaCandidatos = new ArrayList<>();
+		
+		while(rs.next()) {
+			Candidato cand = new Candidato();
+			cand.setEmail(rs.getString("email"));
+			cand.setNome(rs.getString("nome"));
+			st = conn.prepareStatement("Select * from competencia as c "
+					+ "inner join candidato_competencia as cc on c.id_competencia=cc.id_competencia where cc.id_candidato "
+					+ "= (select id_candidato from candidato where email = ?) ");
+			st.setString(1, cand.getEmail());
+			ResultSet rs2 = st.executeQuery();
+			List<Competencia> listaCompetencias = new ArrayList<>();
+			
+				while(rs2.next()) {
+					listaCompetencias.add(new Competencia(rs.getInt("experiencia"),rs.getString("competencia"))) ;
+				}
+			cand.setListaCompetencia(listaCompetencias);
+			
+			
+		}
+		return listaCandidatos;
+		
+	}
 	
 	
 	

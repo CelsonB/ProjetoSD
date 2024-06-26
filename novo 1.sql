@@ -22,6 +22,13 @@ create table Vaga_competencia(id_vaga_competencia int not null AUTO_INCREMENT, i
 					descricao char(255) not null,
 					estado varchar(50) not null,
 					primary key (id_vaga) );
+					
+					CREATE TABLE candidato_mensagem (
+					id INT NOT NULL AUTO_INCREMENT,
+					id_candidato INT NOT NULL,
+					id_empresa INT NOT NULL,
+					PRIMARY KEY (id)
+					);
 
 INSERT INTO competencia (competencia) VALUES ('Python'), ('C#'), ('C++'), ('JS'), ('PHP'), ('Swift'), ('Java'), ('Go'), ('SQL'), ('Ruby'), ('HTML'), ('CSS'), ('NOSQL'), ('Flutter'), ('TypeScript'), ('Perl'), ('Cobol'), ('dotNet'), ('Kotlin'), ('Dart');
 

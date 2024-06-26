@@ -1,5 +1,10 @@
 package dao;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import entities.Empresa;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -17,6 +22,33 @@ public class CandidatoDao extends BancoDeDados{
 			}
 		}
 	
+		public List<Empresa> receberMensagem(String emailCandidato) throws IOException, SQLException {
+			PreparedStatement st = null;
+			
+			
+			List<Empresa> empresas = new ArrayList<>();
+			super.Conectar();
+			st = conn.prepareStatement 
+		("SELECT * FROM candidato_mensagem INNER JOIN empresa on candidato_mensagem.id_empresa = empresa.id_empresa WHERE candidato_mensagem.id_candidato = (select id_candidato from candidato where email = ?) ");
+			
+			st.setString(1,emailCandidato);
+			
+			ResultSet rs = st.executeQuery();
+			while(rs.next()) {
+				Empresa emp = new Empresa();
+				
+				
+				emp.setEmail(rs.getString("email"));
+				
+				//resultadoPesquisa.setNome(rs.getString("nome"));
+				emp.setRamo(rs.getString("ramo"));
+				emp.setRazaoSocial(rs.getString("razao_social"));
+				emp.setSenha(rs.getString("senha"));
+				empresas.add(emp);
+			}
+			return empresas;
+		}
+		
 	
 	public void Cadastrar(String email, String nome, String senha) throws SQLException, IOException {
 		

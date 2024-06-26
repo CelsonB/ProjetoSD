@@ -137,6 +137,12 @@ public class VagasWindow extends JFrame {
 		contentPane.add(btnVisualizarVaga);
 		
 		JButton btnVotlar = new JButton("Voltar");
+		btnVotlar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new PerfilEmpresaWindow(sessao,clienteSocket).setVisible(true);
+				dispose();
+			}
+		});
 		btnVotlar.setBounds(10, 272, 155, 23);
 		contentPane.add(btnVotlar);
 		
@@ -153,6 +159,8 @@ public class VagasWindow extends JFrame {
 		JButton btnFiltrarCandidatos = new JButton("Filtrar candidatos");
 		btnFiltrarCandidatos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new FiltrarCandidatosWindow(clienteSocket,sessao).setVisible(true);
+				dispose();
 			}
 		});
 		btnFiltrarCandidatos.setBounds(10, 238, 155, 23);
@@ -161,12 +169,15 @@ public class VagasWindow extends JFrame {
 	
 	public void alterarEstadoVaga() {
 		int idVaga = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0).toString());
+		String nomeVaga = table.getValueAt(table.getSelectedRow(), 1).toString();
 		Vaga vagaTemp = new Vaga();
 		vagaTemp.setIdVaga(idVaga);
+		vagaTemp.setNome(nomeVaga);
 		
 		
 		Vaga vagaSelecionada = vagasService.visualizarVaga(vagaTemp.getIdVaga());
 		vagaSelecionada.setIdVaga(idVaga);
+		vagaSelecionada.setNome(nomeVaga);
 		if(vagaSelecionada.getEstado().equals("Disponivel")) {
 			vagaSelecionada.setEstado("Divulgavel");
 		}else{

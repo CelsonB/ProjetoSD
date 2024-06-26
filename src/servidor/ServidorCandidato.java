@@ -11,10 +11,12 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import dao.*;
+import entities.Empresa;
 import exceptions.EmailInvalidoException;
 import exceptions.SenhaInvalidaException;
 
@@ -46,6 +48,60 @@ public class ServidorCandidato {
 		
 	}
 
+	
+	public void receberMensagem(Map<String, Object> userData)  {
+		JSONObject json = new JSONObject();
+		ObjectMapper mapper = new ObjectMapper();  
+		PrintStream saida;
+		
+		
+		try {
+			saida = new PrintStream (ss.getOutputStream());
+		
+		
+		CandidatoDao bd = new CandidatoDao();
+		bd.Conectar();
+		
+		List<Empresa> empresas =bd.receberMensagem(userData.get("email").toString());
+		JSONArray empresasArray = new JSONArray();
+		for(Empresa emp : empresas) {
+			JSONObject obj = new JSONObject();
+			obj.put("nome", emp.getRazaoSocial()).put("email", emp.getEmail()).put("ramo", emp.getRamo());
+			empresasArray.put(obj);
+		}
+		
+		String myString = new JSONObject()
+				.put("operacao", "receberMensagem")
+				.put("status","201")
+				.put("empresas", empresasArray)
+				.toString(); 
+		saida.println(myString);
+		
+		
+		
+		}catch (Exception e) {
+			mensagemErro(e);
+			 
+		}	
+	
+	}
+	public void mensagemErro(Exception e) {
+		try {
+			PrintStream saida = new PrintStream (ss.getOutputStream());
+			
+			String myString = new JSONObject()
+					.put("operacao", "receberMensagem")
+					.put("status","422")
+					.put("mensagem", e.getMessage())
+					.toString();
+			
+			saida.println(myString);
+			
+		} catch (JSONException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	
 	public static void SolicitarCadastro(Map<String, Object> userData) {
 		String myString = null;

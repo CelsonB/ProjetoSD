@@ -2,17 +2,23 @@ package gui;
 
 import java.awt.EventQueue;
 import java.net.Socket;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.json.JSONException;
+
 import entities.Candidato;
+import entities.Empresa;
 import service.CandidatoService;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class PerfilCandidatoWindow extends JFrame {
@@ -33,13 +39,23 @@ public class PerfilCandidatoWindow extends JFrame {
 		
 		this.sessao = candidatoService.visualizarUsuario();
 		this.sessao.setToken(sessao.getToken());
-		
+		try {
+			List<Empresa> empresas = this.candidatoService.receberMensagem();
+			if(empresas!=null) {
+				for(Empresa emp : empresas) {
+					JOptionPane.showMessageDialog(null, "a empresa " + emp.getRazaoSocial()+"quer te contatar","empresa interessada",JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		} catch (JSONException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		initComponents();
 	}
 	
 	public void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 282, 185);
+		setBounds(100, 100, 275, 214);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -86,7 +102,7 @@ public class PerfilCandidatoWindow extends JFrame {
 				
 			}
 		});
-		btnVoltar.setBounds(10, 115, 119, 23);
+		btnVoltar.setBounds(10, 142, 119, 23);
 		contentPane.add(btnVoltar);
 		
 		JButton btnCompetencia = new JButton("Competencias");
@@ -98,6 +114,15 @@ public class PerfilCandidatoWindow extends JFrame {
 			}
 		});
 		contentPane.add(btnCompetencia);
+		
+		JButton btnFiltrarVagas = new JButton("Filtrar vagas");
+		btnFiltrarVagas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new FiltrarVagasWindow(sessao,clienteSocket).setVisible(true);
+			}
+		});
+		btnFiltrarVagas.setBounds(10, 115, 119, 23);
+		contentPane.add(btnFiltrarVagas);
 	}
 	
 	

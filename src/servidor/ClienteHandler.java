@@ -123,6 +123,18 @@ public class ClienteHandler implements Runnable {
                     case "apagarEmpresa":
                         empresaServer.apagarEmpresa(userData);
                         break;
+                        //quarta entrega
+                    case "receberMensagem":
+                    	candidatoServer.receberMensagem(userData);
+                    	break;
+                    case "enviarMensagem":
+                    	empresaServer.enviarMensagem(userData);
+                    	break;
+                    case "filtrarCandidatos":
+                    	vagaServer.filtrarCandidato(userData);
+                    	break;
+                   
+                    
                 }
             } while (op != null && !op.isEmpty());
         } catch (Exception ex) {

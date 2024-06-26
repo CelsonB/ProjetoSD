@@ -13,7 +13,9 @@ import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import entities.Empresa;
@@ -26,6 +28,48 @@ public class EmpresaService {
 	public static Socket clienteSocket = null;
 	public EmpresaService(Socket clienteSocket) {	
 		this.clienteSocket = clienteSocket;
+	}
+	
+	
+	
+	public boolean enviarMensagem(Empresa sessao, int []candidatos) throws IOException, JSONException {
+		//{"operacao":"enviarMensagem", "email":"xxxx@xsss.com", "candidatos":[1,2,3,4], "token":"UUID"}
+		
+		PrintStream saida  = new PrintStream (clienteSocket.getOutputStream());
+		JSONObject json = new JSONObject();
+		json.put("type", "CONNECT");
+		
+		String myString = new JSONObject()
+				.put("operacao", "enviarMensagem")
+				.put("email", sessao.getEmail())
+				.put("candidatos", candidatos )
+				.put("token", sessao.getToken())
+				.toString(); 
+		
+			System.out.println("Saida: [" +myString + "]");
+		
+		   saida.println(myString);
+		   return receberRespostaMensagem();
+	}
+	
+	public boolean receberRespostaMensagem() throws JsonMappingException, JsonProcessingException, IOException {
+		Empresa sessaoEmpresa = new Empresa();
+		InputStreamReader input = new InputStreamReader(clienteSocket.getInputStream());
+		BufferedReader reader = new BufferedReader(input);
+		
+		ObjectMapper mapper = new ObjectMapper(); 
+		Map<String, Object> data = mapper.readValue(reader.readLine(), new TypeReference<Map<String, Object>>() {});
+		
+		System.out.println("Entrada: [" +data.toString()+ "]");
+		String op = data.get("status").toString();
+		
+		if(op.equals("201") || op.equals("200")) {
+			return true;
+			
+		}else {
+			JOptionPane.showMessageDialog(null, data.get("mensagem").toString(), "Realizar login", JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
 	}
 	
 	

@@ -163,9 +163,9 @@ public class FiltrarCandidatosWindow extends JFrame {
 	public void filtrarCandidatos() {
 		
 		String filtro = (String) listFiltro.getSelectedItem();
-		
 		List<Candidato> candidatoFiltrados = vagaService.filtrarCandidatos(competencias, filtro);
 		
+		new CandidatosFiltradosWindow(candidatoFiltrados, sessao, clienteSocket).setVisible(true);
 		
 		
 	}

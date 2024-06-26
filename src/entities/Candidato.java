@@ -10,12 +10,21 @@ public class Candidato {
 	private String nome;
 	private String senha;
 	private String email;
+	private int id;
 	
 	private UUID token =null;
 	private List<Competencia> listaCompetencia;
 	
 	
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public List<Competencia> getListaCompetencia() {
 		return listaCompetencia;
 	}

@@ -10,6 +10,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
 import java.util.UUID;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +36,50 @@ public class ServidorEmpresa {
 	public ServidorEmpresa( Socket ss2) {
 		//this.servidorSocket = servidorSocket2;
 		this.ss = ss2;
+	}
+	
+	
+	public void enviarMensagem(Map<String, Object> userData) throws JSONException {
+	    try {
+		//JSONArray jsonarr= new JSONArray(userData.get("candidatos"));
+//		JSONObject jsonObject = new JSONObject();
+//		jsonObject.put("candidatos", userData.get("candidatos"));
+//		int[] candidatosArray = jsonObject.getJSONArray("candidatos").toIntArray();
+		EmpresaDao bd = new EmpresaDao();
+		
+		JSONArray jsonArr = new JSONArray(userData.get("candidatos"));
+		int[] candidatosArray = new int[jsonArr.length()];
+		for (int i = 0; i < jsonArr.length(); i++) {
+		    candidatosArray[i] = jsonArr.getInt(i);
+		
+				bd.enviarMensage(sessao, jsonArr.getInt(i));
+			
+		}
+		
+		respostaMensagemOkay();
+		
+		} catch (SQLException | JSONException | IOException e) {
+			respostaExcecao( e, userData.get("operacao").toString(),"422");
+			e.printStackTrace();
+		}
+	
+		
+		
+	}
+	public void respostaMensagemOkay() throws JSONException, IOException {
+		 
+		 token = UUID.randomUUID();
+		 String myString = null;
+		 PrintStream saida  = new PrintStream (ss.getOutputStream());
+		 
+		{
+			
+			 myString = new JSONObject().put("operacao", "enviarMensagem")
+					 .put("status","201")
+					 	.toString(); 
+			 System.out.println("Saida: ["+myString+"]");
+			 saida.println(myString);
+	}
 	}
 	
 	 public void cadastrarEmpresa(Map<String, Object> userData) throws SQLException, IOException, JSONException {

@@ -13,10 +13,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysql.cj.xdevapi.JsonArray;
 
 import dao.DaoCompetencia;
 import dao.VagasDao;
+import entities.Candidato;
+import entities.Competencia;
 import entities.Vaga;
 
 public class ServidorVaga  {
@@ -39,6 +44,78 @@ public class ServidorVaga  {
 			
 		} catch (Exception e) {
 			respostaExcecao(e, op,"422");
+		} 
+		
+		
+		
+	}
+	
+	public void filtrarCandidato(Map<String, Object> userData) {
+		VagasDao bd = new VagasDao();
+		
+		
+
+		ObjectMapper mapper = new ObjectMapper();
+		
+		List<Competencia> competencias = new ArrayList<>() ; 
+		try {
+			Map<String, Object> filtro = mapper.readValue(new JSONObject (userData.get("filtros").toString().replace("#", "sharp")).toString(), new TypeReference<Map<String, Object>>() {});
+			String tipo = filtro.get("tipo").toString();
+			
+			JSONArray jsonArr = new JSONArray (filtro.get("competenciasExperiencias"));
+			
+			for(int i = 0 ;i<jsonArr.length();i++) {
+				JSONObject jsonobj = jsonArr.getJSONObject(i);
+				
+				Competencia comp = new Competencia(jsonobj.getInt("experiencia"),jsonobj.getString("competencia"));
+				competencias.add(comp);
+			}
+			
+			List<Candidato> listaCandidato = bd.filtrarCandidatos(competencias,tipo);
+			
+			JSONArray jsonarr = new JSONArray();
+			
+			for(Candidato cand : listaCandidato) {
+				
+				JSONArray jsonarrCompetencia = new JSONArray();
+				
+				for(Competencia comp : cand.getListaCompetencia()) {
+					JSONObject objCompetencias = new JSONObject();
+					objCompetencias
+					.put("competencia", comp.getNomeCompetencia())
+					.put("experiencia", comp.getExperiencia());
+					jsonarrCompetencia.put(objCompetencias);
+					
+				}
+				
+				JSONObject obj = new JSONObject();
+				obj.put("idCandidato", 0).put("nome", cand.getNome())
+				.put("email", cand.getEmail())
+				.put("competenciaExperiencia", jsonarrCompetencia);
+				
+				jsonarr.put(obj);
+			}
+			
+			String myString = null;
+			 PrintStream saida  = new PrintStream (ss.getOutputStream());
+			 String tokenString = "201";
+			 String operacao = userData.get("operacao").toString();
+			 
+				 String str = operacao.concat("realizada com sucesso");
+				
+				 myString = new JSONObject()
+						 .put("operacao", operacao)
+						 .put("status","201")
+						 .put("candidatos", jsonarr)
+						 .toString(); 
+				 
+				 System.out.println("Saida: ["+myString+"]");
+				 
+				 saida.println(myString);
+			
+		} catch (IOException | JSONException | SQLException e) {
+			// TODO Auto-generated catch block
+			respostaExcecao(e, userData.get("operacao").toString(),"422");
 		} 
 		
 		
